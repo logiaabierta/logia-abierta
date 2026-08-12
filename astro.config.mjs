@@ -7,7 +7,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { DEFAULT_LOCALE_SETTING, LOCALES_SETTING } from './src/locales';
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://fyrre-seven.vercel.app/',
+	site: 'https://logiaabierta.com/',
 	integrations: [mdx(), sitemap()],
 	image: {
   domains: ["cdn.sanity.io"],
