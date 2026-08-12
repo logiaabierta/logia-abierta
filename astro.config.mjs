@@ -9,7 +9,10 @@ import { DEFAULT_LOCALE_SETTING, LOCALES_SETTING } from './src/locales';
 export default defineConfig({
 	site: 'https://fyrre-seven.vercel.app/',
 	integrations: [mdx(), sitemap()],
-	image: { domains: ["cdn.sanity.io"], },
+	image: {
+  domains: ["cdn.sanity.io"],
+  dangerouslyProcessSVG: true,
+},
 	vite: {
 		plugins: [tailwindcss()],
 	},
