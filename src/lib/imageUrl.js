@@ -1,8 +1,8 @@
-import imageUrlBuilder from "@sanity/image-url";
+import { createImageUrlBuilder } from "@sanity/image-url";
 import { client } from "./sanity";
 
-const builder = imageUrlBuilder(client);
+const builder = createImageUrlBuilder(client);
 
 export function urlFor(source) {
-    return builder.image(source);
+  return builder.image(source).format("webp");
 }
