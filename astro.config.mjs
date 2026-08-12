@@ -11,6 +11,7 @@ export default defineConfig({
 	integrations: [mdx(), sitemap()],
 	image: {
   domains: ["cdn.sanity.io"],
+  dangerouslyProcessSVG: true,
 },
 	vite: {
 		plugins: [tailwindcss()],
