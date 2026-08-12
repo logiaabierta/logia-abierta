@@ -30,6 +30,7 @@
   "devDependencies": {
     "@sanity/eslint-config-studio": "^6.0.0",
     "@types/react": "^19.2.14",
+    "astro": "^6.3.7",
     "eslint": "^9.28",
     "prettier": "^3.5",
     "typescript": "^5.8"
