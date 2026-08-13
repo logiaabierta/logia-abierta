@@ -57,7 +57,7 @@ const navbar = [
 ];
 ---
 
-<footer class="footer bg-black text-white pb-10 pt-5">
+<footer id="site-footer" class="footer pb-10 pt-5">
   <div
     class="footer-topline overflow-hidden uppercase flex gap-4 overflow-x-hidden w-full"
   >
@@ -118,18 +118,31 @@ const navbar = [
       </div>
     </div>
   </div>
+  <div class="footer-wordmark w-full overflow-hidden" aria-label="Logia Abierta">
+    <svg
+      viewBox="0 0 1200 190"
+      role="img"
+      aria-labelledby="footer-wordmark-title"
+      preserveAspectRatio="none"
+    >
+      <title id="footer-wordmark-title">Logia Abierta</title>
+      <text
+        x="0"
+        y="150"
+        textLength="1200"
+        lengthAdjust="spacingAndGlyphs"
+      >
+        Logia Abierta
+      </text>
+    </svg>
+  </div>
   <div class="footer-btm w-full">
     <div class="container flex flex-wrap gap-4 justify-between items-center">
       <p class="text-xs opacity-50">
-        &copy; {today.getFullYear()} Made by Anastasiia Berest - Powered by Astro
+        &copy; {today.getFullYear()} Made by Logia Abierta - Powered by Astro
         + Sanity CMS
       </p>
       <Socials />
-    </div>
-  </div>
-  <div class="footer-wordmark w-full overflow-hidden" aria-label="Logia Abierta">
-    <div class="container">
-      <p>Logia Abierta</p>
     </div>
   </div>
 </footer>
