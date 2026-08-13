@@ -4,23 +4,118 @@
 import "../styles/global.css";
 import type { ImageMetadata } from "astro";
 import FallbackImage from "../assets/og-1200x630.jpg";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import {
+  SITE_AUTHOR,
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  SITE_LOCALE,
+  SITE_TITLE,
+  SITE_TOPICS,
+  SITE_URL,
+} from "../consts";
 import { Font } from "astro:assets";
 interface Props {
-  title: string;
-  description: string;
-  image?: ImageMetadata;
+  title?: string;
+  description?: string;
+  image?: ImageMetadata | string;
+  type?: "website" | "article";
+  publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
+  tags?: string[];
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+  faqItems?: Array<{ question: string; answer: string }>;
+  noindex?: boolean;
 }
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-
 const {
-  title,
+  title = SITE_TITLE,
   description = SITE_DESCRIPTION,
   image = FallbackImage,
+  type = "website",
+  publishedTime,
+  modifiedTime,
+  author = SITE_AUTHOR,
+  tags = [],
+  schema = [],
+  faqItems = [],
+  noindex = false,
 } = Astro.props;
-const pageTitle = `${SITE_TITLE} | ${title}`;
-const ogImage = image.src ? image.src : image;
+const site = Astro.site || new URL(SITE_URL);
+const canonicalURL = new URL(Astro.url.pathname, site);
+const pageTitle = title === SITE_TITLE ? SITE_TITLE : `${title} | ${SITE_TITLE}`;
+const imagePath = typeof image === "string" ? image : image.src;
+const ogImage = new URL(imagePath, site);
+const schemaItems = Array.isArray(schema) ? schema : [schema];
+const faqSchema =
+  faqItems.length > 0
+    ? {
+        "@type": "FAQPage",
+        "@id": `${canonicalURL.toString()}#faq`,
+        mainEntity: faqItems.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.answer,
+          },
+        })),
+      }
+    : null;
+const baseSchema = [
+  {
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: SITE_TITLE,
+    url: SITE_URL,
+    logo: new URL("/favicon/web-app-manifest-512x512.png", site).toString(),
+    knowsAbout: SITE_TOPICS,
+    sameAs: [],
+  },
+  {
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    url: SITE_URL,
+    name: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    publisher: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    about: SITE_TOPICS.map((name) => ({
+      "@type": "Thing",
+      name,
+    })),
+    keywords: SITE_KEYWORDS.join(", "),
+    inLanguage: Astro.currentLocale || "es",
+  },
+  {
+    "@type": "WebPage",
+    "@id": `${canonicalURL.toString()}#webpage`,
+    url: canonicalURL.toString(),
+    name: pageTitle,
+    description,
+    isPartOf: {
+      "@id": `${SITE_URL}/#website`,
+    },
+    publisher: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    about: [...SITE_TOPICS, ...tags].map((name) => ({
+      "@type": "Thing",
+      name,
+    })),
+    keywords: [...SITE_KEYWORDS, ...tags].join(", "),
+    primaryImageOfPage: {
+      "@type": "ImageObject",
+      url: ogImage.toString(),
+    },
+    inLanguage: Astro.currentLocale || "es",
+  },
+];
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [...baseSchema, ...schemaItems.filter(Boolean), faqSchema].filter(Boolean),
+};
 ---
 
 <!-- Global Metadata -->
@@ -29,6 +124,7 @@ const ogImage = image.src ? image.src : image;
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" href="/favicon.ico" />
 <link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="alternate" type="text/plain" title="LLMs.txt" href="/llms.txt" />
 <link rel="manifest" href="/favicon/site.webmanifest" />
 <link
   rel="alternate"
@@ -37,6 +133,14 @@ const ogImage = image.src ? image.src : image;
   href={new URL("rss.xml", Astro.site)}
 />
 <meta name="generator" content={Astro.generator} />
+<meta
+  name="robots"
+  content={noindex ? "noindex,nofollow" : "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"}
+/>
+<meta name="author" content={author} />
+<meta name="keywords" content={[...SITE_KEYWORDS, ...tags].join(", ")} />
+<meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
 
 <Font cssVariable="--font-atkinson" preload />
 
@@ -49,15 +153,28 @@ const ogImage = image.src ? image.src : image;
 <meta name="description" content={description} />
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url} />
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={SITE_TITLE} />
+<meta property="og:locale" content={SITE_LOCALE} />
+<meta property="og:url" content={canonicalURL.toString()} />
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(ogImage, Astro.url)} />
+<meta property="og:image" content={ogImage.toString()} />
+<meta property="og:image:secure_url" content={ogImage.toString()} />
+<meta property="og:image:alt" content={title} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+{publishedTime && <meta property="article:published_time" content={publishedTime} />}
+{modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+{author && <meta property="article:author" content={author} />}
+{tags.map((tag) => <meta property="article:tag" content={tag} />)}
 
 <!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={pageTitle} />
-<meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={new URL(image.src, Astro.url)} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalURL.toString()} />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage.toString()} />
+<meta name="twitter:image:alt" content={title} />
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

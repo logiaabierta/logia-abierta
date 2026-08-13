@@ -1,0 +1,54 @@
+---
+type Props = {
+  chart: string;
+  title?: string;
+  caption?: string;
+};
+
+const { chart, title, caption } = Astro.props;
+const id = `mermaid-${crypto.randomUUID()}`;
+---
+
+<figure class="mdx-mermaid">
+  {title && <figcaption class="mdx-figure-title">{title}</figcaption>}
+  <div id={id} class="mdx-mermaid-canvas" data-mermaid-chart={chart}>
+    <pre>{chart}</pre>
+  </div>
+  {caption && <figcaption class="mdx-figure-caption">{caption}</figcaption>}
+</figure>
+
+<script is:inline>
+  (() => {
+    const renderMermaid = async () => {
+      if (!window.__logiaMermaid) {
+        const module = await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
+        window.__logiaMermaid = module.default;
+        window.__logiaMermaid.initialize({
+          startOnLoad: false,
+          securityLevel: "loose",
+          theme: document.documentElement.dataset.theme === "dark" ? "dark" : "default",
+        });
+      }
+
+      const mermaid = window.__logiaMermaid;
+      const nodes = document.querySelectorAll("[data-mermaid-chart]:not([data-rendered])");
+
+      for (const node of nodes) {
+        const chart = node.getAttribute("data-mermaid-chart");
+        if (!chart) continue;
+
+        try {
+          const id = `${node.id}-svg`;
+          const { svg } = await mermaid.render(id, chart);
+          node.innerHTML = svg;
+          node.dataset.rendered = "true";
+        } catch (error) {
+          node.dataset.rendered = "error";
+          console.error("Mermaid render failed", error);
+        }
+      }
+    };
+
+    renderMermaid();
+  })();
+</script>

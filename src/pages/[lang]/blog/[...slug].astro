@@ -5,6 +5,8 @@ import { client } from "../../../lib/sanity";
 import PostCardBase from "../../../components/PostCardBase.astro";
 import PortableComponent from "../../../components/builder/PortableComponent.astro";
 import { formatDate } from "../../../utils/dateFormatter";
+import { toPlainText } from "astro-portabletext";
+import { SITE_TITLE, SITE_URL } from "../../../consts";
 
 import { LOCALES } from "../../../i18n";
 
@@ -21,8 +23,10 @@ export async function getStaticPaths() {
         title,
         description,
         duration,
+        publishedAt,
         body,
         _createdAt,
+        _updatedAt,
         language,
         "slug": slug.current,
 
@@ -37,7 +41,7 @@ export async function getStaticPaths() {
           "image": image.asset->url
         },
 
-        "categories": categories[0]->{
+        "categories": categories[]->{
           "title": title[language == $lang][0].value,
           "slug": slug.current
         }
@@ -64,6 +68,94 @@ export async function getStaticPaths() {
 
 const locale = Astro.params.lang;
 const { post } = Astro.props;
+const publishedDate = post.publishedAt || post._createdAt;
+const categories = post.categories || [];
+const primaryCategory = categories[0];
+const copyrightUrl = "https://creativecommons.org/licenses/by-nc-sa/4.0/";
+const copyrightLabel = "CC BY-NC-SA 4.0";
+const readingTime = post.duration ? `${post.duration} min read` : "Short read";
+const headingLevels = ["h2", "h3", "h4", "h5", "h6"];
+const tableOfContents = (post.body || [])
+  .filter((block) => block._type === "block" && headingLevels.includes(block.style))
+  .map((block) => ({
+    id: `section-${block._key}`,
+    text: toPlainText([block]),
+    level: Number(block.style.replace("h", "")),
+  }))
+  .filter((item) => item.text);
+const canonicalUrl = new URL(`/${locale}/blog/${post.slug}`, SITE_URL).toString();
+const categoryUrl = primaryCategory
+  ? new URL(`/${locale}/blog/${primaryCategory.slug}`, SITE_URL).toString()
+  : new URL(`/${locale}/blog`, SITE_URL).toString();
+const absoluteImage = post.image ? new URL(post.image, SITE_URL).toString() : undefined;
+const articleTags = categories.map((category) => category.title).filter(Boolean);
+const articleSchema = [
+  {
+    "@type": "Article",
+    "@id": `${canonicalUrl}#article`,
+    headline: post.title,
+    description: post.description,
+    image: absoluteImage ? [absoluteImage] : undefined,
+    datePublished: publishedDate,
+    dateModified: post._updatedAt || publishedDate,
+    author: post.author
+      ? {
+          "@type": "Person",
+          name: post.author.name,
+          url: new URL(`/${locale}/authors/${post.author.slug}`, SITE_URL).toString(),
+        }
+      : {
+          "@type": "Organization",
+          name: SITE_TITLE,
+          url: SITE_URL,
+        },
+    publisher: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    mainEntityOfPage: {
+      "@id": `${canonicalUrl}#webpage`,
+    },
+    articleSection: primaryCategory?.title,
+    keywords: articleTags.join(", "),
+    about: articleTags.map((name) => ({
+      "@type": "Thing",
+      name,
+    })),
+    isAccessibleForFree: true,
+    license: copyrightUrl,
+    inLanguage: locale,
+  },
+  {
+    "@type": "BreadcrumbList",
+    "@id": `${canonicalUrl}#breadcrumb`,
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: new URL(`/${locale}`, SITE_URL).toString(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Magazine",
+        item: new URL(`/${locale}/blog`, SITE_URL).toString(),
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: primaryCategory?.title || "Article",
+        item: categoryUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 4,
+        name: post.title,
+        item: canonicalUrl,
+      },
+    ],
+  },
+];
 
 const relatedPosts = await client.fetch(
   `
@@ -76,6 +168,7 @@ const relatedPosts = await client.fetch(
     title,
     description,
     duration,
+    publishedAt,
     _createdAt,
 
     "slug": slug.current,
@@ -118,7 +211,17 @@ const socials = [
 ];
 ---
 
-<Layout title={post.title} description={post.description} image={post.image}>
+<Layout
+  title={post.title}
+  description={post.description}
+  image={post.image}
+  type="article"
+  publishedTime={publishedDate}
+  modifiedTime={post._updatedAt || publishedDate}
+  author={post.author?.name}
+  tags={articleTags}
+  schema={articleSchema}
+>
   <section class="mt-10">
     <div class="container">
       <div class="flex itms-center justify-between flex-wrap gap-4">
@@ -133,41 +236,44 @@ const socials = [
   </section>
   <section class="section">
     <div class="container">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
+      <div class="article-hero mx-auto max-w-5xl">
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="badge badge-neutral uppercase">Featured</span>
+          {primaryCategory && <span class="badge badge-outline uppercase">{primaryCategory.title}</span>}
+        </div>
         <h1>{post.title}</h1>
-        <p class="text-lg font-semibold">
-          {post.description}
-        </p>
-      </div>
-      <div>
-        <div
-          class="flex flex-wrap gap-x-6 gap-y-3 justify-between items-center mb-5"
-        >
+        {post.description && <p class="text-lg md:text-xl font-semibold mt-6 max-w-3xl">{post.description}</p>}
+
+        <div class="article-meta mt-8">
           {
             post.author && (
-              <p>
-                <b class="mr-2">Text</b>
-                <a href={`/authors/${post.author.slug.current}`}>
-                  {post.author.name}
-                </a>
-              </p>
+              <a href={`/${locale}/authors/${post.author.slug}`} class="font-semibold hover:underline">
+                {post.author.name}
+              </a>
             )
           }
-          <p>
-            <b class="mr-2">Date</b>
-            <span>{formatDate(post._createdAt)}</span>
-          </p>
-          <p>
-            <b class="mr-2">Read</b>
-            <span>{post.duration} Min</span>
-          </p>
-
-          <a
-            href={`/blog/${post.categories.slug.current}`}
-            class="ml-auto btn btn-outline rounded-full py-1 px-4 h-auto hover:bg-black hover:text-white"
-            >{post.categories.title}</a
-          >
+          <span>{formatDate(publishedDate)}</span>
+          <span>{readingTime}</span>
         </div>
+
+        <div class="article-license mt-5">
+          <b>Copyright:</b>
+          <a href={copyrightUrl} target="_blank" rel="noopener noreferrer">
+            {copyrightLabel}
+          </a>
+        </div>
+
+        {
+          categories.length > 0 && (
+            <nav class="article-tags mt-5" aria-label="Article tags">
+              {categories.map((category) => (
+                <a href={`/${locale}/blog/${category.slug}`}>{category.title}</a>
+              ))}
+            </nav>
+          )
+        }
+
+        <div class="mt-10">
         <Image
           src={post.image}
           alt={post.title}
@@ -179,70 +285,57 @@ const socials = [
           loading="eager"
           class="aspect-2/1 w-full h-auto object-cover"
         />
+        </div>
       </div>
     </div>
   </section>
   <section class="section">
     <div class="container">
       <div
-        class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-x-20 gap-y-10"
+        class="article-shell mx-auto grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_280px] gap-x-16 gap-y-10"
       >
-        <aside>
+        {
+          post.body && (
+            <article class="post max-w-3xl">
+              <PortableComponent body={post.body} />
+            </article>
+          )
+        }
+        <aside class="article-toc">
           {
-            post.author && (
-              <a
-                href={`/authors/${post.author.slug.current}`}
-                class="text-2xl md:text-4xl font-semibold grid grid-cols-[80px_1fr] gap-4 items-center"
-              >
-                <Image
-                  src={post.author.image}
-                  alt={post.author.name}
-                  width="80"
-                  height="80"
-                  format="webp"
-                  class="rounded-full h-auto mx-auto"
-                />
-                {post.author.name}
-              </a>
+            tableOfContents.length > 0 && (
+              <nav aria-label="On this page">
+                <p>On This Page</p>
+                <ol>
+                  {tableOfContents.map((item) => (
+                    <li class={`toc-level-${item.level}`}>
+                      <a href={`#${item.id}`}>{item.text}</a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
             )
           }
 
-          <div class="grid gap-4 border-t pt-5 mt-8">
-            <div class="grid grid-cols-[1fr_auto] gap-2">
-              <b>Date</b>
-              <span>{formatDate(post._createdAt)}</span>
-            </div>
-            <div class="grid grid-cols-[1fr_auto] gap-2">
-              <b>Read</b>
-              <span>{post.duration} Min</span>
-            </div>
-            <div class="grid grid-cols-[1fr_auto] gap-2">
-              <b>Share</b>
-              <nav class="flex items-center gap-3 flex-wrap">
-                {
-                  socials.map((icon) => (
-                    <a
-                      href={icon.url}
-                      title={icon.title}
-                      class="hover:rotate-12"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <i class={icon.icon} />
-                    </a>
-                  ))
-                }
-              </nav>
-            </div>
+          <div class="article-share">
+            <b>Share</b>
+            <nav class="flex items-center gap-3 flex-wrap">
+              {
+                socials.map((icon) => (
+                  <a
+                    href={icon.url}
+                    title={icon.title}
+                    class="hover:rotate-12"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i class={icon.icon} />
+                  </a>
+                ))
+              }
+            </nav>
           </div>
         </aside>
-        {
-          post.body && (
-            <div class="post">
-              <PortableComponent body={post.body} />
-            </div>
-          )
-        }
       </div>
     </div>
   </section>
@@ -273,4 +366,42 @@ const socials = [
       </section>
     )
   }
+
+  <script is:inline>
+    (() => {
+      const links = Array.from(document.querySelectorAll(".article-toc a"));
+      if (!links.length) return;
+
+      const headings = links
+        .map((link) => document.getElementById(link.hash.slice(1)))
+        .filter(Boolean);
+
+      if (!headings.length) return;
+
+      const setCurrent = (id) => {
+        links.forEach((link) => {
+          const isCurrent = link.hash === `#${id}`;
+          if (isCurrent) {
+            link.setAttribute("aria-current", "true");
+          } else {
+            link.removeAttribute("aria-current");
+          }
+        });
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+          if (visible[0]) setCurrent(visible[0].target.id);
+        },
+        { rootMargin: "-20% 0px -65% 0px" },
+      );
+
+      headings.forEach((heading) => observer.observe(heading));
+      setCurrent(headings[0].id);
+    })();
+  </script>
 </Layout>

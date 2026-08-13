@@ -1,0 +1,64 @@
+---
+title: "Demo MDX: Mermaid e Impress.js"
+description: "Una página de prueba para validar Markdown, componentes MDX, diagramas Mermaid y presentaciones tipo Impress.js dentro de Logia Abierta."
+lang: "es"
+pubDate: "2026-08-12"
+author: "Logia Abierta"
+tags:
+  - MDX
+  - Mermaid
+  - Impress.js
+  - SEO generativo
+featured: true
+---
+
+import Mermaid from "../../components/mdx/Mermaid.astro";
+import ImpressDeck from "../../components/mdx/ImpressDeck.astro";
+import ImpressStep from "../../components/mdx/ImpressStep.astro";
+
+## Markdown vivo para piezas especiales
+
+Este ensayo vive en MDX. Eso significa que puede usar Markdown normal, pero también componentes visuales y experiencias interactivas cuando el tema lo merece.
+
+Para SGE, AI Overviews y buscadores generativos, la clave sigue siendo que el contenido principal sea claro, visible, rastreable y útil para humanos.
+
+<Mermaid
+  title="Flujo editorial híbrido"
+  caption="Sanity queda para artículos editoriales; MDX queda para ensayos técnicos, diagramas y presentaciones."
+  chart={`
+flowchart LR
+  A[Idea editorial] --> B{Tipo de contenido}
+  B -->|Artículo normal| C[Sanity Portable Text]
+  B -->|Ensayo interactivo| D[MDX]
+  D --> E[Mermaid]
+  D --> F[Impress.js]
+  C --> G[Astro]
+  E --> G
+  F --> G
+  G --> H[SEO + AI Overviews]
+`}/>
+
+## Presentación embebida
+
+El siguiente bloque usa una estructura compatible con Impress.js. Puedes navegar con teclado cuando el deck esté enfocado.
+
+<ImpressDeck id="demo-impress">
+  <ImpressStep x={0} y={0} scale={1}>
+    <h2>Logia Abierta</h2>
+    <p>Ensayos con espacio, movimiento y estructura.</p>
+  </ImpressStep>
+
+  <ImpressStep x={1200} y={0} rotate={10} scale={1}>
+    <h2>Mermaid</h2>
+    <p>Diagramas explicados con texto visible y rastreable.</p>
+  </ImpressStep>
+
+  <ImpressStep x={2400} y={400} rotate={-8} scale={1}>
+    <h2>SGE Ready</h2>
+    <p>Contenido claro, schema honesto y señales semánticas consistentes.</p>
+  </ImpressStep>
+</ImpressDeck>
+
+## Uso recomendado
+
+Usa MDX para piezas evergreen, guías, mapas conceptuales y páginas que necesiten componentes. Usa Sanity para el flujo editorial cotidiano.

@@ -1,0 +1,34 @@
+---
+type Props = {
+  x?: number;
+  y?: number;
+  z?: number;
+  rotate?: number;
+  rotateX?: number;
+  rotateY?: number;
+  scale?: number;
+};
+
+const {
+  x = 0,
+  y = 0,
+  z = 0,
+  rotate = 0,
+  rotateX = 0,
+  rotateY = 0,
+  scale = 1,
+} = Astro.props;
+---
+
+<section
+  class="step mdx-impress-step"
+  data-x={x}
+  data-y={y}
+  data-z={z}
+  data-rotate={rotate}
+  data-rotate-x={rotateX}
+  data-rotate-y={rotateY}
+  data-scale={scale}
+>
+  <slot />
+</section>

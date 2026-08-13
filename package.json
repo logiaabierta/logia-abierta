@@ -21,6 +21,7 @@
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.3.7",
     "astro-portabletext": "^0.13.0",
+    "impress.js": "^1.1.0",
     "reveal.js": "^6.0.1",
     "sharp": "^0.34.3",
     "tailwindcss": "^4.3.0"

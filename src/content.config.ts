@@ -17,4 +17,20 @@ const blog = defineCollection({
 		}),
 });
 
-export const collections = { blog };
+const essays = defineCollection({
+	loader: glob({ base: './src/content/essays', pattern: '**/*.{md,mdx}' }),
+	schema: ({ image }) =>
+		z.object({
+			title: z.string(),
+			description: z.string(),
+			lang: z.string().default('es'),
+			pubDate: z.coerce.date(),
+			updatedDate: z.coerce.date().optional(),
+			author: z.string().default('Logia Abierta'),
+			tags: z.array(z.string()).default([]),
+			featured: z.boolean().default(false),
+			heroImage: z.optional(image()),
+		}),
+});
+
+export const collections = { blog, essays };

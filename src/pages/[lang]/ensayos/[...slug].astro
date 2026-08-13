@@ -1,0 +1,210 @@
+---
+import { getCollection, render } from "astro:content";
+import Image from "astro/components/Image.astro";
+import Layout from "../../../layouts/Base.astro";
+import { SITE_TITLE, SITE_URL } from "../../../consts";
+import { formatDate } from "../../../utils/dateFormatter";
+import { LOCALES } from "../../../i18n";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("essays");
+  const paths = [];
+
+  for (const lang of Object.keys(LOCALES)) {
+    for (const entry of entries.filter((item) => item.data.lang === lang)) {
+      paths.push({
+        params: {
+          lang,
+          slug: entry.id.replace(/\.(md|mdx)$/, ""),
+        },
+        props: {
+          entry,
+        },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const locale = Astro.params.lang;
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const canonicalUrl = new URL(`/${locale}/ensayos/${entry.id.replace(/\.(md|mdx)$/, "")}`, SITE_URL).toString();
+const tags = entry.data.tags || [];
+const tableOfContents = headings
+  .filter((heading) => heading.depth >= 2 && heading.depth <= 6)
+  .map((heading) => ({
+    id: heading.slug,
+    text: heading.text,
+    level: heading.depth,
+  }));
+const articleSchema = [
+  {
+    "@type": "Article",
+    "@id": `${canonicalUrl}#article`,
+    headline: entry.data.title,
+    description: entry.data.description,
+    datePublished: entry.data.pubDate.toISOString(),
+    dateModified: (entry.data.updatedDate || entry.data.pubDate).toISOString(),
+    author: {
+      "@type": "Person",
+      name: entry.data.author,
+    },
+    publisher: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    mainEntityOfPage: {
+      "@id": `${canonicalUrl}#webpage`,
+    },
+    articleSection: "Ensayos",
+    keywords: tags.join(", "),
+    about: tags.map((name) => ({
+      "@type": "Thing",
+      name,
+    })),
+    isAccessibleForFree: true,
+    inLanguage: locale,
+  },
+  {
+    "@type": "BreadcrumbList",
+    "@id": `${canonicalUrl}#breadcrumb`,
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: new URL(`/${locale}`, SITE_URL).toString(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Ensayos",
+        item: new URL(`/${locale}/ensayos`, SITE_URL).toString(),
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: entry.data.title,
+        item: canonicalUrl,
+      },
+    ],
+  },
+];
+---
+
+<Layout
+  title={entry.data.title}
+  description={entry.data.description}
+  image={entry.data.heroImage}
+  type="article"
+  publishedTime={entry.data.pubDate.toISOString()}
+  modifiedTime={(entry.data.updatedDate || entry.data.pubDate).toISOString()}
+  author={entry.data.author}
+  tags={tags}
+  schema={articleSchema}
+>
+  <section class="section">
+    <div class="container">
+      <article class="mdx-article mx-auto max-w-6xl">
+        <div class="mx-auto max-w-4xl">
+          <div class="flex flex-wrap gap-2 mb-6">
+            <span class="badge badge-neutral uppercase">MDX</span>
+            {entry.data.featured && <span class="badge badge-outline uppercase">Featured</span>}
+          </div>
+          <h1>{entry.data.title}</h1>
+          <p class="mt-6 text-lg md:text-xl font-semibold">{entry.data.description}</p>
+          <div class="article-meta mt-8">
+            <span>{entry.data.author || SITE_TITLE}</span>
+            <span>{formatDate(entry.data.pubDate)}</span>
+            <span>Interactive essay</span>
+          </div>
+          {
+            tags.length > 0 && (
+              <nav class="article-tags mt-5" aria-label="Essay tags">
+                {tags.map((tag) => (
+                  <span>{tag}</span>
+                ))}
+              </nav>
+            )
+          }
+          {
+            entry.data.heroImage && (
+              <Image
+                src={entry.data.heroImage}
+                alt={entry.data.title}
+                width="1200"
+                height="630"
+                format="webp"
+                class="mt-10 aspect-[1200/630] w-full object-cover"
+              />
+            )
+          }
+        </div>
+
+        <div
+          class="article-shell mx-auto mt-12 grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_280px] gap-x-16 gap-y-10"
+        >
+          <div class="post max-w-3xl">
+            <Content />
+          </div>
+
+          <aside class="article-toc mdx-floating-toc">
+            {
+              tableOfContents.length > 0 && (
+                <nav aria-label="On this page">
+                  <p>On This Page</p>
+                  <ol>
+                    {tableOfContents.map((item) => (
+                      <li class={`toc-level-${item.level}`}>
+                        <a href={`#${item.id}`}>{item.text}</a>
+                      </li>
+                    ))}
+                  </ol>
+                </nav>
+              )
+            }
+          </aside>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <script is:inline>
+    (() => {
+      const links = Array.from(document.querySelectorAll(".article-toc a"));
+      if (!links.length) return;
+
+      const headings = links
+        .map((link) => document.getElementById(link.hash.slice(1)))
+        .filter(Boolean);
+
+      if (!headings.length) return;
+
+      const setCurrent = (id) => {
+        links.forEach((link) => {
+          const isCurrent = link.hash === `#${id}`;
+          if (isCurrent) {
+            link.setAttribute("aria-current", "true");
+          } else {
+            link.removeAttribute("aria-current");
+          }
+        });
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+          if (visible[0]) setCurrent(visible[0].target.id);
+        },
+        { rootMargin: "-20% 0px -65% 0px" },
+      );
+
+      headings.forEach((heading) => observer.observe(heading));
+      setCurrent(headings[0].id);
+    })();
+  </script>
+</Layout>

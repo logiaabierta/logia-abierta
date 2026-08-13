@@ -16,6 +16,7 @@
 html,
 body {
   @apply flex flex-col min-h-full flex-1 w-full overflow-x-hidden;
+  scroll-behavior: smooth;
 }
 
 .container {
@@ -70,12 +71,14 @@ body {
 }
 
 .post {
+  @apply text-lg leading-8;
+
   h2,
   h3,
   h4,
   h5,
   h6 {
-    @apply mt-4 mb-3;
+    @apply mt-10 mb-3 scroll-mt-24;
   }
 
   p {
@@ -120,4 +123,220 @@ body {
       @apply block mt-4 font-normal text-base;
     }
   }
+}
+
+.article-hero h1 {
+  @apply max-w-5xl;
+}
+
+.article-meta {
+  @apply flex flex-wrap items-center gap-x-3 gap-y-2 text-sm uppercase tracking-wide;
+}
+
+.article-meta > * + *::before {
+  content: "·";
+  margin-right: 0.75rem;
+  opacity: 0.65;
+}
+
+.article-license {
+  @apply flex flex-wrap items-center gap-2 text-sm;
+}
+
+.article-license a {
+  @apply font-bold underline underline-offset-4;
+}
+
+.article-tags {
+  @apply flex flex-wrap gap-x-3 gap-y-2 text-sm;
+}
+
+.article-tags a:first-child {
+  @apply font-bold;
+}
+
+.article-tags a {
+  @apply hover:underline underline-offset-4;
+}
+
+.article-shell {
+  max-width: 1120px;
+}
+
+.article-toc {
+  @apply hidden xl:block;
+}
+
+.article-toc > nav {
+  @apply sticky top-24 border-l pl-5 text-sm;
+}
+
+.article-toc p {
+  @apply mb-4 font-bold uppercase;
+}
+
+.article-toc ol {
+  @apply grid gap-3;
+}
+
+.article-toc a {
+  @apply block leading-snug opacity-70 transition hover:opacity-100;
+}
+
+.article-toc a[aria-current="true"] {
+  @apply font-bold opacity-100;
+}
+
+.article-toc .toc-level-3 {
+  @apply pl-4;
+}
+
+.article-toc .toc-level-4,
+.article-toc .toc-level-5,
+.article-toc .toc-level-6 {
+  @apply pl-8 text-xs;
+}
+
+.article-share {
+  @apply sticky top-[calc(6rem+18rem)] mt-10 grid gap-3 border-l pl-5 text-sm;
+}
+
+.heading-anchor {
+  @apply -mt-2 mb-4 inline-block text-sm font-bold opacity-0 transition hover:opacity-100;
+}
+
+.post h2:hover + .heading-anchor,
+.post h3:hover + .heading-anchor,
+.post h4:hover + .heading-anchor,
+.post h5:hover + .heading-anchor,
+.post h6:hover + .heading-anchor,
+.heading-anchor:focus {
+  @apply opacity-70;
+}
+
+.scroll-top-button {
+  @apply fixed bottom-5 right-5 z-40 shadow-lg transition duration-200;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.75rem);
+}
+
+.scroll-top-button[data-visible="true"] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.footer-wordmark {
+  @apply mt-8;
+}
+
+.footer-wordmark p {
+  @apply font-bold uppercase leading-none;
+  font-size: clamp(4.5rem, 17vw, 18rem);
+  letter-spacing: 0;
+  white-space: nowrap;
+  transform: translateY(0.12em);
+}
+
+.mdx-article .post > * + * {
+  @apply mt-6;
+}
+
+.mdx-mermaid {
+  @apply my-10 overflow-x-auto border p-4;
+}
+
+.mdx-figure-title {
+  @apply mb-4 text-sm font-bold uppercase;
+}
+
+.mdx-figure-caption {
+  @apply mt-4 text-sm opacity-70;
+}
+
+.mdx-mermaid-canvas {
+  @apply min-w-full;
+}
+
+.mdx-mermaid-canvas svg {
+  @apply mx-auto h-auto max-w-full;
+}
+
+.mdx-impress-shell {
+  @apply relative my-10 overflow-hidden border bg-base-200;
+  height: min(var(--deck-height), calc(100vh - 7rem));
+  margin-left: 50%;
+  transform: translateX(-50%);
+  width: min(calc(100vw - 2rem), 960px);
+}
+
+.mdx-impress {
+  @apply relative grid h-full w-full justify-items-center overflow-hidden p-6 pt-16;
+  align-items: start;
+}
+
+.mdx-impress::before {
+  @apply absolute left-4 top-4 text-xs font-bold uppercase opacity-50;
+  content: "Presentation";
+}
+
+.mdx-impress-step {
+  @apply absolute grid w-[min(86vw,860px)] content-start gap-4 border bg-base-100 p-8 shadow-sm transition duration-300;
+  min-height: min(50vh, 430px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(1rem) scale(0.98);
+}
+
+.mdx-impress-step.active {
+  min-height: min(50vh, 430px);
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.mdx-impress-controls {
+  @apply pointer-events-none absolute inset-x-4 top-4 z-20 grid grid-cols-[auto_auto_auto] items-center justify-between;
+}
+
+.mdx-impress-controls button {
+  @apply pointer-events-auto shadow-lg;
+}
+
+.mdx-impress-shell:fullscreen {
+  @apply m-0 h-screen w-screen border-0 bg-base-200;
+  transform: none;
+}
+
+.mdx-impress-shell:fullscreen .mdx-impress-step {
+  min-height: min(68vh, 680px);
+  width: min(88vw, 1040px);
+}
+
+.mdx-floating-toc {
+  @apply xl:block;
+}
+
+@media (min-width: 1280px) {
+  .mdx-floating-toc {
+    position: fixed;
+    top: 7rem;
+    right: max(1rem, calc((100vw - 1520px) / 2 + 1rem));
+    z-index: 30;
+    width: 260px;
+  }
+
+  .mdx-floating-toc > nav {
+    position: static;
+    max-height: calc(100vh - 9rem);
+    overflow-y: auto;
+    background: color-mix(in oklab, canvas 86%, transparent);
+    backdrop-filter: blur(12px);
+  }
+}
+
+:root[data-theme="dark"] .header .border-black,
+:root[data-theme="dark"] .border-black {
+  border-color: color-mix(in oklab, currentColor 28%, transparent);
 }

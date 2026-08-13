@@ -1,0 +1,33 @@
+# Logia Abierta
+
+> Revista digital multilingüe sobre masonería, cultura iniciática, filosofía, historia, simbolismo y pensamiento contemporáneo.
+
+Logia Abierta publishes educational and cultural content for readers interested in Freemasonry, comparative symbolism, philosophy, history, civic culture, and initiatic traditions. The site is available in Spanish, English, French, Italian, and Portuguese.
+
+## Primary Sections
+
+- [Home](https://logiaabierta.com/)
+- [Magazine](https://logiaabierta.com/es/blog)
+- [Podcast](https://logiaabierta.com/es/podcast)
+- [Authors](https://logiaabierta.com/es/authors)
+- [RSS Feed](https://logiaabierta.com/rss.xml)
+- [Sitemap](https://logiaabierta.com/sitemap-index.xml)
+
+## Content Notes
+
+- Content is editorial and informational.
+- Article pages include canonical URLs, Open Graph metadata, Twitter cards, and JSON-LD structured data.
+- Articles may include Creative Commons licensing details when shown on the page.
+- Article pages are written for human readers first, with clear headings, authorship, publication metadata, and crawlable HTML suitable for search snippets and AI summaries.
+
+## Crawling
+
+AI agents and search crawlers may crawl public pages for indexing, citation, summarization, and discovery when they respect robots.txt and canonical URLs.
+
+## Primary Topics
+
+- Freemasonry and Masonic culture
+- Initiatic symbolism
+- Philosophy and ethics
+- History and cultural interpretation
+- Comparative spiritual and civic traditions

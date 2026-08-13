@@ -2,6 +2,7 @@
 import { PortableText } from "astro-portabletext";
 import PortableImage from "./PortableImage.astro";
 import PortableTable from "./PortableTable.astro";
+import PortableHeading from "./PortableHeading.astro";
 
 const { body } = Astro.props;
 //console.log("body", body);
@@ -13,6 +14,13 @@ const { body } = Astro.props;
     type: {
       image: PortableImage,
       table: PortableTable,
+    },
+    block: {
+      h2: PortableHeading,
+      h3: PortableHeading,
+      h4: PortableHeading,
+      h5: PortableHeading,
+      h6: PortableHeading,
     },
   }}
 />

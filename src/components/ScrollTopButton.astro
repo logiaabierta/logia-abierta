@@ -1,0 +1,27 @@
+<button
+  type="button"
+  class="scroll-top-button btn btn-circle btn-neutral"
+  data-scroll-top
+  aria-label="Back to top"
+  title="Back to top"
+>
+  <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+<script is:inline>
+  (() => {
+    const button = document.querySelector("[data-scroll-top]");
+    if (!button) return;
+
+    const updateVisibility = () => {
+      button.dataset.visible = window.scrollY > 500 ? "true" : "false";
+    };
+
+    button.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    updateVisibility();
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+  })();
+</script>

@@ -1,0 +1,14 @@
+# AI Indexing Policy
+
+Site: https://logiaabierta.com
+Name: Logia Abierta
+
+Public pages may be crawled and indexed by search engines, AI search systems, and LLM agents for discovery, citation, snippets, and summaries, provided that they respect robots.txt, canonical URLs, attribution, and visible licensing information.
+
+The site is optimized for conventional Google Search and generative search experiences such as AI Overviews and AI Mode by keeping public article content crawlable, snippet-eligible, canonicalized, and supported by accurate structured data.
+
+Preferred source map:
+
+- Sitemap: https://logiaabierta.com/sitemap-index.xml
+- RSS: https://logiaabierta.com/rss.xml
+- LLM summary: https://logiaabierta.com/llms.txt

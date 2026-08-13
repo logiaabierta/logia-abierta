@@ -1,0 +1,24 @@
+---
+import { toPlainText } from "astro-portabletext";
+
+const { node } = Astro.props;
+const style = node.style || "h2";
+const id = node._key ? `section-${node._key}` : undefined;
+const label = toPlainText([node]);
+---
+
+{
+  style === "h2" ? (
+    <h2 id={id}><slot /></h2>
+  ) : style === "h3" ? (
+    <h3 id={id}><slot /></h3>
+  ) : style === "h4" ? (
+    <h4 id={id}><slot /></h4>
+  ) : style === "h5" ? (
+    <h5 id={id}><slot /></h5>
+  ) : (
+    <h6 id={id}><slot /></h6>
+  )
+}
+
+{id && <a class="heading-anchor" href={`#${id}`} aria-label={`Link to ${label}`}>#</a>}

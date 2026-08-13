@@ -1,0 +1,70 @@
+---
+title: "Demo MDX: Mermaid dentro de Impress.js"
+description: "Una prueba de presentación espacial donde cada paso de Impress.js puede contener diagramas Mermaid y texto rastreable."
+lang: "es"
+pubDate: "2026-08-12"
+author: "Logia Abierta"
+tags:
+  - MDX
+  - Impress.js
+  - Mermaid
+  - Presentaciones
+featured: true
+---
+
+import Mermaid from "../../components/mdx/Mermaid.astro";
+import ImpressDeck from "../../components/mdx/ImpressDeck.astro";
+import ImpressStep from "../../components/mdx/ImpressStep.astro";
+
+## Deck con diagramas
+
+Este demo prueba una presentación Impress.js donde los pasos pueden incluir diagramas Mermaid. El texto sigue visible en HTML, y el diagrama queda acompañado por contexto editorial.
+
+<ImpressDeck id="impress-mermaid-demo" height="78vh">
+  <ImpressStep x={0} y={0} scale={1}>
+    <h2>Mapa de una idea</h2>
+    <p>Un deck MDX puede combinar narrativa, visualización y estructura semántica.</p>
+  </ImpressStep>
+
+  <ImpressStep x={1300} y={0} rotate={8} scale={1}>
+    <h2>Flujo de lectura</h2>
+    <Mermaid
+      title="De concepto a publicación"
+      caption="El diagrama vive dentro de un paso de Impress.js."
+      chart={`
+flowchart TD
+  A[Concepto] --> B[Esquema]
+  B --> C[MDX]
+  C --> D[Mermaid]
+  C --> E[Impress.js]
+  D --> F[Pagina publicada]
+  E --> F
+`}/>
+  </ImpressStep>
+
+  <ImpressStep x={2600} y={300} rotate={-10} scale={1}>
+    <h2>Relaciones simbólicas</h2>
+    <Mermaid
+      title="Triada conceptual"
+      caption="Ejemplo sencillo de relaciones entre temas."
+      chart={`
+graph LR
+  Luz((Luz)) --- Conocimiento[Conocimiento]
+  Conocimiento --- Trabajo[Trabajo interior]
+  Trabajo --- Luz
+`}/>
+  </ImpressStep>
+
+  <ImpressStep x={3900} y={-150} rotate={4} scale={1}>
+    <h2>Cierre</h2>
+    <p>Si esto se ve bien, podemos crear presentaciones editoriales completas desde archivos MDX.</p>
+  </ImpressStep>
+</ImpressDeck>
+
+## Por qué sirve
+
+Esta combinación permite publicar una pieza que funciona como artículo, presentación y recurso visual al mismo tiempo.
+
+## Siguiente paso
+
+Podemos convertir ensayos largos en decks navegables sin perder SEO, porque los títulos, párrafos y captions siguen estando en el HTML.

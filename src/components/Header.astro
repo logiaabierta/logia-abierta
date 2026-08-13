@@ -2,6 +2,7 @@
 import Logo from "./Logo.astro";
 import Socials from "./Socials.astro";
 import LangSwitcher from "./i18n/LangSwitcher.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 
 import { menu } from "../consts";
 const locale = Astro.currentLocale;
@@ -29,6 +30,7 @@ const locale = Astro.currentLocale;
       <div class="ml-auto md:ml-0">
         <LangSwitcher locale={locale} />
       </div>
+      <ThemeToggle />
       <div class="flex-none md:hidden">
         <label
           for="my-drawer-2"

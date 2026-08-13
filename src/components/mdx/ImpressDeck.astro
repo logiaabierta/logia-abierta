@@ -1,0 +1,111 @@
+---
+type Props = {
+  id?: string;
+  height?: string;
+};
+
+const { id = `deck-${crypto.randomUUID()}`, height = "70vh" } = Astro.props;
+---
+
+<div
+  class="mdx-impress-shell"
+  data-impress-shell={id}
+  style={`--deck-height: ${height}`}
+  tabindex="0"
+>
+  <div id={id} class="mdx-impress" data-impress-deck>
+    <slot />
+  </div>
+  <div class="mdx-impress-controls" aria-label="Presentation controls">
+    <button type="button" class="btn btn-circle btn-neutral" data-impress-prev={id} aria-label="Previous slide">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+    <button type="button" class="btn btn-circle btn-neutral" data-impress-fullscreen={id} aria-label="Toggle fullscreen">
+      <i class="fa-solid fa-expand"></i>
+    </button>
+    <button type="button" class="btn btn-circle btn-neutral" data-impress-next={id} aria-label="Next slide">
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const initDecks = () => {
+      document.querySelectorAll("[data-impress-deck]:not([data-ready])").forEach((deck) => {
+        const steps = Array.from(deck.querySelectorAll(".step"));
+        const shell = deck.closest("[data-impress-shell]");
+        let current = 0;
+
+        const show = (index) => {
+          if (!steps.length) return;
+
+          current = (index + steps.length) % steps.length;
+          deck.dataset.activeIndex = String(current);
+
+          steps.forEach((step, stepIndex) => {
+            const isActive = stepIndex === current;
+            step.classList.toggle("active", isActive);
+            step.setAttribute("aria-hidden", isActive ? "false" : "true");
+          });
+        };
+
+        deck.dataset.totalSteps = String(steps.length);
+        deck.dataset.ready = "true";
+
+        shell?.addEventListener("keydown", (event) => {
+          if (event.key === "ArrowLeft") show(current - 1);
+          if (event.key === "ArrowRight" || event.key === " ") show(current + 1);
+        });
+
+        show(0);
+      });
+
+      document.querySelectorAll("[data-impress-prev]:not([data-bound])").forEach((button) => {
+        button.addEventListener("click", () => {
+          const deck = document.getElementById(button.dataset.impressPrev);
+          const current = Number(deck?.dataset.activeIndex || 0);
+          const total = Number(deck?.dataset.totalSteps || 1);
+          const next = (current - 1 + total) % total;
+          deck?.querySelectorAll(".step").forEach((step, index) => {
+            step.classList.toggle("active", index === next);
+            step.setAttribute("aria-hidden", index === next ? "false" : "true");
+          });
+          if (deck) deck.dataset.activeIndex = String(next);
+        });
+        button.dataset.bound = "true";
+      });
+
+      document.querySelectorAll("[data-impress-next]:not([data-bound])").forEach((button) => {
+        button.addEventListener("click", () => {
+          const deck = document.getElementById(button.dataset.impressNext);
+          const current = Number(deck?.dataset.activeIndex || 0);
+          const total = Number(deck?.dataset.totalSteps || 1);
+          const next = (current + 1) % total;
+          deck?.querySelectorAll(".step").forEach((step, index) => {
+            step.classList.toggle("active", index === next);
+            step.setAttribute("aria-hidden", index === next ? "false" : "true");
+          });
+          if (deck) deck.dataset.activeIndex = String(next);
+        });
+        button.dataset.bound = "true";
+      });
+
+      document.querySelectorAll("[data-impress-fullscreen]:not([data-bound])").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const shell = document.querySelector(`[data-impress-shell="${button.dataset.impressFullscreen}"]`);
+          if (!shell) return;
+
+          if (document.fullscreenElement) {
+            await document.exitFullscreen();
+          } else {
+            await shell.requestFullscreen();
+          }
+        });
+        button.dataset.bound = "true";
+      });
+    };
+
+    initDecks();
+  })();
+</script>

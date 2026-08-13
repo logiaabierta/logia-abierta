@@ -1,12 +1,12 @@
 {
-  "name": "Fyrre",
-  "short_name": "Fyrre",
+  "name": "Logia Abierta",
+  "short_name": "Logia Abierta",
   "start_url": "/",
-  "description": "A fast and modern starter template designed to help teams build and launch magazines, blogs, or brand websites efficiently, with a focus on performance and scalability.",
+  "description": "Revista digital multilingüe sobre masonería, cultura iniciática, filosofía, historia, simbolismo y pensamiento contemporáneo.",
   "display_override": ["window-control-overlay", "minimal-ui"],
   "orientation": "portrait",
-  "theme_color": "#ECC584",
-  "background_color": "#464646",
+  "theme_color": "#111111",
+  "background_color": "#ffffff",
   "display": "standalone",
   "icons": [
     {

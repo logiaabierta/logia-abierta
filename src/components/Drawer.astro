@@ -2,6 +2,7 @@
 import { menu } from "../consts";
 import Socials from "./Socials.astro";
 import Logo from "./Logo.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 const locale = Astro.currentLocale;
 
 ---
@@ -26,6 +27,9 @@ const locale = Astro.currentLocale;
       }
     </ul>
 
-    <Socials />
+    <div class="flex items-center justify-between gap-4">
+      <Socials />
+      <ThemeToggle />
+    </div>
   </div>
 </div>
