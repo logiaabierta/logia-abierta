@@ -1,11 +1,11 @@
 <button
   type="button"
-  class="scroll-top-button btn btn-circle btn-neutral"
+  class="scroll-top-button"
   data-scroll-top
   aria-label="Back to top"
   title="Back to top"
 >
-  <i class="fa-solid fa-arrow-up"></i>
+  <span aria-hidden="true">^</span>
 </button>
 
 <script is:inline>
@@ -13,15 +13,19 @@
     const button = document.querySelector("[data-scroll-top]");
     if (!button) return;
 
-    const updateVisibility = () => {
+    const updateProgress = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollable > 0 ? Math.min(window.scrollY / scrollable, 1) : 0;
       button.dataset.visible = window.scrollY > 500 ? "true" : "false";
+      button.style.setProperty("--scroll-progress", `${progress * 360}deg`);
     };
 
     button.addEventListener("click", () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
-    updateVisibility();
-    window.addEventListener("scroll", updateVisibility, { passive: true });
+    updateProgress();
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
   })();
 </script>

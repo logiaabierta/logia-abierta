@@ -30,21 +30,23 @@ const options = Object.entries(LOCALES).map(([lang, config]) => {
 
   return {
     lang,
-    label: config.label,
+    label: lang.toUpperCase(),
     path,
     selected: lang === locale,
   };
 });
 ---
 
-<div class="form-control w-fit">
-  <div class="input input-bordered flex items-center gap-2">
+<div class="language-switcher">
+  <div class="language-switcher-control">
+    <i class="fa-solid fa-globe" aria-hidden="true"></i>
     <label for="lang-switcher" class="sr-only"> Select language </label>
 
     <select
-      class="bg-transparent outline-none"
+      class="language-switcher-select"
       id="lang-switcher"
       data-language-select
+      aria-label="Select language"
     >
       {
         options.map((opt) => (

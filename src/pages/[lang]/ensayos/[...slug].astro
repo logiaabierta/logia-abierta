@@ -152,16 +152,28 @@ const articleSchema = [
           <aside class="article-toc mdx-floating-toc">
             {
               tableOfContents.length > 0 && (
-                <nav aria-label="On this page">
-                  <p>On This Page</p>
-                  <ol>
-                    {tableOfContents.map((item) => (
-                      <li class={`toc-level-${item.level}`}>
-                        <a href={`#${item.id}`}>{item.text}</a>
-                      </li>
-                    ))}
-                  </ol>
-                </nav>
+                <>
+                  <button
+                    type="button"
+                    class="article-toc-toggle"
+                    data-toc-toggle
+                    aria-expanded="false"
+                    aria-controls="article-toc-panel"
+                    aria-label="Open article navigation"
+                  >
+                    <i class="fa-solid fa-list-ul" aria-hidden="true"></i>
+                  </button>
+                  <nav id="article-toc-panel" aria-label="On this page" data-toc-panel>
+                    <p>On This Page</p>
+                    <ol>
+                      {tableOfContents.map((item) => (
+                        <li class={`toc-level-${item.level}`}>
+                          <a href={`#${item.id}`}>{item.text}</a>
+                        </li>
+                      ))}
+                    </ol>
+                  </nav>
+                </>
               )
             }
           </aside>
@@ -172,6 +184,23 @@ const articleSchema = [
 
   <script is:inline>
     (() => {
+      const tocToggle = document.querySelector("[data-toc-toggle]");
+      const tocPanel = document.querySelector("[data-toc-panel]");
+      if (tocToggle && tocPanel) {
+        const setOpen = (isOpen) => {
+          tocPanel.dataset.open = String(isOpen);
+          tocToggle.setAttribute("aria-expanded", String(isOpen));
+        };
+
+        tocToggle.addEventListener("click", () => {
+          setOpen(tocPanel.dataset.open !== "true");
+        });
+
+        tocPanel.querySelectorAll("a").forEach((link) => {
+          link.addEventListener("click", () => setOpen(false));
+        });
+      }
+
       const links = Array.from(document.querySelectorAll(".article-toc a"));
       if (!links.length) return;
 

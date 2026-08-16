@@ -1,24 +1,49 @@
 ---
 const socials = [
   {
-    url: "#",
+    url: "https://logiaabierta.substack.com",
+    title: "Substack",
+    icon: "fa-brands fa-substack",
+  },
+  {
+    url: "https://www.youtube.com/@logiaabierta",
+    title: "YouTube",
+    icon: "fa-brands fa-youtube",
+  },
+  {
+    url: "https://www.linkedin.com/company/logiaabierta",
+    title: "LinkedIn",
+    icon: "fa-brands fa-linkedin",
+  },
+  {
+    url: "https://bsky.app/profile/logiaabierta.bsky.social",
+    title: "Bluesky",
+    icon: "fa-brands fa-bluesky",
+  },
+  {
+    url: "https://mastodon.social/@logiaabierta",
+    title: "Mastodon",
+    icon: "fa-brands fa-mastodon",
+  },
+  {
+    url: "https://www.instagram.com/logiaabierta",
     title: "Instagram",
     icon: "fa-brands fa-instagram",
   },
   {
-    url: "#",
-    title: "Twitter",
-    icon: "fa-brands fa-x-twitter",
+    url: "https://www.threads.net/@logiaabierta",
+    title: "Threads",
+    icon: "fa-brands fa-threads",
   },
   {
-    url: "#",
-    title: "Youtube",
-    icon: "fa-brands fa-youtube",
+    url: "https://www.facebook.com/logiaabierta",
+    title: "Facebook",
+    icon: "fa-brands fa-facebook",
   },
   {
-    url: "#",
-    title: "Rss",
-    icon: "fa-solid fa-rss",
+    url: "https://www.pinterest.com/logiaabierta",
+    title: "Pinterest",
+    icon: "fa-brands fa-pinterest",
   },
 ];
 ---
@@ -29,6 +54,7 @@ const socials = [
       <a
         href={icon.url}
         title={icon.title}
+        aria-label={icon.title}
         class="hover:rotate-12"
         target="_blank"
         rel="noopener noreferrer"

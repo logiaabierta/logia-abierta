@@ -238,12 +238,42 @@ body {
 }
 
 .article-toc {
-  @apply hidden xl:block;
+  @apply xl:block;
+}
+
+.article-toc-toggle {
+  @apply fixed bottom-20 right-5 z-40 grid h-12 w-12 place-items-center rounded-full border text-sm shadow-lg xl:hidden;
+  background: color-mix(in oklab, var(--la-ink-panel) 82%, transparent);
+  border-color: color-mix(in oklab, var(--la-brass) 42%, transparent);
+  color: var(--la-bone);
+  backdrop-filter: blur(14px);
 }
 
 .article-toc > nav {
-  @apply sticky top-24 border-l pl-5 text-sm;
+  @apply fixed bottom-36 right-5 z-40 max-h-[min(28rem,60vh)] w-[min(20rem,calc(100vw-2.5rem))] overflow-y-auto border p-5 text-sm shadow-xl xl:sticky xl:top-24 xl:max-h-none xl:w-auto xl:overflow-visible xl:border-l xl:border-y-0 xl:border-r-0 xl:bg-transparent xl:p-0 xl:pl-5 xl:shadow-none;
   border-color: var(--la-border);
+  background: color-mix(in oklab, var(--la-surface) 72%, transparent);
+  backdrop-filter: blur(16px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.75rem);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.article-toc > nav[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+@media (min-width: 80rem) {
+  .article-toc > nav {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
 }
 
 .article-toc p {
@@ -308,11 +338,44 @@ body {
   @apply opacity-70;
 }
 
+.language-switcher {
+  @apply w-fit;
+}
+
+.language-switcher-control {
+  @apply flex h-9 items-center gap-1.5 border px-2 text-xs uppercase;
+  border-color: color-mix(in oklab, currentColor 18%, transparent);
+  background: color-mix(in oklab, var(--la-surface) 54%, transparent);
+}
+
+.language-switcher-control i {
+  @apply text-[0.7rem] opacity-60;
+}
+
+.language-switcher-select {
+  @apply bg-transparent pr-1 font-bold outline-none;
+  color: inherit;
+}
+
 .scroll-top-button {
-  @apply fixed bottom-5 right-5 z-40 shadow-lg transition duration-200;
+  @apply fixed bottom-5 right-5 z-40 grid h-12 w-12 place-items-center rounded-full text-lg font-bold shadow-lg transition duration-200;
+  --scroll-progress: 0deg;
+  background:
+    linear-gradient(var(--la-ink-panel), var(--la-ink-panel)) padding-box,
+    conic-gradient(
+      var(--la-amber) var(--scroll-progress),
+      color-mix(in oklab, var(--la-bone) 22%, transparent) 0
+    ) border-box;
+  border: 2px solid transparent;
+  color: var(--la-bone);
   opacity: 0;
   pointer-events: none;
   transform: translateY(0.75rem);
+}
+
+.scroll-top-button span {
+  @apply leading-none;
+  transform: translateY(0.12em);
 }
 
 .scroll-top-button[data-visible="true"] {
