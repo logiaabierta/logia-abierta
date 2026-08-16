@@ -1,0 +1,10 @@
+---
+const { value } = Astro.props;
+const language = value.language || "text";
+---
+
+<figure class="portable-code-block">
+  {value.title && <figcaption class="mdx-figure-title">{value.title}</figcaption>}
+  <pre data-language={language}><code>{value.code}</code></pre>
+  {value.caption && <figcaption class="mdx-figure-caption">{value.caption}</figcaption>}
+</figure>

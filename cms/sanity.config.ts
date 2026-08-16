@@ -28,7 +28,7 @@ export default defineConfig({
         {id: 'it', title: 'Italiano'},
         {id: 'pt', title: 'Português'},
       ],
-      schemaTypes: ['post', 'author', 'podcast'],
+      schemaTypes: ['post', 'podcast'],
       languageField: `language`,
       weakReferences: true,
       bulkPublish: true,
@@ -43,7 +43,7 @@ export default defineConfig({
         {id: 'pt', title: 'Português'},
       ],
       defaultLanguages: ['es'],
-      fieldTypes: ['string'],
+      fieldTypes: ['string', 'text'],
     }),
   ],
 

@@ -17,6 +17,11 @@ const {
   schema,
   faqItems,
   noindex,
+  canonicalUrl,
+  socialTitle,
+  socialDescription,
+  imageAlt,
+  alternateUrls,
 } = Astro.props;
 const locale = Astro.currentLocale || "en";
 ---
@@ -43,6 +48,11 @@ const locale = Astro.currentLocale || "en";
       schema={schema}
       faqItems={faqItems}
       noindex={noindex}
+      canonicalUrl={canonicalUrl}
+      socialTitle={socialTitle}
+      socialDescription={socialDescription}
+      imageAlt={imageAlt}
+      alternateUrls={alternateUrls}
     />
   </head>
   <body class="bg-base-100 text-base-content">

@@ -13,11 +13,23 @@ export async function getStaticPaths({ paginate }) {
   for (const lang of Object.keys(LOCALES)) {
     const authors = await client.fetch(
       `
-      *[_type == "author" && language == $lang]
+      *[
+        _type == "author" &&
+        defined(slug.current) &&
+        $lang in coalesce(activeLanguages, [language, "es"])
+      ]
       | order(_createdAt desc){
         name,
-        city,
-        job,
+        "activeLanguages": coalesce(activeLanguages, [language, "es"]),
+        showMasonicProfile,
+        primaryRites,
+        craftBodies,
+        philosophicalBodies,
+        appendantBodies,
+        honors,
+        "city": coalesce(cityLocalized[language == $lang][0].value, cityLocalized[language == "es"][0].value, city),
+        "job": coalesce(jobLocalized[language == $lang][0].value, jobLocalized[language == "es"][0].value, job),
+        "description": coalesce(shortBio[language == $lang][0].value, shortBio[language == "es"][0].value, descriptionLocalized[language == $lang][0].value, descriptionLocalized[language == "es"][0].value, description),
         "slug": slug.current,
         "image": image.asset->url
       }

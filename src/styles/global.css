@@ -221,6 +221,18 @@ body {
   background: color-mix(in oklab, var(--la-accent-2) 18%, transparent);
 }
 
+.author-badge {
+  @apply inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-bold uppercase leading-none;
+  border-color: var(--la-border);
+  background: color-mix(in oklab, var(--la-bone) 12%, transparent);
+  color: currentColor;
+}
+
+.author-badge-masonic {
+  background: color-mix(in oklab, var(--la-amber) 18%, transparent);
+  border-color: color-mix(in oklab, var(--la-brass) 58%, transparent);
+}
+
 .article-shell {
   max-width: 1120px;
 }
@@ -248,6 +260,25 @@ body {
 
 .article-toc a[aria-current="true"] {
   @apply font-bold opacity-100;
+}
+
+.article-faq {
+  @apply border-t pt-8;
+  border-color: var(--la-border);
+}
+
+.article-faq-item {
+  @apply border p-5;
+  border-color: var(--la-border);
+  background: color-mix(in oklab, var(--la-surface) 78%, transparent);
+}
+
+.article-faq-item summary {
+  @apply cursor-pointer font-bold;
+}
+
+.article-faq-item p {
+  @apply mt-4;
 }
 
 .article-toc .toc-level-3 {
@@ -362,6 +393,25 @@ body {
   @apply my-10 overflow-x-auto border p-4;
   border-color: var(--la-border);
   background: var(--la-surface);
+}
+
+.portable-code-block {
+  @apply my-10 overflow-hidden border;
+  border-color: var(--la-border);
+  background: var(--la-ink-panel);
+  color: var(--la-bone);
+}
+
+.portable-code-block pre {
+  @apply m-0 overflow-x-auto p-5 text-sm leading-relaxed;
+}
+
+.portable-code-block code {
+  @apply font-mono;
+}
+
+.portable-raw-mdx {
+  border-style: dashed;
 }
 
 .mdx-figure-title {

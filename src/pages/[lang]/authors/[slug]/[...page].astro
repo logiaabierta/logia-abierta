@@ -12,13 +12,29 @@ export async function getStaticPaths({ paginate }) {
 
   for (const lang of Object.keys(LOCALES)) {
     const authors = await client.fetch(
-      `*[ _type == "author" && language == $lang ]{
+      `*[
+        _type == "author" &&
+        defined(slug.current) &&
+        $lang in coalesce(activeLanguages, [language, "es"])
+      ]{
         name,
-        description,
-        city,
-        job,
+        "activeLanguages": coalesce(activeLanguages, [language, "es"]),
+        showMasonicProfile,
+        primaryRites,
+        craftBodies,
+        philosophicalBodies,
+        appendantBodies,
+        honors,
+        personalWebsite,
+        publicEmail,
+        contacts,
         bio,
-        language,
+        "description": coalesce(descriptionLocalized[language == $lang][0].value, descriptionLocalized[language == "es"][0].value, shortBio[language == $lang][0].value, shortBio[language == "es"][0].value, description),
+        "shortBio": coalesce(shortBio[language == $lang][0].value, shortBio[language == "es"][0].value, description),
+        "city": coalesce(cityLocalized[language == $lang][0].value, cityLocalized[language == "es"][0].value, city),
+        "job": coalesce(jobLocalized[language == $lang][0].value, jobLocalized[language == "es"][0].value, job),
+        "bioText": coalesce(bioLocalized[language == $lang][0].value, bioLocalized[language == "es"][0].value),
+        "masonicNotes": coalesce(masonicNotes[language == $lang][0].value, masonicNotes[language == "es"][0].value),
         "slug": slug.current,
         "image": image.asset->url
       }`,
@@ -79,23 +95,16 @@ const currentPage = page.currentPage;
 
 const totalPages = page.lastPage;
 
-const socials = [
-  {
-    url: "#",
-    title: "Instagram",
-    icon: "fa-brands fa-instagram",
-  },
-  {
-    url: "#",
-    title: "Twitter",
-    icon: "fa-brands fa-x-twitter",
-  },
-  {
-    url: "#",
-    title: "Youtube",
-    icon: "fa-brands fa-youtube",
-  },
-];
+const languageBadges = (author.activeLanguages || []).map((language) => String(language).toUpperCase());
+const masonicGroups = [
+  {title: "Ritos / sistemas", badges: author.primaryRites || []},
+  {title: "Craft", badges: author.craftBodies || []},
+  {title: "Cuerpos filosóficos", badges: author.philosophicalBodies || []},
+  {title: "Appendant bodies", badges: author.appendantBodies || []},
+  {title: "Distinciones", badges: author.honors || []},
+].filter((group) => group.badges.length > 0);
+const hasPublicMasonicProfile = author.showMasonicProfile !== false && masonicGroups.length > 0;
+const contacts = author.contacts || [];
 ---
 
 <Layout
@@ -134,27 +143,47 @@ const socials = [
             )
           }
 
-          <div
-            class="border-t pt-5 mt-10 flex flex-wrap items-center justify-between gap-4"
-          >
-            <p class="font-semibold uppercase">Follow</p>
+          {(contacts.length > 0 || author.personalWebsite || author.publicEmail) && (
+            <div
+              class="border-t pt-5 mt-10 flex flex-wrap items-center justify-between gap-4"
+            >
+              <p class="font-semibold uppercase">Follow</p>
 
-            <nav class="flex items-center gap-3 flex-wrap">
-              {
-                socials.map((icon) => (
+              <nav class="flex items-center gap-3 flex-wrap">
+                {author.personalWebsite && (
                   <a
-                    href={icon.url}
-                    title={icon.title}
+                    href={author.personalWebsite}
+                    title="Website"
                     class="hover:rotate-12"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <i class={icon.icon} />
+                    <i class="fa-solid fa-link" />
                   </a>
-                ))
-              }
-            </nav>
-          </div>
+                )}
+                {author.publicEmail && (
+                  <a
+                    href={`mailto:${author.publicEmail}`}
+                    title="Email"
+                    class="hover:rotate-12"
+                  >
+                    <i class="fa-solid fa-envelope" />
+                  </a>
+                )}
+                {contacts.map((contact) => (
+                  <a
+                    href={contact.link}
+                    title={contact.network}
+                    class="hover:rotate-12"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i class={contact.icon || "fa-solid fa-link"} />
+                  </a>
+                ))}
+              </nav>
+            </div>
+          )}
         </aside>
 
         <div>
@@ -172,16 +201,44 @@ const socials = [
                 <span>{author.city}</span>
               </p>
             </div>
+
+            {languageBadges.length > 0 && (
+              <div class="mt-6 flex flex-wrap gap-2">
+                {languageBadges.map((badge) => <span class="author-badge">{badge}</span>)}
+              </div>
+            )}
           </div>
 
           {
-            author.description && (
-              <p class="text-lg my-10 font-semibold">{author.description}</p>
+            (author.shortBio || author.description) && (
+              <p class="text-lg my-10 font-semibold">{author.shortBio || author.description}</p>
             )
           }
 
+          {hasPublicMasonicProfile && (
+            <div class="my-10 grid gap-5 border-y py-6">
+              {masonicGroups.map((group) => (
+                <div class="grid gap-2 md:grid-cols-[170px_1fr] md:items-start">
+                  <p class="text-sm font-bold uppercase opacity-70">{group.title}</p>
+                  <div class="flex flex-wrap gap-2">
+                    {group.badges.map((badge) => (
+                      <span class="author-badge author-badge-masonic">{badge}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              {author.masonicNotes && (
+                <p class="text-sm leading-relaxed opacity-80">{author.masonicNotes}</p>
+              )}
+            </div>
+          )}
+
           {
-            author?.bio && (
+            author.bioText ? (
+              <div class="prose prose-lg max-w-none mt-10">
+                {author.bioText.split("\n").map((paragraph) => paragraph.trim() && <p>{paragraph}</p>)}
+              </div>
+            ) : author?.bio && (
               <div class="prose prose-lg max-w-none mt-10">
                 <PortableComponent body={author.bio} />
               </div>

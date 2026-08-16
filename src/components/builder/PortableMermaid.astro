@@ -1,0 +1,7 @@
+---
+import Mermaid from "../mdx/Mermaid.astro";
+
+const { value } = Astro.props;
+---
+
+<Mermaid chart={value.chart} title={value.title} caption={value.caption} />

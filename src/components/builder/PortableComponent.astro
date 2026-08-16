@@ -3,6 +3,10 @@ import { PortableText } from "astro-portabletext";
 import PortableImage from "./PortableImage.astro";
 import PortableTable from "./PortableTable.astro";
 import PortableHeading from "./PortableHeading.astro";
+import PortableMermaid from "./PortableMermaid.astro";
+import PortableImpressDeck from "./PortableImpressDeck.astro";
+import PortableCodeBlock from "./PortableCodeBlock.astro";
+import PortableRawMdx from "./PortableRawMdx.astro";
 
 const { body } = Astro.props;
 //console.log("body", body);
@@ -14,6 +18,10 @@ const { body } = Astro.props;
     type: {
       image: PortableImage,
       table: PortableTable,
+      mermaidChart: PortableMermaid,
+      impressDeck: PortableImpressDeck,
+      codeBlock: PortableCodeBlock,
+      rawMdx: PortableRawMdx,
     },
     block: {
       h2: PortableHeading,

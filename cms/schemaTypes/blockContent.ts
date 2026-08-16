@@ -89,6 +89,147 @@ export default defineType({
       name: 'table',
       type: 'table',
     }),
+
+    defineArrayMember({
+      title: 'Mermaid chart',
+      name: 'mermaidChart',
+      type: 'object',
+      fields: [
+        {name: 'title', title: 'Title', type: 'string'},
+        {
+          name: 'chart',
+          title: 'Mermaid code',
+          type: 'text',
+          rows: 12,
+          validation: (Rule) => Rule.required(),
+        },
+        {name: 'caption', title: 'Caption', type: 'string'},
+      ],
+      preview: {
+        select: {
+          title: 'title',
+          subtitle: 'chart',
+        },
+        prepare({title, subtitle}) {
+          return {
+            title: title || 'Mermaid chart',
+            subtitle,
+          }
+        },
+      },
+    }),
+
+    defineArrayMember({
+      title: 'Impress deck',
+      name: 'impressDeck',
+      type: 'object',
+      fields: [
+        {name: 'title', title: 'Title', type: 'string'},
+        {
+          name: 'height',
+          title: 'Height',
+          type: 'string',
+          initialValue: '70vh',
+        },
+        {
+          name: 'slides',
+          title: 'Slides',
+          type: 'array',
+          validation: (Rule) => Rule.required().min(1),
+          of: [
+            {
+              type: 'object',
+              fields: [
+                {name: 'title', title: 'Title', type: 'string'},
+                {
+                  name: 'body',
+                  title: 'Body',
+                  type: 'text',
+                  rows: 8,
+                  description: 'Markdown-style plain text. Mermaid/code blocks can live in adjacent blocks.',
+                },
+              ],
+              preview: {
+                select: {
+                  title: 'title',
+                  subtitle: 'body',
+                },
+              },
+            },
+          ],
+        },
+      ],
+      preview: {
+        select: {
+          title: 'title',
+          slides: 'slides',
+        },
+        prepare({title, slides}) {
+          return {
+            title: title || 'Impress deck',
+            subtitle: `${slides?.length || 0} slides`,
+          }
+        },
+      },
+    }),
+
+    defineArrayMember({
+      title: 'Code block',
+      name: 'codeBlock',
+      type: 'object',
+      fields: [
+        {name: 'title', title: 'Title', type: 'string'},
+        {name: 'language', title: 'Language', type: 'string'},
+        {
+          name: 'code',
+          title: 'Code',
+          type: 'text',
+          rows: 12,
+          validation: (Rule) => Rule.required(),
+        },
+        {name: 'caption', title: 'Caption', type: 'string'},
+      ],
+      preview: {
+        select: {
+          title: 'title',
+          language: 'language',
+        },
+        prepare({title, language}) {
+          return {
+            title: title || 'Code block',
+            subtitle: language,
+          }
+        },
+      },
+    }),
+
+    defineArrayMember({
+      title: 'Raw Markdown / MDX note',
+      name: 'rawMdx',
+      type: 'object',
+      fields: [
+        {name: 'title', title: 'Title', type: 'string'},
+        {
+          name: 'content',
+          title: 'Raw Markdown / MDX',
+          type: 'text',
+          rows: 14,
+          description: 'Stored as raw text for advanced editorial snippets. Rendered as preformatted text on the site.',
+          validation: (Rule) => Rule.required(),
+        },
+      ],
+      preview: {
+        select: {
+          title: 'title',
+          subtitle: 'content',
+        },
+        prepare({title, subtitle}) {
+          return {
+            title: title || 'Raw Markdown / MDX',
+            subtitle,
+          }
+        },
+      },
+    }),
   ],
 })
-

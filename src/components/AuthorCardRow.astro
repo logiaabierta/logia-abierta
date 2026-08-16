@@ -1,8 +1,35 @@
 ---
 import Image from "astro/components/Image.astro";
 
-const { name, city, job, slug, image } = Astro.props;
+const {
+  name,
+  city,
+  job,
+  slug,
+  image,
+  description,
+  activeLanguages = [],
+  showMasonicProfile = true,
+  primaryRites = [],
+  craftBodies = [],
+  philosophicalBodies = [],
+  appendantBodies = [],
+  honors = [],
+} = Astro.props;
 const locale = Astro.currentLocale;
+const languageBadges = (activeLanguages || []).map((language) => String(language).toUpperCase());
+const masonicBadges =
+  showMasonicProfile === false
+    ? []
+    : [
+        ...new Set([
+          ...(primaryRites || []),
+          ...(craftBodies || []),
+          ...(philosophicalBodies || []),
+          ...(appendantBodies || []),
+          ...(honors || []),
+        ]),
+      ].slice(0, 5);
 
 ---
 
@@ -29,14 +56,14 @@ const locale = Astro.currentLocale;
       <div
         class="flex flex-wrap gap-x-6 gap-y-3 justify-start items-center mt-4"
       >
-        <p>
+        {job && <p>
           <b class="mr-2">Job</b>
           <span> {job} </span>
-        </p>
-        <p>
+        </p>}
+        {city && <p>
           <b class="mr-2">City</b>
           <span>{city}</span>
-        </p>
+        </p>}
         <button
           class="btn btn-link text-inherit uppercase no-underline group p-0"
         >
@@ -44,6 +71,13 @@ const locale = Astro.currentLocale;
           <i class="fa-solid fa-arrow-right group-hover:translate-x-1"></i>
         </button>
       </div>
+      {description && <p class="mt-4 text-sm opacity-70 basis-full">{description}</p>}
+      {(languageBadges.length > 0 || masonicBadges.length > 0) && (
+        <div class="mt-5 flex flex-wrap justify-center md:justify-start gap-2 basis-full">
+          {languageBadges.map((badge) => <span class="author-badge">{badge}</span>)}
+          {masonicBadges.map((badge) => <span class="author-badge author-badge-masonic">{badge}</span>)}
+        </div>
+      )}
     </div>
   </a>
 </article>

@@ -22,9 +22,20 @@ export async function getStaticPaths() {
       ]{
         title,
         description,
+        seoTitle,
+        seoDescription,
+        ogTitle,
+        ogDescription,
+        canonicalUrl,
+        noindex,
         duration,
         publishedAt,
         body,
+        enableFaqSchema,
+        faqs[]{
+          question,
+          answer
+        },
         _createdAt,
         _updatedAt,
         language,
@@ -34,6 +45,26 @@ export async function getStaticPaths() {
           mainImage.asset->url,
           thumbnail.asset->url
         ),
+        "imageAlt": coalesce(
+          mainImage.alt,
+          thumbnail.alt,
+          title
+        ),
+        "socialImage": coalesce(
+          socialImage.asset->url,
+          mainImage.asset->url,
+          thumbnail.asset->url
+        ),
+        "socialImageAlt": coalesce(
+          socialImage.alt,
+          mainImage.alt,
+          thumbnail.alt,
+          title
+        ),
+        "alternatePosts": *[_type == "translation.metadata" && references(^._id)][0].translations[].value->{
+          language,
+          "slug": slug.current
+        },
 
         "author": author->{
           name,
@@ -73,7 +104,11 @@ const categories = post.categories || [];
 const primaryCategory = categories[0];
 const copyrightUrl = "https://creativecommons.org/licenses/by-nc-sa/4.0/";
 const copyrightLabel = "CC BY-NC-SA 4.0";
-const readingTime = post.duration ? `${post.duration} min read` : "Short read";
+const plainText = toPlainText(post.body || []);
+const wordCount = plainText.trim().split(/\s+/).filter(Boolean).length;
+const estimatedReadingMinutes = Math.max(1, Math.ceil(wordCount / 200));
+const readingMinutes = post.duration || estimatedReadingMinutes;
+const readingTime = `${readingMinutes} min read`;
 const headingLevels = ["h2", "h3", "h4", "h5", "h6"];
 const tableOfContents = (post.body || [])
   .filter((block) => block._type === "block" && headingLevels.includes(block.style))
@@ -84,17 +119,35 @@ const tableOfContents = (post.body || [])
   }))
   .filter((item) => item.text);
 const canonicalUrl = new URL(`/${locale}/blog/${post.slug}`, SITE_URL).toString();
+const canonicalUrlOverride = post.canonicalUrl || canonicalUrl;
 const categoryUrl = primaryCategory
   ? new URL(`/${locale}/blog/${primaryCategory.slug}`, SITE_URL).toString()
   : new URL(`/${locale}/blog`, SITE_URL).toString();
 const absoluteImage = post.image ? new URL(post.image, SITE_URL).toString() : undefined;
+const socialImage = post.socialImage || post.image;
 const articleTags = categories.map((category) => category.title).filter(Boolean);
+const seoTitle = post.seoTitle || post.title;
+const seoDescription = post.seoDescription || post.description;
+const socialTitle = post.ogTitle || seoTitle;
+const socialDescription = post.ogDescription || seoDescription;
+const faqItems = (post.enableFaqSchema === false ? [] : post.faqs || [])
+  .filter((item) => item?.question && item?.answer)
+  .map((item) => ({
+    question: item.question,
+    answer: item.answer,
+  }));
+const alternateUrls = (post.alternatePosts || [])
+  .filter((alternate) => alternate?.language && alternate?.slug)
+  .map((alternate) => ({
+    lang: alternate.language,
+    url: `/${alternate.language}/blog/${alternate.slug}`,
+  }));
 const articleSchema = [
   {
     "@type": "Article",
-    "@id": `${canonicalUrl}#article`,
+    "@id": `${canonicalUrlOverride}#article`,
     headline: post.title,
-    description: post.description,
+    description: seoDescription || post.description,
     image: absoluteImage ? [absoluteImage] : undefined,
     datePublished: publishedDate,
     dateModified: post._updatedAt || publishedDate,
@@ -113,10 +166,12 @@ const articleSchema = [
       "@id": `${SITE_URL}/#organization`,
     },
     mainEntityOfPage: {
-      "@id": `${canonicalUrl}#webpage`,
+      "@id": `${canonicalUrlOverride}#webpage`,
     },
     articleSection: primaryCategory?.title,
     keywords: articleTags.join(", "),
+    wordCount,
+    timeRequired: `PT${readingMinutes}M`,
     about: articleTags.map((name) => ({
       "@type": "Thing",
       name,
@@ -127,7 +182,7 @@ const articleSchema = [
   },
   {
     "@type": "BreadcrumbList",
-    "@id": `${canonicalUrl}#breadcrumb`,
+    "@id": `${canonicalUrlOverride}#breadcrumb`,
     itemListElement: [
       {
         "@type": "ListItem",
@@ -151,7 +206,7 @@ const articleSchema = [
         "@type": "ListItem",
         position: 4,
         name: post.title,
-        item: canonicalUrl,
+        item: canonicalUrlOverride,
       },
     ],
   },
@@ -212,15 +267,22 @@ const socials = [
 ---
 
 <Layout
-  title={post.title}
-  description={post.description}
-  image={post.image}
+  title={seoTitle}
+  description={seoDescription || post.description}
+  image={socialImage}
+  imageAlt={post.socialImageAlt || post.imageAlt || post.title}
+  socialTitle={socialTitle}
+  socialDescription={socialDescription || seoDescription || post.description}
+  canonicalUrl={canonicalUrlOverride}
+  alternateUrls={alternateUrls}
   type="article"
   publishedTime={publishedDate}
   modifiedTime={post._updatedAt || publishedDate}
   author={post.author?.name}
   tags={articleTags}
   schema={articleSchema}
+  faqItems={faqItems}
+  noindex={post.noindex}
 >
   <section class="mt-10">
     <div class="container">
@@ -276,7 +338,7 @@ const socials = [
         <div class="mt-10">
         <Image
           src={post.image}
-          alt={post.title}
+          alt={post.imageAlt || post.title}
           width="1200"
           height="600"
           format="webp"
@@ -298,6 +360,21 @@ const socials = [
           post.body && (
             <article class="post max-w-3xl">
               <PortableComponent body={post.body} />
+              {
+                faqItems.length > 0 && (
+                  <section class="article-faq mt-12" id="faq">
+                    <h2>FAQs</h2>
+                    <div class="grid gap-4 mt-6">
+                      {faqItems.map((item) => (
+                        <details class="article-faq-item">
+                          <summary>{item.question}</summary>
+                          <p>{item.answer}</p>
+                        </details>
+                      ))}
+                    </div>
+                  </section>
+                )
+              }
             </article>
           )
         }

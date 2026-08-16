@@ -6,10 +6,22 @@ const locale = Astro.currentLocale;
 
 const authors = await client.fetch(
   `
-  *[_type == "author" && language == $locale] | order(_createdAt desc)[0...6]{
+  *[
+    _type == "author" &&
+    defined(slug.current) &&
+    $locale in coalesce(activeLanguages, [language, "es"])
+  ] | order(_createdAt desc)[0...6]{
     name,
-    city,
-    job,
+    "activeLanguages": coalesce(activeLanguages, [language, "es"]),
+    showMasonicProfile,
+    primaryRites,
+    craftBodies,
+    philosophicalBodies,
+    appendantBodies,
+    honors,
+    "city": coalesce(cityLocalized[language == $locale][0].value, cityLocalized[language == "es"][0].value, city),
+    "job": coalesce(jobLocalized[language == $locale][0].value, jobLocalized[language == "es"][0].value, job),
+    "description": coalesce(shortBio[language == $locale][0].value, shortBio[language == "es"][0].value, descriptionLocalized[language == $locale][0].value, descriptionLocalized[language == "es"][0].value, description),
     "slug": slug.current,
     "image": image.asset->url
   }

@@ -1,0 +1,8 @@
+---
+const { value } = Astro.props;
+---
+
+<figure class="portable-code-block portable-raw-mdx">
+  {value.title && <figcaption class="mdx-figure-title">{value.title}</figcaption>}
+  <pre data-language="mdx"><code>{value.content}</code></pre>
+</figure>
