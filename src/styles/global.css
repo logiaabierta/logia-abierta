@@ -332,19 +332,22 @@ body {
   @apply mt-8 w-screen overflow-hidden;
   margin-left: 50%;
   transform: translateX(-50%);
+  color: color-mix(in oklab, var(--la-bone) 72%, var(--la-brass));
+  opacity: 0.46;
 }
 
 .footer-wordmark svg {
   @apply block w-full;
-  height: clamp(5.75rem, 15.5vw, 17rem);
+  height: clamp(6.25rem, 15.5vw, 17rem);
 }
 
 .footer-wordmark text {
   fill: currentColor;
   font-family: var(--font-atkinson), sans-serif;
-  font-size: 168px;
+  font-size: 160px;
   font-weight: 700;
   text-transform: uppercase;
+  filter: drop-shadow(0 1.5rem 2.75rem color-mix(in oklab, var(--la-amber) 32%, transparent));
 }
 
 .footer-btm {
