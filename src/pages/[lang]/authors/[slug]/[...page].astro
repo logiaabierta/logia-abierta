@@ -31,7 +31,15 @@ export async function getStaticPaths({ paginate }) {
         bio,
         "description": coalesce(descriptionLocalized[language == $lang][0].value, descriptionLocalized[language == "es"][0].value, shortBio[language == $lang][0].value, shortBio[language == "es"][0].value, description),
         "shortBio": coalesce(shortBio[language == $lang][0].value, shortBio[language == "es"][0].value, description),
-        "city": coalesce(cityLocalized[language == $lang][0].value, cityLocalized[language == "es"][0].value, city),
+        "city": coalesce(
+          select(defined(cityName) && defined(country) => cityName + ", " + country),
+          cityName,
+          country,
+          otherLocation,
+          cityLocalized[language == $lang][0].value,
+          cityLocalized[language == "es"][0].value,
+          city
+        ),
         "job": coalesce(jobLocalized[language == $lang][0].value, jobLocalized[language == "es"][0].value, job),
         "bioText": coalesce(bioLocalized[language == $lang][0].value, bioLocalized[language == "es"][0].value),
         "masonicNotes": coalesce(masonicNotes[language == $lang][0].value, masonicNotes[language == "es"][0].value),

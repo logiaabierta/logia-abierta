@@ -27,7 +27,15 @@ export async function getStaticPaths({ paginate }) {
         philosophicalBodies,
         appendantBodies,
         honors,
-        "city": coalesce(cityLocalized[language == $lang][0].value, cityLocalized[language == "es"][0].value, city),
+        "city": coalesce(
+          select(defined(cityName) && defined(country) => cityName + ", " + country),
+          cityName,
+          country,
+          otherLocation,
+          cityLocalized[language == $lang][0].value,
+          cityLocalized[language == "es"][0].value,
+          city
+        ),
         "job": coalesce(jobLocalized[language == $lang][0].value, jobLocalized[language == "es"][0].value, job),
         "description": coalesce(shortBio[language == $lang][0].value, shortBio[language == "es"][0].value, descriptionLocalized[language == $lang][0].value, descriptionLocalized[language == "es"][0].value, description),
         "slug": slug.current,

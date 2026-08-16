@@ -97,7 +97,7 @@ export const structure: StructureResolver = (S) =>
               authorListItem(
                 S,
                 'Autores incompletos',
-                '!defined(image.asset) || !defined(activeLanguages[0]) || !defined(shortBio[0])',
+                '!defined(image.asset) || !defined(activeLanguages[0]) || !defined(shortBio[0]) || !defined(country) || !defined(cityName)',
               ),
             ]),
         ),
@@ -221,6 +221,7 @@ export const structure: StructureResolver = (S) =>
               authorListItem(S, 'Sin foto', '!defined(image.asset)'),
               authorListItem(S, 'Sin idiomas activos', '!defined(activeLanguages[0])'),
               authorListItem(S, 'Sin bio corta', '!defined(shortBio[0])'),
+              authorListItem(S, 'Sin ubicación', '!defined(country) || !defined(cityName)'),
               authorListItem(
                 S,
                 'Perfil masónico visible',

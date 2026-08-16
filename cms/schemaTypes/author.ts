@@ -8,6 +8,43 @@ const languageOptions = [
   {title: 'PT', value: 'pt'},
 ]
 
+const countryOptions = [
+  {title: 'República Dominicana', value: 'República Dominicana'},
+  {title: 'Estados Unidos', value: 'Estados Unidos'},
+  {title: 'Puerto Rico', value: 'Puerto Rico'},
+  {title: 'México', value: 'México'},
+  {title: 'Colombia', value: 'Colombia'},
+  {title: 'Venezuela', value: 'Venezuela'},
+  {title: 'España', value: 'España'},
+  {title: 'Francia', value: 'Francia'},
+  {title: 'Italia', value: 'Italia'},
+  {title: 'Portugal', value: 'Portugal'},
+  {title: 'Brasil', value: 'Brasil'},
+  {title: 'Argentina', value: 'Argentina'},
+  {title: 'Chile', value: 'Chile'},
+  {title: 'Perú', value: 'Perú'},
+]
+
+const cityOptions = [
+  {title: 'Santo Domingo', value: 'Santo Domingo'},
+  {title: 'Santiago de los Caballeros', value: 'Santiago de los Caballeros'},
+  {title: 'San Juan', value: 'San Juan'},
+  {title: 'Miami', value: 'Miami'},
+  {title: 'New York', value: 'New York'},
+  {title: 'Ciudad de México', value: 'Ciudad de México'},
+  {title: 'Bogotá', value: 'Bogotá'},
+  {title: 'Caracas', value: 'Caracas'},
+  {title: 'Madrid', value: 'Madrid'},
+  {title: 'Barcelona', value: 'Barcelona'},
+  {title: 'Paris', value: 'Paris'},
+  {title: 'Rome', value: 'Rome'},
+  {title: 'Lisbon', value: 'Lisbon'},
+  {title: 'São Paulo', value: 'São Paulo'},
+  {title: 'Buenos Aires', value: 'Buenos Aires'},
+  {title: 'Santiago de Chile', value: 'Santiago de Chile'},
+  {title: 'Lima', value: 'Lima'},
+]
+
 const riteOptions = [
   {title: 'RAPM - Rito Antiguo y Primitivo de Memphis', value: 'RAPM'},
   {title: 'RAPMM - Rito Antiguo y Primitivo de Memphis-Misraim', value: 'RAPMM'},
@@ -104,10 +141,29 @@ export default defineType({
       group: 'localized',
     }),
     defineField({
-      name: 'cityLocalized',
-      title: 'Ciudad / país',
-      type: 'internationalizedArrayString',
-      group: 'localized',
+      name: 'country',
+      title: 'País',
+      type: 'string',
+      group: 'identity',
+      options: {
+        list: countryOptions,
+      },
+    }),
+    defineField({
+      name: 'cityName',
+      title: 'Ciudad',
+      type: 'string',
+      group: 'identity',
+      options: {
+        list: cityOptions,
+      },
+    }),
+    defineField({
+      name: 'otherLocation',
+      title: 'Otra ubicación',
+      type: 'string',
+      group: 'identity',
+      description: 'Usar solo si el país o ciudad no aparece en las listas controladas.',
     }),
     defineField({
       name: 'shortBio',
@@ -145,7 +201,7 @@ export default defineType({
       of: [{type: 'string'}],
       options: {
         list: riteOptions,
-        layout: 'tags',
+        layout: 'grid',
       },
     }),
     defineField({
@@ -156,7 +212,7 @@ export default defineType({
       of: [{type: 'string'}],
       options: {
         list: riteOptions,
-        layout: 'tags',
+        layout: 'grid',
       },
     }),
     defineField({
@@ -167,7 +223,7 @@ export default defineType({
       of: [{type: 'string'}],
       options: {
         list: [...riteOptions, ...bodyOptions],
-        layout: 'tags',
+        layout: 'grid',
       },
     }),
     defineField({
@@ -178,7 +234,7 @@ export default defineType({
       of: [{type: 'string'}],
       options: {
         list: bodyOptions,
-        layout: 'tags',
+        layout: 'grid',
       },
     }),
     defineField({
@@ -189,7 +245,7 @@ export default defineType({
       of: [{type: 'string'}],
       options: {
         list: honorOptions,
-        layout: 'tags',
+        layout: 'grid',
       },
     }),
     defineField({
@@ -260,6 +316,13 @@ export default defineType({
       name: 'city',
       title: 'Legacy city',
       type: 'string',
+      group: 'legacy',
+      hidden: true,
+    }),
+    defineField({
+      name: 'cityLocalized',
+      title: 'Legacy localized city',
+      type: 'internationalizedArrayString',
       group: 'legacy',
       hidden: true,
     }),

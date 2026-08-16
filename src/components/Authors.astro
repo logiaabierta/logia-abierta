@@ -19,7 +19,15 @@ const authors = await client.fetch(
     philosophicalBodies,
     appendantBodies,
     honors,
-    "city": coalesce(cityLocalized[language == $locale][0].value, cityLocalized[language == "es"][0].value, city),
+    "city": coalesce(
+      select(defined(cityName) && defined(country) => cityName + ", " + country),
+      cityName,
+      country,
+      otherLocation,
+      cityLocalized[language == $locale][0].value,
+      cityLocalized[language == "es"][0].value,
+      city
+    ),
     "job": coalesce(jobLocalized[language == $locale][0].value, jobLocalized[language == "es"][0].value, job),
     "description": coalesce(shortBio[language == $locale][0].value, shortBio[language == "es"][0].value, descriptionLocalized[language == $locale][0].value, descriptionLocalized[language == "es"][0].value, description),
     "slug": slug.current,
