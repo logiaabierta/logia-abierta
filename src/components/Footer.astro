@@ -2,6 +2,7 @@
 const today = new Date();
 import Logo from "./Logo.astro";
 import Socials from "./Socials.astro";
+import SiteSignature from "./SiteSignature.astro";
 const locale = Astro.currentLocale;
 
 const navbar = [
@@ -35,6 +36,10 @@ const navbar = [
       {
         url: "/authors",
         title: "Authors",
+      },
+      {
+        url: "/links",
+        title: "Links",
       },
     ],
   },
@@ -131,10 +136,7 @@ const navbar = [
   </div>
   <div class="footer-btm w-full">
     <div class="container flex flex-wrap gap-4 justify-between items-center">
-      <p class="text-xs opacity-50">
-        &copy; {today.getFullYear()} Made by Logia Abierta - Powered by Astro
-        + Sanity CMS
-      </p>
+      <SiteSignature />
       <Socials />
     </div>
   </div>

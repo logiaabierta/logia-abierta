@@ -1,0 +1,356 @@
+---
+import Image from "astro/components/Image.astro";
+import Layout from "../layouts/Links.astro";
+import SiteSignature from "./SiteSignature.astro";
+import Socials from "./Socials.astro";
+import { client } from "../lib/sanity";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+
+type Props = {
+  locale?: string;
+};
+
+const { locale = Astro.currentLocale || "es" } = Astro.props as Props;
+
+const profileLinks = [
+  {
+    title: "Sitio principal",
+    description: "Artículos, ensayos, podcast y archivo editorial.",
+    url: `/${locale}`,
+    icon: "fa-solid fa-house",
+  },
+  {
+    title: "Contacto",
+    description: "Escríbenos a hola@logiaabierta.com.",
+    url: "mailto:hola@logiaabierta.com",
+    icon: "fa-solid fa-envelope",
+  },
+  {
+    title: "Substack",
+    description: "Newsletter y publicaciones por correo.",
+    url: "https://logiaabierta.substack.com",
+    icon: "fa-brands fa-substack",
+  },
+  {
+    title: "Ko-fi",
+    description: "Apoya, suscríbete o compra en la tienda.",
+    url: "https://ko-fi.com/logiaabierta",
+    icon: "fa-brands fa-ko-fi",
+  },
+  {
+    title: "Ko-fi Memberships",
+    description: "Suscripciones y apoyo recurrente.",
+    url: "https://ko-fi.com/logiaabierta/tiers",
+    icon: "fa-solid fa-circle-dollar-to-slot",
+  },
+  {
+    title: "Spotify",
+    description: "Sigue el podcast y activa notificaciones.",
+    url: "https://open.spotify.com/show/2AEigQBcKbh1x9f74gqebU",
+    icon: "fa-brands fa-spotify",
+  },
+  {
+    title: "YouTube",
+    description: "Videos, podcast y contenido audiovisual.",
+    url: "https://www.youtube.com/@logiaabierta",
+    icon: "fa-brands fa-youtube",
+  },
+  {
+    title: "RSS Feed",
+    description: "Agrega Logia Abierta a tu lector RSS.",
+    url: "/rss.xml",
+    icon: "fa-solid fa-rss",
+  },
+  {
+    title: "Instagram",
+    description: "Visuales, clips y novedades.",
+    url: "https://www.instagram.com/logiaabierta",
+    icon: "fa-brands fa-instagram",
+  },
+  {
+    title: "Threads",
+    description: "Conversación y notas rápidas.",
+    url: "https://www.threads.net/@logiaabierta",
+    icon: "fa-brands fa-threads",
+  },
+  {
+    title: "Bluesky",
+    description: "Notas breves y conversación pública.",
+    url: "https://bsky.app/profile/logiaabierta.bsky.social",
+    icon: "fa-brands fa-bluesky",
+  },
+  {
+    title: "Mastodon",
+    description: "Publicaciones federadas.",
+    url: "https://mastodon.social/@logiaabierta",
+    icon: "fa-brands fa-mastodon",
+  },
+  {
+    title: "Facebook",
+    description: "Comunidad y publicaciones.",
+    url: "https://www.facebook.com/logiaabierta",
+    icon: "fa-brands fa-facebook",
+  },
+  {
+    title: "LinkedIn",
+    description: "Actualizaciones editoriales e institucionales.",
+    url: "https://www.linkedin.com/company/logiaabierta",
+    icon: "fa-brands fa-linkedin",
+  },
+  {
+    title: "Discord",
+    description: "Canal de comunidad y conversación.",
+    url: "https://discord.gg/logiaabierta",
+    icon: "fa-brands fa-discord",
+  },
+  {
+    title: "Pinterest",
+    description: "Colecciones visuales e inspiración.",
+    url: "https://www.pinterest.com/logiaabierta",
+    icon: "fa-brands fa-pinterest",
+  },
+  {
+    title: "Tumblr",
+    description: "Archivo social y publicaciones breves.",
+    url: "https://logiaabierta.tumblr.com",
+    icon: "fa-brands fa-tumblr",
+  },
+];
+
+const paidLinks = [
+  {
+    title: "Ko-fi Support",
+    description: "Aportes libres para sostener Logia Abierta.",
+    url: "https://ko-fi.com/logiaabierta",
+    icon: "fa-brands fa-ko-fi",
+  },
+  {
+    title: "Ko-fi Memberships",
+    description: "Suscripciones y apoyo recurrente.",
+    url: "https://ko-fi.com/logiaabierta/tiers",
+    icon: "fa-solid fa-circle-dollar-to-slot",
+  },
+  {
+    title: "Ko-fi Shop",
+    description: "Tienda y recursos digitales.",
+    url: "https://ko-fi.com/logiaabierta/shop",
+    icon: "fa-solid fa-store",
+  },
+  {
+    title: "Substack",
+    description: "Newsletter, archivo y piezas editoriales.",
+    url: "https://logiaabierta.substack.com",
+    icon: "fa-brands fa-substack",
+  },
+  {
+    title: "Spotify",
+    description: "Suscríbete al podcast desde Spotify.",
+    url: "https://open.spotify.com/show/2AEigQBcKbh1x9f74gqebU",
+    icon: "fa-brands fa-spotify",
+  },
+];
+
+const posts = await client.fetch(
+  `
+  *[_type == "post" && language == $locale]
+  | order(coalesce(publishedAt, _createdAt) desc)[0...3]{
+    title,
+    description,
+    "slug": slug.current,
+    "image": coalesce(thumbnail.asset->url, mainImage.asset->url)
+  }
+  `,
+  { locale },
+);
+
+const podcasts = await client.fetch(
+  `
+  *[_type == "podcast" && language == $locale]
+  | order(coalesce(publishedAt, _createdAt) desc)[0...3]{
+    title,
+    description,
+    duration,
+    episod,
+    listen,
+    "slug": slug.current,
+    "image": mainImage.asset->url
+  }
+  `,
+  { locale },
+);
+
+const youtubeEpisodes = podcasts.map((podcast) => {
+  const youtube = (podcast.listen || []).find((item) => {
+    const network = String(item?.network || "").toLowerCase();
+    const link = String(item?.link || "").toLowerCase();
+
+    return network.includes("youtube") || link.includes("youtube.com") || link.includes("youtu.be");
+  });
+
+  return {
+    ...podcast,
+    youtubeUrl: youtube?.link || "https://www.youtube.com/@logiaabierta/videos",
+  };
+});
+---
+
+<Layout
+  title={`${SITE_TITLE} Links`}
+  description={`Todos los enlaces oficiales de ${SITE_TITLE}: redes, newsletter, Ko-fi, tienda, artículos y podcast.`}
+  type="website"
+>
+  <section class="links-hub">
+    <div class="links-hub-inner">
+      <header class="links-profile">
+        <a href={`/${locale}`} class="links-logo" aria-label={SITE_TITLE}>
+          LA
+        </a>
+        <div>
+          <p class="links-kicker">Revista digital</p>
+          <h1>{SITE_TITLE}</h1>
+          <p>{SITE_DESCRIPTION}</p>
+        </div>
+      </header>
+
+      <div class="links-grid">
+        {profileLinks.map((link) => (
+          <a class="links-card" href={link.url} target={link.url.startsWith("http") ? "_blank" : undefined} rel={link.url.startsWith("http") ? "noopener noreferrer" : undefined}>
+            <i class={link.icon} aria-hidden="true"></i>
+            <span>
+              <b>{link.title}</b>
+              <small>{link.description}</small>
+            </span>
+          </a>
+        ))}
+      </div>
+
+      <section class="links-section">
+        <div class="links-section-heading">
+          <p class="links-kicker">Gratis</p>
+          <h2>Últimos artículos</h2>
+        </div>
+        <div class="links-content-grid">
+          {posts.map((post) => (
+            <a class="links-feature" href={`/${locale}/blog/${post.slug}`}>
+              {post.image && (
+                <Image
+                  src={post.image}
+                  alt={post.title}
+                  width="320"
+                  height="180"
+                  format="webp"
+                  quality={70}
+                />
+              )}
+              <span>
+                <b>{post.title}</b>
+                {post.description && <small>{post.description}</small>}
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section class="links-section">
+        <div class="links-section-heading">
+          <p class="links-kicker">Audio y video</p>
+          <h2>Últimos podcasts</h2>
+        </div>
+        <div class="links-content-grid">
+          {podcasts.map((podcast) => (
+            <a class="links-feature" href={`/${locale}/podcast/${podcast.slug}`}>
+              {podcast.image && (
+                <Image
+                  src={podcast.image}
+                  alt={podcast.title}
+                  width="320"
+                  height="180"
+                  format="webp"
+                  quality={70}
+                />
+              )}
+              <span>
+                <b>{podcast.title}</b>
+                <small>
+                  {podcast.episod ? `Ep. ${podcast.episod}` : "Podcast"}
+                  {podcast.duration ? ` · ${podcast.duration} min` : ""}
+                </small>
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section class="links-section">
+        <div class="links-section-heading">
+          <p class="links-kicker">YouTube</p>
+          <h2>Últimos episodios</h2>
+        </div>
+        <div class="links-content-grid">
+          {youtubeEpisodes.map((episode) => (
+            <a class="links-feature links-feature-external" href={episode.youtubeUrl} target="_blank" rel="noopener noreferrer">
+              {episode.image && (
+                <Image
+                  src={episode.image}
+                  alt={episode.title}
+                  width="320"
+                  height="180"
+                  format="webp"
+                  quality={70}
+                />
+              )}
+              <span>
+                <b>{episode.title}</b>
+                <small>
+                  {episode.episod ? `Ep. ${episode.episod}` : "Video"}
+                  {" · Ver en YouTube"}
+                </small>
+              </span>
+              <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section class="links-section">
+        <div class="links-section-heading">
+          <p class="links-kicker">Apoya el proyecto</p>
+          <h2>Suscripciones, tienda y apoyo</h2>
+          <p class="links-section-note">
+            Las piezas escritas premium vivirán mejor en Substack o Ko-fi. Spotify queda para seguir el podcast y recibir nuevos episodios.
+          </p>
+        </div>
+        <div class="links-grid links-grid-compact">
+          {paidLinks.map((link) => (
+            <a class="links-card" href={link.url} target="_blank" rel="noopener noreferrer">
+              <i class={link.icon} aria-hidden="true"></i>
+              <span>
+                <b>{link.title}</b>
+                <small>{link.description}</small>
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <div class="links-wordmark" aria-label={SITE_TITLE}>
+        <svg
+          viewBox="0 0 1200 190"
+          role="img"
+          aria-labelledby="links-wordmark-title"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <title id="links-wordmark-title">{SITE_TITLE}</title>
+          <text x="600" y="150" text-anchor="middle" textLength="1160" lengthAdjust="spacingAndGlyphs">{SITE_TITLE}</text>
+        </svg>
+      </div>
+
+      <footer class="links-footer">
+        <div class="links-socials">
+          <Socials />
+        </div>
+        <SiteSignature />
+      </footer>
+    </div>
+  </section>
+</Layout>

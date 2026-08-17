@@ -1,0 +1,13 @@
+---
+import LinksHub from "../../components/LinksHub.astro";
+import { LOCALES } from "../../i18n";
+
+export const getStaticPaths = () =>
+  Object.keys(LOCALES).map((lang) => ({
+    params: { lang },
+  }));
+
+const locale = Astro.params.lang;
+---
+
+<LinksHub locale={locale} />

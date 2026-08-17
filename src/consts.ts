@@ -44,4 +44,8 @@ export const menu = [
     url: "/ensayos",
     title: "Ensayos",
   },
+  {
+    url: "/links",
+    title: "Links",
+  },
 ];

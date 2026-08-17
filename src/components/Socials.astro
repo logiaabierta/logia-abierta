@@ -6,24 +6,29 @@ const socials = [
     icon: "fa-brands fa-substack",
   },
   {
+    url: "https://ko-fi.com/logiaabierta",
+    title: "Ko-fi",
+    icon: "fa-brands fa-ko-fi",
+  },
+  {
+    url: "https://open.spotify.com/show/2AEigQBcKbh1x9f74gqebU",
+    title: "Spotify",
+    icon: "fa-brands fa-spotify",
+  },
+  {
     url: "https://www.youtube.com/@logiaabierta",
     title: "YouTube",
     icon: "fa-brands fa-youtube",
   },
   {
-    url: "https://www.linkedin.com/company/logiaabierta",
-    title: "LinkedIn",
-    icon: "fa-brands fa-linkedin",
+    url: "/rss.xml",
+    title: "RSS",
+    icon: "fa-solid fa-rss",
   },
   {
-    url: "https://bsky.app/profile/logiaabierta.bsky.social",
-    title: "Bluesky",
-    icon: "fa-brands fa-bluesky",
-  },
-  {
-    url: "https://mastodon.social/@logiaabierta",
-    title: "Mastodon",
-    icon: "fa-brands fa-mastodon",
+    url: "mailto:hola@logiaabierta.com",
+    title: "Email",
+    icon: "fa-solid fa-envelope",
   },
   {
     url: "https://www.instagram.com/logiaabierta",
@@ -36,14 +41,39 @@ const socials = [
     icon: "fa-brands fa-threads",
   },
   {
+    url: "https://bsky.app/profile/logiaabierta.bsky.social",
+    title: "Bluesky",
+    icon: "fa-brands fa-bluesky",
+  },
+  {
+    url: "https://mastodon.social/@logiaabierta",
+    title: "Mastodon",
+    icon: "fa-brands fa-mastodon",
+  },
+  {
     url: "https://www.facebook.com/logiaabierta",
     title: "Facebook",
     icon: "fa-brands fa-facebook",
   },
   {
+    url: "https://www.linkedin.com/company/logiaabierta",
+    title: "LinkedIn",
+    icon: "fa-brands fa-linkedin",
+  },
+  {
+    url: "https://discord.gg/logiaabierta",
+    title: "Discord",
+    icon: "fa-brands fa-discord",
+  },
+  {
     url: "https://www.pinterest.com/logiaabierta",
     title: "Pinterest",
     icon: "fa-brands fa-pinterest",
+  },
+  {
+    url: "https://logiaabierta.tumblr.com",
+    title: "Tumblr",
+    icon: "fa-brands fa-tumblr",
   },
 ];
 ---
@@ -59,7 +89,7 @@ const socials = [
         target="_blank"
         rel="noopener noreferrer"
       >
-        <i class={icon.icon} />
+        <i class={icon.icon} aria-hidden="true" />
       </a>
     ))
   }

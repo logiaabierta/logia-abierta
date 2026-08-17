@@ -1,0 +1,57 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+
+const {
+  title,
+  description,
+  image,
+  type,
+  publishedTime,
+  modifiedTime,
+  author,
+  tags,
+  schema,
+  faqItems,
+  noindex,
+  canonicalUrl,
+  socialTitle,
+  socialDescription,
+  imageAlt,
+  alternateUrls,
+} = Astro.props;
+const locale = Astro.currentLocale || "es";
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <script is:inline>
+      (() => {
+        const storedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.dataset.theme = storedTheme || (prefersDark ? "dark" : "light");
+      })();
+    </script>
+    <BaseHead
+      title={title}
+      description={description}
+      image={image}
+      type={type}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      author={author}
+      tags={tags}
+      schema={schema}
+      faqItems={faqItems}
+      noindex={noindex}
+      canonicalUrl={canonicalUrl}
+      socialTitle={socialTitle}
+      socialDescription={socialDescription}
+      imageAlt={imageAlt}
+      alternateUrls={alternateUrls}
+    />
+  </head>
+  <body class="bg-base-100 text-base-content links-page-body">
+    <main><slot /></main>
+  </body>
+</html>

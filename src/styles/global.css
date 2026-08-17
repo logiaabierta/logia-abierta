@@ -63,6 +63,22 @@ body {
   @apply my-10 lg:my-20;
 }
 
+.header {
+  background: color-mix(in oklab, var(--la-bg) 86%, transparent);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 0.75rem 2rem color-mix(in oklab, var(--la-carbon) 14%, transparent);
+}
+
+.site-main {
+  padding-top: 5.25rem;
+}
+
+@media (min-width: 768px) {
+  .site-main {
+    padding-top: 6.25rem;
+  }
+}
+
 @layer base {
   h1,
   .h1 {
@@ -448,6 +464,24 @@ body {
   @apply pt-6;
 }
 
+.site-signature {
+  @apply grid gap-1 text-xs uppercase;
+  color: var(--la-muted);
+}
+
+.site-signature p {
+  @apply flex flex-wrap items-center gap-1.5;
+}
+
+.site-signature a {
+  @apply underline underline-offset-4;
+}
+
+.site-signature .fa-heart,
+.links-footer .fa-heart {
+  color: var(--la-accent);
+}
+
 .mdx-article .post > * + * {
   @apply mt-6;
 }
@@ -475,6 +509,174 @@ body {
 
 .portable-raw-mdx {
   border-style: dashed;
+}
+
+.links-hub {
+  @apply px-4 py-10 md:py-16;
+  background:
+    radial-gradient(circle at 20% 0%, color-mix(in oklab, var(--la-amber) 18%, transparent), transparent 30rem),
+    radial-gradient(circle at 85% 15%, color-mix(in oklab, var(--la-brass) 15%, transparent), transparent 24rem),
+    var(--la-bg);
+}
+
+.links-hub-inner {
+  @apply mx-auto grid max-w-3xl gap-8;
+}
+
+.links-profile {
+  @apply grid gap-5 sm:grid-cols-[4.5rem_1fr] sm:items-center;
+}
+
+.links-logo {
+  @apply grid h-20 w-20 place-items-center border text-3xl font-bold uppercase;
+  background: var(--la-ink-panel);
+  border-color: color-mix(in oklab, var(--la-brass) 58%, transparent);
+  color: var(--la-bone);
+}
+
+.links-profile h1 {
+  @apply mb-2 text-5xl uppercase leading-none md:text-7xl;
+}
+
+.links-profile p:not(.links-kicker) {
+  @apply max-w-2xl text-base opacity-80;
+}
+
+.links-kicker {
+  @apply mb-2 text-xs font-bold uppercase tracking-wider;
+  color: var(--la-accent);
+}
+
+.links-grid {
+  @apply grid gap-3 sm:grid-cols-2;
+}
+
+.links-grid-compact {
+  @apply sm:grid-cols-2;
+}
+
+.links-card {
+  @apply grid grid-cols-[2.5rem_1fr] items-center gap-3 border p-4 transition hover:-translate-y-0.5;
+  background: color-mix(in oklab, var(--la-surface) 82%, transparent);
+  border-color: var(--la-border);
+}
+
+.links-card i {
+  @apply grid h-10 w-10 place-items-center text-lg;
+  color: var(--la-accent);
+}
+
+.links-card b,
+.links-feature b {
+  @apply block uppercase leading-tight;
+}
+
+.links-card small,
+.links-feature small {
+  @apply mt-1 block text-sm leading-snug opacity-70;
+}
+
+.links-section {
+  @apply border-t pt-8;
+  border-color: var(--la-border);
+}
+
+.links-section-heading {
+  @apply mb-5;
+}
+
+.links-section-note {
+  @apply mt-2 max-w-2xl text-sm leading-relaxed opacity-70;
+}
+
+.links-section h2 {
+  @apply text-3xl uppercase md:text-4xl;
+}
+
+.links-content-grid {
+  @apply grid gap-4;
+}
+
+.links-feature {
+  @apply grid gap-4 border p-3 transition hover:-translate-y-0.5 sm:grid-cols-[9rem_1fr] sm:items-center;
+  background: color-mix(in oklab, var(--la-surface) 78%, transparent);
+  border-color: var(--la-border);
+}
+
+.links-feature img {
+  @apply aspect-video w-full object-cover;
+}
+
+.links-feature-external {
+  @apply relative pr-12;
+}
+
+.links-feature-external > i {
+  @apply absolute right-4 top-4 text-xl;
+  color: var(--la-accent);
+}
+
+.links-wordmark {
+  @apply overflow-visible pt-4;
+  color: color-mix(in oklab, var(--la-bone) 92%, var(--la-brass));
+  margin-left: 50%;
+  opacity: 0.72;
+  transform: translateX(-50%);
+  width: min(calc(100vw - 0.75rem), 1500px);
+}
+
+.links-wordmark svg {
+  @apply block w-full;
+  height: clamp(7rem, 18vw, 13rem);
+}
+
+.links-wordmark text {
+  fill: currentColor;
+  font-family: var(--font-atkinson), sans-serif;
+  font-size: 166px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.links-footer {
+  @apply grid w-full justify-items-center gap-3 border-t pt-6 text-center text-xs uppercase;
+  border-color: var(--la-border);
+  color: var(--la-muted);
+}
+
+.links-socials {
+  @apply grid w-full justify-items-center;
+}
+
+.links-socials nav {
+  display: flex;
+  flex-wrap: nowrap;
+  font-size: clamp(0.78rem, 3vw, 1rem);
+  gap: clamp(0.38rem, 1.9vw, 0.72rem);
+  justify-content: center;
+  max-width: 100%;
+  width: 100%;
+}
+
+.links-footer nav {
+  @apply mx-auto w-full justify-center text-lg;
+  color: var(--la-text);
+}
+
+.links-footer .site-signature {
+  @apply mx-auto w-full max-w-sm justify-items-center text-center;
+}
+
+.links-footer .site-signature p {
+  @apply justify-center text-center;
+}
+
+.links-footer p {
+  @apply flex flex-wrap items-center justify-center gap-1.5;
+}
+
+.links-footer a {
+  @apply underline underline-offset-4;
 }
 
 .mdx-figure-title {
