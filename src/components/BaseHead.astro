@@ -205,3 +205,14 @@ const jsonLd = {
 <meta name="twitter:image:alt" content={ogImageAlt} />
 
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GZ4FHV124L"></script>
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+  gtag("config", "G-GZ4FHV124L");
+</script>
