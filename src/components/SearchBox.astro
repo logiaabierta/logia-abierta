@@ -1,0 +1,105 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<div class="site-search" data-site-search>
+  <button
+    type="button"
+    class="site-search-button"
+    data-search-toggle
+    aria-expanded="false"
+    aria-controls="site-search-panel"
+    aria-label="Search"
+    title="Search"
+  >
+    <Icon name="lucide:search" aria-hidden="true" class="size-4" />
+  </button>
+  <div class="site-search-panel" id="site-search-panel" data-search-panel hidden>
+    <label class="sr-only" for="site-search-input">Search Logia Abierta</label>
+    <input
+      id="site-search-input"
+      data-search-input
+      type="search"
+      placeholder="Buscar..."
+      autocomplete="off"
+    />
+    <div class="site-search-results" data-search-results></div>
+  </div>
+</div>
+
+<script>
+  const root = document.querySelector("[data-site-search]");
+  const toggle = root?.querySelector("[data-search-toggle]");
+  const panel = root?.querySelector("[data-search-panel]");
+  const input = root?.querySelector("[data-search-input]");
+  const results = root?.querySelector("[data-search-results]");
+  let pagefind;
+
+  const loadPagefind = async () => {
+    if (pagefind !== undefined) return pagefind;
+
+    try {
+      pagefind = await new Function("return import('/pagefind/pagefind.js')")();
+      await pagefind.options({
+        excerptLength: 22,
+        highlightParam: "search",
+      });
+    } catch {
+      pagefind = null;
+    }
+
+    return pagefind;
+  };
+
+  const renderResults = async () => {
+    if (!(input instanceof HTMLInputElement) || !results) return;
+
+    const query = input.value.trim();
+    results.innerHTML = "";
+
+    if (query.length < 2) return;
+
+    const search = await loadPagefind();
+
+    if (!search) {
+      results.innerHTML = "<p>La búsqueda estará disponible después del build.</p>";
+      return;
+    }
+
+    const response = await search.search(query);
+    const matches = await Promise.all(response.results.slice(0, 6).map((result) => result.data()));
+
+    results.innerHTML = matches
+      .map(
+        (result) => `
+          <a href="${result.url}">
+            <b>${result.meta.title || result.url}</b>
+            ${result.excerpt ? `<small>${result.excerpt}</small>` : ""}
+          </a>
+        `,
+      )
+      .join("");
+  };
+
+  toggle?.addEventListener("click", async () => {
+    if (!(toggle instanceof HTMLButtonElement) || !(panel instanceof HTMLElement)) return;
+
+    const isOpen = panel.hidden;
+    panel.hidden = !isOpen;
+    toggle.setAttribute("aria-expanded", String(isOpen));
+
+    if (isOpen && input instanceof HTMLInputElement) {
+      input.focus();
+      await loadPagefind();
+    }
+  });
+
+  input?.addEventListener("input", renderResults);
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && panel instanceof HTMLElement && !panel.hidden) {
+      panel.hidden = true;
+      toggle?.setAttribute("aria-expanded", "false");
+    }
+  });
+</script>

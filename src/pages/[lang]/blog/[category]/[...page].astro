@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon/components";
 import { client } from "../../../../lib/sanity";
 import Layout from "../../../../layouts/Base.astro";
 import Hero from "../../../../components/Hero.astro";
@@ -102,7 +103,7 @@ const postsCategories = await client.fetch(
           href={`/${locale}/blog`}
           class="btn btn-link text-inherit uppercase no-underline group p-0"
         >
-          <i class="fa-solid fa-arrow-left group-hover:translate-x-1"></i>
+          <Icon name="lucide:arrow-left" aria-hidden="true" class="size-4 transition group-hover:translate-x-1" />
           Go Back
         </a>
 

@@ -1,17 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui";
-
-@import "@fortawesome/fontawesome-free/css/all.css";
-
-@font-face {
-  font-family: "Font Awesome 7 Free";
-  font-display: swap !important;
-}
-
-@font-face {
-  font-family: "Font Awesome 7 Brands";
-  font-display: swap !important;
-}
+@plugin "@tailwindcss/typography";
 
 :root {
   --la-carbon: #161616;
@@ -114,16 +103,26 @@ body {
     @apply font-bold uppercase text-center text-[clamp(4rem,14.5vw,18rem)] -z-10;
   }
 
-  .fa,
-  .fas,
-  .far,
-  .fab {
-    font-display: swap !important;
-  }
 }
 
 .post {
-  @apply text-lg leading-8;
+  @apply prose prose-zinc max-w-none text-lg leading-8;
+  --tw-prose-body: var(--la-text);
+  --tw-prose-headings: var(--la-text);
+  --tw-prose-lead: var(--la-muted);
+  --tw-prose-links: var(--la-accent);
+  --tw-prose-bold: var(--la-text);
+  --tw-prose-counters: var(--la-muted);
+  --tw-prose-bullets: var(--la-accent-2);
+  --tw-prose-hr: var(--la-border);
+  --tw-prose-quotes: var(--la-text);
+  --tw-prose-quote-borders: var(--la-accent-2);
+  --tw-prose-captions: var(--la-muted);
+  --tw-prose-code: var(--la-bone);
+  --tw-prose-pre-code: var(--la-bone);
+  --tw-prose-pre-bg: var(--la-ink-panel);
+  --tw-prose-th-borders: var(--la-border);
+  --tw-prose-td-borders: var(--la-border);
 
   h2,
   h3,
@@ -174,6 +173,18 @@ body {
     b {
       @apply block mt-4 font-normal text-base;
     }
+  }
+}
+
+.motion-ready [data-motion-reveal] {
+  opacity: 0;
+  transform: translateY(1rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-ready [data-motion-reveal] {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -373,6 +384,53 @@ body {
   color: inherit;
 }
 
+.site-search {
+  @apply relative;
+}
+
+.site-search-button {
+  @apply grid h-9 w-9 place-items-center border transition hover:opacity-75;
+  border-color: color-mix(in oklab, currentColor 18%, transparent);
+  background: color-mix(in oklab, var(--la-surface) 54%, transparent);
+}
+
+.site-search-panel {
+  @apply fixed left-4 right-4 top-24 z-[1001] border p-3 shadow-xl md:absolute md:left-auto md:right-0 md:top-12 md:w-80;
+  border-color: var(--la-border);
+  background: color-mix(in oklab, var(--la-surface) 92%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.site-search-panel[hidden] {
+  display: none;
+}
+
+.site-search-panel input {
+  @apply w-full border px-3 py-2 text-sm outline-none;
+  border-color: var(--la-border);
+  background: var(--la-bg);
+  color: var(--la-text);
+}
+
+.site-search-results {
+  @apply mt-3 grid gap-2 text-sm;
+}
+
+.site-search-results a {
+  @apply block border p-3 no-underline transition hover:opacity-80;
+  border-color: color-mix(in oklab, var(--la-border) 72%, transparent);
+}
+
+.site-search-results b,
+.site-search-results small {
+  @apply block;
+}
+
+.site-search-results small {
+  @apply mt-1 leading-snug;
+  color: var(--la-muted);
+}
+
 .scroll-top-button {
   @apply fixed bottom-5 right-5 z-40 grid h-12 w-12 place-items-center rounded-full text-lg font-bold shadow-lg transition duration-200;
   --scroll-progress: 0deg;
@@ -477,8 +535,8 @@ body {
   @apply underline underline-offset-4;
 }
 
-.site-signature .fa-heart,
-.links-footer .fa-heart {
+.site-signature-heart {
+  display: inline-block;
   color: var(--la-accent);
 }
 
@@ -511,16 +569,25 @@ body {
   border-style: dashed;
 }
 
+.vidstack-player {
+  @apply my-10 overflow-hidden border;
+  border-color: var(--la-border);
+  background: var(--la-ink-panel);
+  color: var(--la-bone);
+}
+
 .links-hub {
   @apply px-4 py-10 md:py-16;
   background:
     radial-gradient(circle at 20% 0%, color-mix(in oklab, var(--la-amber) 18%, transparent), transparent 30rem),
     radial-gradient(circle at 85% 15%, color-mix(in oklab, var(--la-brass) 15%, transparent), transparent 24rem),
     var(--la-bg);
+  min-height: 100vh;
 }
 
 .links-hub-inner {
-  @apply mx-auto grid max-w-3xl gap-8;
+  @apply mx-auto grid w-full max-w-4xl gap-8;
+  justify-items: stretch;
 }
 
 .links-profile {
@@ -548,7 +615,7 @@ body {
 }
 
 .links-grid {
-  @apply grid gap-3 sm:grid-cols-2;
+  @apply mx-auto grid w-full max-w-4xl gap-3 sm:grid-cols-2;
 }
 
 .links-grid-compact {
@@ -561,8 +628,8 @@ body {
   border-color: var(--la-border);
 }
 
-.links-card i {
-  @apply grid h-10 w-10 place-items-center text-lg;
+.links-card > svg {
+  @apply h-5 w-5 justify-self-center;
   color: var(--la-accent);
 }
 
@@ -577,7 +644,7 @@ body {
 }
 
 .links-section {
-  @apply border-t pt-8;
+  @apply mx-auto w-full max-w-4xl border-t pt-8;
   border-color: var(--la-border);
 }
 
@@ -611,18 +678,17 @@ body {
   @apply relative pr-12;
 }
 
-.links-feature-external > i {
+.links-feature-external > svg {
   @apply absolute right-4 top-4 text-xl;
   color: var(--la-accent);
 }
 
 .links-wordmark {
-  @apply overflow-visible pt-4;
+  @apply w-full overflow-visible pt-4;
   color: color-mix(in oklab, var(--la-bone) 92%, var(--la-brass));
-  margin-left: 50%;
   opacity: 0.72;
-  transform: translateX(-50%);
-  width: min(calc(100vw - 0.75rem), 1500px);
+  justify-self: center;
+  max-width: min(calc(100vw - 1rem), 1500px);
 }
 
 .links-wordmark svg {
@@ -639,7 +705,7 @@ body {
 }
 
 .links-footer {
-  @apply grid w-full justify-items-center gap-3 border-t pt-6 text-center text-xs uppercase;
+  @apply mx-auto grid w-full max-w-4xl justify-items-center gap-3 border-t pt-6 text-center text-xs uppercase;
   border-color: var(--la-border);
   color: var(--la-muted);
 }

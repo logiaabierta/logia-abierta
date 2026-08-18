@@ -1,5 +1,6 @@
 ---
 import Image from "astro/components/Image.astro";
+import { Icon } from "astro-icon/components";
 import { formatDate } from "../utils/dateFormatter";
 
 const { index, title, _createdAt, duration, episod, slug, image } = Astro.props;
@@ -65,7 +66,7 @@ const locale = Astro.currentLocale;
           class="btn btn-link text-inherit uppercase no-underline group p-0"
         >
           Listen
-          <i class="fa-solid fa-arrow-right group-hover:translate-x-1"></i>
+          <Icon name="lucide:arrow-right" aria-hidden="true" class="size-4 transition group-hover:translate-x-1" />
         </button>
       </div>
     </div>

@@ -1,84 +1,86 @@
 ---
+import { Icon } from "astro-icon/components";
+
 const socials = [
   {
     url: "https://logiaabierta.substack.com",
     title: "Substack",
-    icon: "fa-brands fa-substack",
+    icon: "simple-icons:substack",
   },
   {
     url: "https://ko-fi.com/logiaabierta",
     title: "Ko-fi",
-    icon: "fa-brands fa-ko-fi",
+    icon: "simple-icons:kofi",
   },
   {
     url: "https://open.spotify.com/show/2AEigQBcKbh1x9f74gqebU",
     title: "Spotify",
-    icon: "fa-brands fa-spotify",
+    icon: "simple-icons:spotify",
   },
   {
     url: "https://www.youtube.com/@logiaabierta",
     title: "YouTube",
-    icon: "fa-brands fa-youtube",
+    icon: "simple-icons:youtube",
   },
   {
     url: "https://www.tiktok.com/@logiaabierta",
     title: "TikTok",
-    icon: "fa-brands fa-tiktok",
+    icon: "simple-icons:tiktok",
   },
   {
     url: "/rss.xml",
     title: "RSS",
-    icon: "fa-solid fa-rss",
+    icon: "lucide:rss",
   },
   {
     url: "mailto:hola@logiaabierta.com",
     title: "Email",
-    icon: "fa-solid fa-envelope",
+    icon: "lucide:mail",
   },
   {
     url: "https://www.instagram.com/logiaabierta",
     title: "Instagram",
-    icon: "fa-brands fa-instagram",
+    icon: "simple-icons:instagram",
   },
   {
     url: "https://www.threads.net/@logiaabierta",
     title: "Threads",
-    icon: "fa-brands fa-threads",
+    icon: "simple-icons:threads",
   },
   {
     url: "https://bsky.app/profile/logiaabierta.bsky.social",
     title: "Bluesky",
-    icon: "fa-brands fa-bluesky",
+    icon: "simple-icons:bluesky",
   },
   {
     url: "https://mastodon.social/@logiaabierta",
     title: "Mastodon",
-    icon: "fa-brands fa-mastodon",
+    icon: "simple-icons:mastodon",
   },
   {
     url: "https://www.facebook.com/logiaabierta",
     title: "Facebook",
-    icon: "fa-brands fa-facebook",
+    icon: "simple-icons:facebook",
   },
   {
     url: "https://www.linkedin.com/company/logiaabierta",
     title: "LinkedIn",
-    icon: "fa-brands fa-linkedin",
+    icon: "simple-icons:linkedin",
   },
   {
     url: "https://discord.gg/logiaabierta",
     title: "Discord",
-    icon: "fa-brands fa-discord",
+    icon: "simple-icons:discord",
   },
   {
     url: "https://www.pinterest.com/logiaabierta",
     title: "Pinterest",
-    icon: "fa-brands fa-pinterest",
+    icon: "simple-icons:pinterest",
   },
   {
     url: "https://logiaabierta.tumblr.com",
     title: "Tumblr",
-    icon: "fa-brands fa-tumblr",
+    icon: "simple-icons:tumblr",
   },
 ];
 ---
@@ -90,11 +92,11 @@ const socials = [
         href={icon.url}
         title={icon.title}
         aria-label={icon.title}
-        class="hover:rotate-12"
-        target="_blank"
-        rel="noopener noreferrer"
+        class="inline-grid place-items-center transition hover:rotate-12"
+        target={icon.url.startsWith("http") ? "_blank" : undefined}
+        rel={icon.url.startsWith("http") ? "noopener noreferrer" : undefined}
       >
-        <i class={icon.icon} aria-hidden="true" />
+        <Icon name={icon.icon} aria-hidden="true" class="size-[1em]" />
       </a>
     ))
   }

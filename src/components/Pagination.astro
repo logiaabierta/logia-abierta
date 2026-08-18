@@ -1,4 +1,6 @@
 ---
+import { Icon } from "astro-icon/components";
+
 const { totalPages, page } = Astro.props;
 ---
 
@@ -9,7 +11,7 @@ const { totalPages, page } = Astro.props;
         href={page.url.prev}
         class="pagination-btn flex gap-2 items-center btn"
       >
-        <i class="fa-solid fa-arrow-left" /> Previous
+        <Icon name="lucide:arrow-left" aria-hidden="true" class="size-4" /> Previous
       </a>
     )
   }
@@ -24,7 +26,7 @@ const { totalPages, page } = Astro.props;
         href={page.url.next}
         class="pagination-btn flex gap-2 items-center btn"
       >
-        Next <i class="fa-solid fa-arrow-right" />
+        Next <Icon name="lucide:arrow-right" aria-hidden="true" class="size-4" />
       </a>
     )
   }

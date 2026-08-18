@@ -1,3 +1,7 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
 <button
   type="button"
   class="btn btn-square btn-ghost"
@@ -5,5 +9,6 @@
   aria-label="Toggle dark mode"
   title="Toggle dark mode"
 >
-  <i class="fa-solid fa-moon" data-theme-icon></i>
+  <Icon name="lucide:moon" data-theme-icon="moon" class="size-4" aria-hidden="true" />
+  <Icon name="lucide:sun" data-theme-icon="sun" class="hidden size-4" aria-hidden="true" />
 </button>

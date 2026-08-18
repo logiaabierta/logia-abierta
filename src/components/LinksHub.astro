@@ -1,5 +1,6 @@
 ---
 import Image from "astro/components/Image.astro";
+import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Links.astro";
 import SiteSignature from "./SiteSignature.astro";
 import Socials from "./Socials.astro";
@@ -17,109 +18,109 @@ const profileLinks = [
     title: "Sitio principal",
     description: "Artículos, ensayos, podcast y archivo editorial.",
     url: `/${locale}`,
-    icon: "fa-solid fa-house",
+    icon: "lucide:home",
   },
   {
     title: "Contacto",
     description: "Escríbenos a hola@logiaabierta.com.",
     url: "mailto:hola@logiaabierta.com",
-    icon: "fa-solid fa-envelope",
+    icon: "lucide:mail",
   },
   {
     title: "Substack",
     description: "Newsletter y publicaciones por correo.",
     url: "https://logiaabierta.substack.com",
-    icon: "fa-brands fa-substack",
+    icon: "simple-icons:substack",
   },
   {
     title: "Ko-fi",
     description: "Apoya, suscríbete o compra en la tienda.",
     url: "https://ko-fi.com/logiaabierta",
-    icon: "fa-brands fa-ko-fi",
+    icon: "simple-icons:kofi",
   },
   {
     title: "Ko-fi Memberships",
     description: "Suscripciones y apoyo recurrente.",
     url: "https://ko-fi.com/logiaabierta/tiers",
-    icon: "fa-solid fa-circle-dollar-to-slot",
+    icon: "lucide:circle-dollar-sign",
   },
   {
     title: "Spotify",
     description: "Sigue el podcast y activa notificaciones.",
     url: "https://open.spotify.com/show/2AEigQBcKbh1x9f74gqebU",
-    icon: "fa-brands fa-spotify",
+    icon: "simple-icons:spotify",
   },
   {
     title: "YouTube",
     description: "Videos, podcast y contenido audiovisual.",
     url: "https://www.youtube.com/@logiaabierta",
-    icon: "fa-brands fa-youtube",
+    icon: "simple-icons:youtube",
   },
   {
     title: "TikTok",
     description: "Clips breves y publicaciones de video.",
     url: "https://www.tiktok.com/@logiaabierta",
-    icon: "fa-brands fa-tiktok",
+    icon: "simple-icons:tiktok",
   },
   {
     title: "RSS Feed",
     description: "Agrega Logia Abierta a tu lector RSS.",
     url: "/rss.xml",
-    icon: "fa-solid fa-rss",
+    icon: "lucide:rss",
   },
   {
     title: "Instagram",
     description: "Visuales, clips y novedades.",
     url: "https://www.instagram.com/logiaabierta",
-    icon: "fa-brands fa-instagram",
+    icon: "simple-icons:instagram",
   },
   {
     title: "Threads",
     description: "Conversación y notas rápidas.",
     url: "https://www.threads.net/@logiaabierta",
-    icon: "fa-brands fa-threads",
+    icon: "simple-icons:threads",
   },
   {
     title: "Bluesky",
     description: "Notas breves y conversación pública.",
     url: "https://bsky.app/profile/logiaabierta.bsky.social",
-    icon: "fa-brands fa-bluesky",
+    icon: "simple-icons:bluesky",
   },
   {
     title: "Mastodon",
     description: "Publicaciones federadas.",
     url: "https://mastodon.social/@logiaabierta",
-    icon: "fa-brands fa-mastodon",
+    icon: "simple-icons:mastodon",
   },
   {
     title: "Facebook",
     description: "Comunidad y publicaciones.",
     url: "https://www.facebook.com/logiaabierta",
-    icon: "fa-brands fa-facebook",
+    icon: "simple-icons:facebook",
   },
   {
     title: "LinkedIn",
     description: "Actualizaciones editoriales e institucionales.",
     url: "https://www.linkedin.com/company/logiaabierta",
-    icon: "fa-brands fa-linkedin",
+    icon: "simple-icons:linkedin",
   },
   {
     title: "Discord",
     description: "Canal de comunidad y conversación.",
     url: "https://discord.gg/logiaabierta",
-    icon: "fa-brands fa-discord",
+    icon: "simple-icons:discord",
   },
   {
     title: "Pinterest",
     description: "Colecciones visuales e inspiración.",
     url: "https://www.pinterest.com/logiaabierta",
-    icon: "fa-brands fa-pinterest",
+    icon: "simple-icons:pinterest",
   },
   {
     title: "Tumblr",
     description: "Archivo social y publicaciones breves.",
     url: "https://logiaabierta.tumblr.com",
-    icon: "fa-brands fa-tumblr",
+    icon: "simple-icons:tumblr",
   },
 ];
 
@@ -128,31 +129,31 @@ const paidLinks = [
     title: "Ko-fi Support",
     description: "Aportes libres para sostener Logia Abierta.",
     url: "https://ko-fi.com/logiaabierta",
-    icon: "fa-brands fa-ko-fi",
+    icon: "simple-icons:kofi",
   },
   {
     title: "Ko-fi Memberships",
     description: "Suscripciones y apoyo recurrente.",
     url: "https://ko-fi.com/logiaabierta/tiers",
-    icon: "fa-solid fa-circle-dollar-to-slot",
+    icon: "lucide:circle-dollar-sign",
   },
   {
     title: "Ko-fi Shop",
     description: "Tienda y recursos digitales.",
     url: "https://ko-fi.com/logiaabierta/shop",
-    icon: "fa-solid fa-store",
+    icon: "lucide:store",
   },
   {
     title: "Substack",
     description: "Newsletter, archivo y piezas editoriales.",
     url: "https://logiaabierta.substack.com",
-    icon: "fa-brands fa-substack",
+    icon: "simple-icons:substack",
   },
   {
     title: "Spotify",
     description: "Suscríbete al podcast desde Spotify.",
     url: "https://open.spotify.com/show/2AEigQBcKbh1x9f74gqebU",
-    icon: "fa-brands fa-spotify",
+    icon: "simple-icons:spotify",
   },
 ];
 
@@ -221,7 +222,7 @@ const youtubeEpisodes = podcasts.map((podcast) => {
       <div class="links-grid">
         {profileLinks.map((link) => (
           <a class="links-card" href={link.url} target={link.url.startsWith("http") ? "_blank" : undefined} rel={link.url.startsWith("http") ? "noopener noreferrer" : undefined}>
-            <i class={link.icon} aria-hidden="true"></i>
+            <Icon name={link.icon} aria-hidden="true" class="size-5 shrink-0" />
             <span>
               <b>{link.title}</b>
               <small>{link.description}</small>
@@ -312,7 +313,7 @@ const youtubeEpisodes = podcasts.map((podcast) => {
                   {" · Ver en YouTube"}
                 </small>
               </span>
-              <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+              <Icon name="simple-icons:youtube" aria-hidden="true" class="size-5 shrink-0" />
             </a>
           ))}
         </div>
@@ -329,7 +330,7 @@ const youtubeEpisodes = podcasts.map((podcast) => {
         <div class="links-grid links-grid-compact">
           {paidLinks.map((link) => (
             <a class="links-card" href={link.url} target="_blank" rel="noopener noreferrer">
-              <i class={link.icon} aria-hidden="true"></i>
+              <Icon name={link.icon} aria-hidden="true" class="size-5 shrink-0" />
               <span>
                 <b>{link.title}</b>
                 <small>{link.description}</small>

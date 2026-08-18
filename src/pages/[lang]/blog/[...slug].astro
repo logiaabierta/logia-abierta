@@ -1,5 +1,6 @@
 ---
 import Image from "astro/components/Image.astro";
+import { Icon } from "astro-icon/components";
 import Layout from "../../../layouts/Base.astro";
 import { client } from "../../../lib/sanity";
 import PostCardBase from "../../../components/PostCardBase.astro";
@@ -251,17 +252,17 @@ const socials = [
   {
     url: "#",
     title: "Instagram",
-    icon: "fa-brands fa-instagram",
+    icon: "simple-icons:instagram",
   },
   {
     url: "#",
     title: "Twitter",
-    icon: "fa-brands fa-x-twitter",
+    icon: "simple-icons:x",
   },
   {
     url: "#",
     title: "Youtube",
-    icon: "fa-brands fa-youtube",
+    icon: "simple-icons:youtube",
   },
 ];
 ---
@@ -290,7 +291,7 @@ const socials = [
         <a
           href={`/${locale}/blog`}
           class="btn btn-link text-inherit uppercase no-underline group p-0"
-          ><i class="fa-solid fa-arrow-left group-hover:translate-x-1"></i> Go Back
+          ><Icon name="lucide:arrow-left" aria-hidden="true" class="size-4 transition group-hover:translate-x-1" /> Go Back
         </a>
         <p class="font-semibold text-3xl uppercase">Magazine</p>
       </div>
@@ -298,7 +299,7 @@ const socials = [
   </section>
   <section class="section">
     <div class="container">
-      <div class="article-hero mx-auto max-w-5xl">
+      <div class="article-hero mx-auto max-w-5xl" data-motion-reveal>
         <div class="flex flex-wrap gap-2 mb-6">
           <span class="badge badge-neutral uppercase">Featured</span>
           {primaryCategory && <span class="badge badge-outline uppercase">{primaryCategory.title}</span>}
@@ -358,7 +359,7 @@ const socials = [
       >
         {
           post.body && (
-            <article class="post max-w-3xl">
+            <article class="post max-w-3xl" data-motion-reveal>
               <PortableComponent body={post.body} />
               {
                 faqItems.length > 0 && (
@@ -390,7 +391,7 @@ const socials = [
                   aria-controls="article-toc-panel"
                   aria-label="Open article navigation"
                 >
-                  <i class="fa-solid fa-list-ul" aria-hidden="true"></i>
+                  <Icon name="lucide:list" aria-hidden="true" class="size-4" />
                 </button>
                 <nav id="article-toc-panel" aria-label="On this page" data-toc-panel>
                   <p>On This Page</p>
@@ -418,7 +419,7 @@ const socials = [
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <i class={icon.icon} />
+                    <Icon name={icon.icon} aria-hidden="true" class="size-4" />
                   </a>
                 ))
               }
@@ -441,7 +442,7 @@ const socials = [
                 class="btn btn-link text-inherit uppercase no-underline group p-0"
               >
                 See all
-                <i class="fa-solid fa-arrow-right group-hover:translate-x-1" />
+                <Icon name="lucide:arrow-right" aria-hidden="true" class="size-4 transition group-hover:translate-x-1" />
               </a>
             </div>
 

@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon/components";
 import Layout from "../../../../layouts/Base.astro";
 import { client } from "../../../../lib/sanity";
 import Card from "../../../../components/AuthorBlogCard.astro";
@@ -113,6 +114,27 @@ const masonicGroups = [
 ].filter((group) => group.badges.length > 0);
 const hasPublicMasonicProfile = author.showMasonicProfile !== false && masonicGroups.length > 0;
 const contacts = author.contacts || [];
+const getContactIcon = (icon = "", network = "") => {
+  const value = `${icon} ${network}`.toLowerCase();
+
+  if (value.includes("instagram")) return "simple-icons:instagram";
+  if (value.includes("twitter") || value.includes("x-twitter")) return "simple-icons:x";
+  if (value.includes("youtube")) return "simple-icons:youtube";
+  if (value.includes("facebook")) return "simple-icons:facebook";
+  if (value.includes("linkedin")) return "simple-icons:linkedin";
+  if (value.includes("bluesky")) return "simple-icons:bluesky";
+  if (value.includes("mastodon")) return "simple-icons:mastodon";
+  if (value.includes("threads")) return "simple-icons:threads";
+  if (value.includes("substack")) return "simple-icons:substack";
+  if (value.includes("spotify")) return "simple-icons:spotify";
+  if (value.includes("tiktok")) return "simple-icons:tiktok";
+  if (value.includes("pinterest")) return "simple-icons:pinterest";
+  if (value.includes("tumblr")) return "simple-icons:tumblr";
+  if (value.includes("discord")) return "simple-icons:discord";
+  if (value.includes("mail") || value.includes("email") || value.includes("envelope")) return "lucide:mail";
+
+  return "lucide:link";
+};
 ---
 
 <Layout
@@ -127,7 +149,7 @@ const contacts = author.contacts || [];
           href={`/${locale}/authors`}
           class="btn btn-link text-inherit uppercase no-underline group p-0"
         >
-          <i class="fa-solid fa-arrow-left group-hover:translate-x-1"></i>
+          <Icon name="lucide:arrow-left" aria-hidden="true" class="size-4 transition group-hover:translate-x-1" />
           Go Back
         </a>
 
@@ -166,7 +188,7 @@ const contacts = author.contacts || [];
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <i class="fa-solid fa-link" />
+                    <Icon name="lucide:link" aria-hidden="true" class="size-4" />
                   </a>
                 )}
                 {author.publicEmail && (
@@ -175,7 +197,7 @@ const contacts = author.contacts || [];
                     title="Email"
                     class="hover:rotate-12"
                   >
-                    <i class="fa-solid fa-envelope" />
+                    <Icon name="lucide:mail" aria-hidden="true" class="size-4" />
                   </a>
                 )}
                 {contacts.map((contact) => (
@@ -186,7 +208,7 @@ const contacts = author.contacts || [];
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <i class={contact.icon || "fa-solid fa-link"} />
+                    <Icon name={getContactIcon(contact.icon, contact.network)} aria-hidden="true" class="size-4" />
                   </a>
                 ))}
               </nav>

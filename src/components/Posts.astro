@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon/components";
 import PostCardRow from "../components/PostCardRow.astro";
 import Subscribe from "../components/Subscride.astro";
 import Banner from "../components/Banner.astro";
@@ -51,7 +52,7 @@ const posts = await client.fetch(
               class="btn btn-link mt-10 text-inherit uppercase no-underline group p-0"
             >
               All articles
-              <i class="fa-solid fa-arrow-right group-hover:translate-x-1" />
+              <Icon name="lucide:arrow-right" aria-hidden="true" class="size-4 transition group-hover:translate-x-1" />
             </a>
           </div>
           <aside class="lg:flex flex-col gap-10 hidden">

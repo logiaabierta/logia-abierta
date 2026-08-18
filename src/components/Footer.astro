@@ -85,13 +85,16 @@ const navbar = [
             class="flex flex-wrap gap-3 items-center md:ml-auto lg:max-w-sm"
           >
             <input
-              type="text"
+              type="email"
               required
-              name="subscribe_email"
+              name="email"
               id="subscribe-email"
               placeholder="Email"
+              autocomplete="email"
+              inputmode="email"
               class="input text-black rounded-none flex-1"
             />
+            <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
             <button
               class="btn bg-white rounded-none shadow-none hover:bg-neutral hover:text-white uppercase"
               type="submit">Sign Up</button

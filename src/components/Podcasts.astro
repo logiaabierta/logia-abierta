@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon/components";
 import PodcastCard from "../components/PodcastCard.astro";
 
 import { client } from "../lib/sanity";
@@ -33,7 +34,7 @@ const podcasts = await client.fetch(
               class="btn btn-link text-inherit uppercase no-underline group p-0"
             >
               All Episodes
-              <i class="fa-solid fa-arrow-right group-hover:translate-x-1" />
+              <Icon name="lucide:arrow-right" aria-hidden="true" class="size-4 transition group-hover:translate-x-1" />
             </a>
           </div>
 

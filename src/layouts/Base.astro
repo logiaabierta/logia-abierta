@@ -67,13 +67,33 @@ const locale = Astro.currentLocale || "en";
       <div class="drawer-content flex flex-col">
         <div class="flex-1">
           <Header />
-          <main class="site-main"><slot /></main>
+          <main class="site-main" data-pagefind-body><slot /></main>
         </div>
         <Footer />
       </div>
       <Drawer />
     </div>
     <ScrollTopButton />
+    <script>
+      import { animate, inView } from "motion";
+
+      const initMotionReveal = () => {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        document.documentElement.classList.add("motion-ready");
+
+        inView("[data-motion-reveal]", (element) => {
+          animate(
+            element,
+            { opacity: 1, transform: "translateY(0)" },
+            { duration: 0.55, easing: [0.16, 1, 0.3, 1] },
+          );
+        }, { margin: "0px 0px -12% 0px" });
+      };
+
+      initMotionReveal();
+      document.addEventListener("astro:page-load", initMotionReveal);
+    </script>
     <script is:inline>
       (() => {
         const root = document.documentElement;
@@ -83,16 +103,23 @@ const locale = Astro.currentLocale || "en";
           localStorage.setItem("theme", theme);
 
           document.querySelectorAll("[data-theme-icon]").forEach((icon) => {
-            icon.className = theme === "dark" ? "fa-solid fa-sun" : "fa-solid fa-moon";
+            icon.classList.toggle("hidden", icon.dataset.themeIcon !== (theme === "dark" ? "sun" : "moon"));
           });
         };
 
-        applyTheme(root.dataset.theme || "light");
+        const currentTheme = () => root.dataset.theme || localStorage.getItem("theme") || "light";
 
-        document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
-          button.addEventListener("click", () => {
-            applyTheme(root.dataset.theme === "dark" ? "light" : "dark");
-          });
+        applyTheme(currentTheme());
+
+        document.addEventListener("click", (event) => {
+          const button = event.target.closest("[data-theme-toggle]");
+          if (!button) return;
+
+          applyTheme(currentTheme() === "dark" ? "light" : "dark");
+        });
+
+        document.addEventListener("astro:page-load", () => {
+          applyTheme(currentTheme());
         });
       })();
     </script>

@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import Image from "astro/components/Image.astro";
+import { Icon } from "astro-icon/components";
 import Layout from "../../../layouts/Base.astro";
 import { SITE_TITLE, SITE_URL } from "../../../consts";
 import { formatDate } from "../../../utils/dateFormatter";
@@ -107,7 +108,7 @@ const articleSchema = [
   <section class="section">
     <div class="container">
       <article class="mdx-article mx-auto max-w-6xl">
-        <div class="mx-auto max-w-4xl">
+        <div class="mx-auto max-w-4xl" data-motion-reveal>
           <div class="flex flex-wrap gap-2 mb-6">
             <span class="badge badge-neutral uppercase">MDX</span>
             {entry.data.featured && <span class="badge badge-outline uppercase">Featured</span>}
@@ -145,7 +146,7 @@ const articleSchema = [
         <div
           class="article-shell mx-auto mt-12 grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_280px] gap-x-16 gap-y-10"
         >
-          <div class="post max-w-3xl">
+          <div class="post max-w-3xl" data-motion-reveal>
             <Content />
           </div>
 
@@ -161,7 +162,7 @@ const articleSchema = [
                     aria-controls="article-toc-panel"
                     aria-label="Open article navigation"
                   >
-                    <i class="fa-solid fa-list-ul" aria-hidden="true"></i>
+                    <Icon name="lucide:list" aria-hidden="true" class="size-4" />
                   </button>
                   <nav id="article-toc-panel" aria-label="On this page" data-toc-panel>
                     <p>On This Page</p>

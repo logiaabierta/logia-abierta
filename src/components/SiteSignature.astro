@@ -1,10 +1,12 @@
 ---
+import { Icon } from "astro-icon/components";
+
 const year = new Date().getFullYear();
 ---
 
 <div class="site-signature">
   <p>
-    <span aria-label={`Copyleft ${year}`}>🄯</span> {year} hecho con <i class="fa-solid fa-heart" aria-hidden="true"></i> en <span aria-label="República Dominicana">🇩🇴</span>
+    <span aria-label={`Copyleft ${year}`}>🄯</span> {year} hecho con <Icon name="lucide:heart" aria-hidden="true" class="site-signature-heart size-[1em]" /> en <span aria-label="República Dominicana">🇩🇴</span>
     <span>by Logia Abierta</span>
     <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">
       CC BY-NC-SA 4.0

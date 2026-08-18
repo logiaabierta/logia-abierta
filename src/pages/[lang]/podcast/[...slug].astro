@@ -1,5 +1,6 @@
 ---
 import Image from "astro/components/Image.astro";
+import { Icon } from "astro-icon/components";
 import Layout from "../../../layouts/Base.astro";
 import { client } from "../../../lib/sanity";
 import { formatDate } from "../../../utils/dateFormatter";
@@ -77,17 +78,17 @@ const socials = [
   {
     url: "#",
     title: "Instagram",
-    icon: "fa-brands fa-instagram",
+    icon: "simple-icons:instagram",
   },
   {
     url: "#",
     title: "Twitter",
-    icon: "fa-brands fa-x-twitter",
+    icon: "simple-icons:x",
   },
   {
     url: "#",
     title: "Youtube",
-    icon: "fa-brands fa-youtube",
+    icon: "simple-icons:youtube",
   },
 ];
 ---
@@ -104,7 +105,7 @@ const socials = [
           href={`/${locale}/podcast`}
           class="btn btn-link text-inherit uppercase no-underline group p-0"
         >
-          <i class="fa-solid fa-arrow-left group-hover:translate-x-1"></i>
+          <Icon name="lucide:arrow-left" aria-hidden="true" class="size-4 transition group-hover:translate-x-1" />
           Go Back
         </a>
 
@@ -179,7 +180,7 @@ const socials = [
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <i class={icon.icon} />
+                    <Icon name={icon.icon} aria-hidden="true" class="size-4" />
                   </a>
                 ))
               }
@@ -210,7 +211,7 @@ const socials = [
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <i class={icon.icon} />
+                      <Icon name={icon.icon} aria-hidden="true" class="size-4" />
                     </a>
                   ))
                 }
@@ -219,7 +220,7 @@ const socials = [
           </div>
         </aside>
 
-        <div class="post">
+        <div class="post" data-motion-reveal>
           <div>
             <p class="font-semibold uppercase mb-3">
               Episode {podcast?.episod}
@@ -250,7 +251,7 @@ const socials = [
                 class="btn btn-link text-inherit uppercase no-underline group p-0"
               >
                 All Episodes
-                <i class="fa-solid fa-arrow-right group-hover:translate-x-1" />
+                <Icon name="lucide:arrow-right" aria-hidden="true" class="size-4 transition group-hover:translate-x-1" />
               </a>
             </div>
 

@@ -8,13 +8,16 @@
 
   <form action="/" method="GET" class="grid gap-3 items-end mt-4">
     <input
-      type="text"
+      type="email"
       required
-      name="subscribe_email_block"
+      name="email"
       id="subscribe-email_block"
       placeholder="Email"
+      autocomplete="email"
+      inputmode="email"
       class="input text-black rounded-none w-full"
     />
+    <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
     <button
       class="btn btn-neutral rounded-none uppercase ml-auto mr-0"
       type="submit">Sign Up</button

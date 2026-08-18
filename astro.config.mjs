@@ -2,19 +2,24 @@
 
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+import icon from 'astro-icon';
 import { defineConfig, fontProviders } from 'astro/config';
 import tailwindcss from "@tailwindcss/vite";
 import { DEFAULT_LOCALE_SETTING, LOCALES_SETTING } from './src/locales';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://logiaabierta.com/',
-	integrations: [mdx(), sitemap()],
+	integrations: [mdx(), icon(), sitemap()],
 	image: {
   domains: ["cdn.sanity.io"],
   dangerouslyProcessSVG: true,
 },
 	vite: {
 		plugins: [tailwindcss()],
+		build: {
+			// Mermaid is intentionally lazy-loaded only on pages that render charts.
+			chunkSizeWarningLimit: 750,
+		},
 	},
 	i18n: {
 		defaultLocale: DEFAULT_LOCALE_SETTING,

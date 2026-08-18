@@ -1,0 +1,30 @@
+---
+import "vidstack/styles/defaults.css";
+import "vidstack/styles/community-skin/video.css";
+
+type Props = {
+  src: string;
+  title?: string;
+  poster?: string;
+};
+
+const { src, title = "Logia Abierta video", poster } = Astro.props as Props;
+---
+
+<media-player
+  class="vidstack-player"
+  src={src}
+  title={title}
+  poster={poster}
+  aspect-ratio="16/9"
+  playsinline
+>
+  <media-outlet></media-outlet>
+  <media-community-skin></media-community-skin>
+</media-player>
+
+<script>
+  import "vidstack/define/media-player.js";
+  import "vidstack/define/media-outlet.js";
+  import "vidstack/define/media-community-skin.js";
+</script>
