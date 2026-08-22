@@ -1,0 +1,17 @@
+import type { Block } from 'payload'
+
+export const RichTextBlock: Block = {
+  slug: 'richTextSection',
+  interfaceName: 'RichTextSectionBlock',
+  labels: {
+    singular: 'Rich text',
+    plural: 'Rich text sections',
+  },
+  fields: [
+    {
+      name: 'content',
+      type: 'richText',
+      required: true,
+    },
+  ],
+}

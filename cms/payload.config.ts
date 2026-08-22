@@ -11,6 +11,7 @@ import sharp from 'sharp'
 
 import { Authors } from './src/collections/Authors'
 import { Media } from './src/collections/Media'
+import { Pages } from './src/collections/Pages'
 import { Posts } from './src/collections/Posts'
 import { Users } from './src/collections/Users'
 
@@ -49,7 +50,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname, 'src'),
     },
   },
-  collections: [Users, Media, Authors, Posts],
+  collections: [Users, Media, Authors, Pages, Posts],
   db: databaseUrl
     ? postgresAdapter({
         pool: {

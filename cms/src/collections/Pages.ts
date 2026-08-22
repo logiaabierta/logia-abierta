@@ -1,14 +1,15 @@
 import type { CollectionConfig } from 'payload'
 
+import { editorialBlocks } from '../blocks'
 import { contentModeOptions, languageOptions, statusOptions } from '../config/editorialOptions'
 import { postRichTextEditor } from '../editor/postRichTextEditor'
 import { faqFields } from '../fields/faqFields'
 import { seoFields } from '../fields/seoFields'
 
-export const Posts: CollectionConfig = {
-  slug: 'posts',
+export const Pages: CollectionConfig = {
+  slug: 'pages',
   admin: {
-    defaultColumns: ['title', 'language', 'status', 'publishedAt'],
+    defaultColumns: ['title', 'slug', 'language', 'status', 'updatedAt'],
     useAsTitle: 'title',
   },
   fields: [
@@ -22,6 +23,9 @@ export const Posts: CollectionConfig = {
       type: 'text',
       required: true,
       unique: true,
+      admin: {
+        description: 'Use "home" for the homepage. Astro can map it to /.',
+      },
     },
     {
       name: 'language',
@@ -34,7 +38,7 @@ export const Posts: CollectionConfig = {
       name: 'translationGroup',
       type: 'text',
       admin: {
-        description: 'Shared key for translated versions of the same article.',
+        description: 'Shared key for translated versions of the same page.',
       },
     },
     {
@@ -54,50 +58,41 @@ export const Posts: CollectionConfig = {
       },
     },
     {
-      name: 'author',
-      type: 'relationship',
-      relationTo: 'authors',
+      name: 'template',
+      type: 'select',
+      defaultValue: 'standard',
+      options: [
+        { label: 'Standard', value: 'standard' },
+        { label: 'Home', value: 'home' },
+        { label: 'Landing SEO', value: 'landing' },
+        { label: 'Links', value: 'links' },
+        { label: 'FAQ hub', value: 'faqHub' },
+      ],
       required: true,
     },
     {
-      name: 'categories',
-      type: 'array',
+      name: 'hero',
+      type: 'group',
       fields: [
         {
-          name: 'name',
+          name: 'eyebrow',
           type: 'text',
-          required: true,
         },
-      ],
-    },
-    {
-      name: 'tags',
-      type: 'array',
-      fields: [
         {
-          name: 'name',
+          name: 'heading',
           type: 'text',
-          required: true,
+        },
+        {
+          name: 'summary',
+          type: 'textarea',
+          maxLength: 220,
+        },
+        {
+          name: 'image',
+          type: 'relationship',
+          relationTo: 'media',
         },
       ],
-    },
-    {
-      name: 'heroImage',
-      type: 'relationship',
-      relationTo: 'media',
-    },
-    {
-      name: 'thumbnail',
-      type: 'relationship',
-      relationTo: 'media',
-    },
-    {
-      name: 'excerpt',
-      type: 'textarea',
-      maxLength: 160,
-      admin: {
-        description: 'Recommended meta description length: 150-160 characters.',
-      },
     },
     {
       name: 'contentMode',
@@ -106,7 +101,16 @@ export const Posts: CollectionConfig = {
       options: contentModeOptions,
       required: true,
       admin: {
-        description: 'Choose how this article is authored and rendered by Astro.',
+        description: 'Use visual blocks, raw MDX, or both.',
+      },
+    },
+    {
+      name: 'sections',
+      type: 'blocks',
+      blocks: editorialBlocks,
+      admin: {
+        condition: (_, siblingData) => siblingData?.contentMode !== 'mdx',
+        description: 'Page-builder sections rendered by Astro.',
       },
     },
     {
@@ -115,8 +119,7 @@ export const Posts: CollectionConfig = {
       editor: postRichTextEditor,
       admin: {
         condition: (_, siblingData) => siblingData?.contentMode !== 'mdx',
-        description:
-          'WYSIWYG editor with one-click editorial blocks: Mermaid, Impress.js, media, CTA, FAQ, timeline and more.',
+        description: 'Optional long-form page content after the section blocks.',
       },
     },
     {
@@ -124,15 +127,17 @@ export const Posts: CollectionConfig = {
       type: 'textarea',
       admin: {
         condition: (_, siblingData) => siblingData?.contentMode !== 'visual',
-        description:
-          'Advanced MDX/Astro-compatible source. Use this for custom components or hand-authored MDX.',
-        rows: 24,
+        description: 'Advanced MDX/Astro-compatible page source.',
+        rows: 26,
       },
     },
     {
       name: 'faq',
       type: 'array',
       fields: faqFields,
+      admin: {
+        description: 'Structured FAQ data for rich results and AI answer surfaces.',
+      },
     },
     {
       name: 'seo',

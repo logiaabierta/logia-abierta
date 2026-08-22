@@ -4,15 +4,14 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 
-import { ImpressDeckBlock } from '../blocks/ImpressDeckBlock'
-import { MermaidBlock } from '../blocks/MermaidBlock'
+import { editorialBlocks } from '../blocks'
 
 export const postRichTextEditor = lexicalEditor({
   features: ({ defaultFeatures }) => [
     ...defaultFeatures,
     FixedToolbarFeature(),
     BlocksFeature({
-      blocks: [MermaidBlock, ImpressDeckBlock],
+      blocks: editorialBlocks,
     }),
   ],
 })
