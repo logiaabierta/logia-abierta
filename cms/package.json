@@ -10,6 +10,7 @@
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
+    "seed:editorial": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/seed-editorial.ts",
     "upload:site-assets": "node scripts/upload-site-assets-to-r2.mjs",
     "lint": "next lint"
   },
