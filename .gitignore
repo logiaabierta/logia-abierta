@@ -29,3 +29,4 @@ pnpm-debug.log*
 .env.development
 .env.*
 !.env.example
+.vercel
