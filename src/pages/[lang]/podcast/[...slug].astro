@@ -3,6 +3,7 @@ import Image from "astro/components/Image.astro";
 import { Icon } from "astro-icon/components";
 import Layout from "../../../layouts/Base.astro";
 import { client } from "../../../lib/sanity";
+import { r2Asset } from "../../../lib/r2Assets";
 import { formatDate } from "../../../utils/dateFormatter";
 import PortableComponent from "../../../components/builder/PortableComponent.astro";
 import PodcastCard from "../../../components/PodcastCard.astro";
@@ -152,11 +153,13 @@ const socials = [
                 </div>
 
                 <div>
-                  <Image
-                    src="/img/icons/arrow.svg"
+                  <img
+                    src={r2Asset("/img/icons/arrow.svg")}
                     alt=""
                     width="46"
                     height="46"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </div>

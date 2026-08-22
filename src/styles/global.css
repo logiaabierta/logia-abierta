@@ -165,7 +165,7 @@ body {
     &::before {
       content: "";
       display: inline-block;
-      background: url(/img/icons/quote.svg) no-repeat 50% / contain;
+      background: url("https://pub-490f1c18b67d44e4968672517297f4c8.r2.dev/site-assets/public/img/icons/quote.svg") no-repeat 50% / contain;
       width: 40px;
       height: 40px;
     }

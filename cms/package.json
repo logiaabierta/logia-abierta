@@ -10,6 +10,7 @@
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
+    "upload:site-assets": "node scripts/upload-site-assets-to-r2.mjs",
     "lint": "next lint"
   },
   "dependencies": {

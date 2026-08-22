@@ -4,6 +4,7 @@
 import "../styles/global.css";
 import type { ImageMetadata } from "astro";
 import FallbackImage from "../assets/og-1200x630.jpg";
+import { r2Asset } from "../lib/r2Assets";
 import {
   SITE_AUTHOR,
   SITE_DESCRIPTION,
@@ -56,7 +57,12 @@ const canonicalURL = canonicalUrl ? new URL(canonicalUrl, site) : new URL(Astro.
 const pageTitle = title === SITE_TITLE ? SITE_TITLE : `${title} | ${SITE_TITLE}`;
 const socialMetaTitle = socialTitle || pageTitle;
 const socialMetaDescription = socialDescription || description;
-const imagePath = typeof image === "string" ? image : image.src;
+const imagePath =
+  typeof image === "string"
+    ? r2Asset(image)
+    : image === FallbackImage
+      ? r2Asset("/src/assets/og-1200x630.jpg")
+      : image.src;
 const ogImage = new URL(imagePath, site);
 const ogImageAlt = imageAlt || title;
 const schemaItems = Array.isArray(schema) ? schema : [schema];
@@ -81,7 +87,7 @@ const baseSchema = [
     "@id": `${SITE_URL}/#organization`,
     name: SITE_TITLE,
     url: SITE_URL,
-    logo: new URL("/favicon/web-app-manifest-512x512.png", site).toString(),
+    logo: r2Asset("/favicon/web-app-manifest-512x512.png"),
     knowsAbout: SITE_TOPICS,
     sameAs: [],
   },
@@ -134,7 +140,7 @@ const jsonLd = {
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/svg+xml" href={r2Asset("/favicon.svg")} />
 <link rel="icon" href="/favicon.ico" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" type="text/plain" title="LLMs.txt" href="/llms.txt" />

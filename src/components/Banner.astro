@@ -1,5 +1,5 @@
 ---
-import Image from "astro/components/Image.astro";
+import { r2Asset } from "../lib/r2Assets";
 ---
 
 <div>
@@ -7,13 +7,13 @@ import Image from "astro/components/Image.astro";
   <p class="text-5xl">03/2022</p>
 
   <a href="#" class="grid mt-10">
-    <Image
-      src="/img/banners/banner1.jpg"
+    <img
+      src={r2Asset("/img/banners/banner1.jpg")}
       alt=""
       width="369"
       height="462"
-      format="webp"
-      quality={45}
+      loading="lazy"
+      decoding="async"
       class="w-full h-auto [grid-area:1/1/2/2]"
     />
     <div
@@ -42,7 +42,7 @@ import Image from "astro/components/Image.astro";
           <p class="text-3xl">03/2022</p>
         </div>
         <div>
-          <Image src="/img/icons/arrow.svg" alt="" width="46" height="46" />
+            <img src={r2Asset("/img/icons/arrow.svg")} alt="" width="46" height="46" loading="lazy" decoding="async" />
         </div>
       </div>
     </div>

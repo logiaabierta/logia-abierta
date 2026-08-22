@@ -11,7 +11,7 @@ export default defineConfig({
 	site: 'https://logiaabierta.com/',
 	integrations: [mdx(), icon(), sitemap()],
 	image: {
-  domains: ["cdn.sanity.io"],
+  domains: ["cdn.sanity.io", "pub-490f1c18b67d44e4968672517297f4c8.r2.dev"],
   dangerouslyProcessSVG: true,
 },
 	vite: {

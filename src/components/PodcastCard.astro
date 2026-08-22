@@ -1,6 +1,7 @@
 ---
 import Image from "astro/components/Image.astro";
 import { formatDate } from "../utils/dateFormatter";
+import { r2Asset } from "../lib/r2Assets";
 
 const { title, _createdAt, duration, episod, slug, image } = Astro.props;
 const locale = Astro.currentLocale;
@@ -43,7 +44,7 @@ const locale = Astro.currentLocale;
             </p>
           </div>
           <div>
-            <Image src="/img/icons/arrow.svg" alt="" width="46" height="46" />
+            <img src={r2Asset("/img/icons/arrow.svg")} alt="" width="46" height="46" loading="lazy" decoding="async" />
           </div>
         </div>
       </div>
