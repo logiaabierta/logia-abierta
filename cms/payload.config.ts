@@ -48,6 +48,12 @@ const r2Enabled = Boolean(
 const databasePoolMax = Number(
   process.env.DATABASE_POOL_MAX || (process.env.VERCEL ? 1 : 5),
 );
+const databaseIdleTimeout = Number(
+  process.env.DATABASE_IDLE_TIMEOUT_MS || (process.env.VERCEL ? 1000 : 10000),
+);
+const databaseMaxUses = Number(
+  process.env.DATABASE_MAX_USES || (process.env.VERCEL ? 1 : 0),
+);
 const runProdMigrations = process.env.PAYLOAD_RUN_MIGRATIONS === "true";
 
 export default buildConfig({
@@ -64,8 +70,9 @@ export default buildConfig({
           connectionString: databaseUrl,
           allowExitOnIdle: true,
           connectionTimeoutMillis: 10000,
-          idleTimeoutMillis: 10000,
+          idleTimeoutMillis: databaseIdleTimeout,
           max: databasePoolMax,
+          ...(databaseMaxUses > 0 ? { maxUses: databaseMaxUses } : {}),
           ...(databaseSsl ? { ssl: databaseSsl } : {}),
         },
         ...(runProdMigrations ? { prodMigrations: migrations } : {}),
