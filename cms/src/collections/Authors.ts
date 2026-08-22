@@ -1,15 +1,15 @@
-import type { CollectionConfig } from "payload";
+import type { CollectionConfig, FieldAccess } from "payload";
 
 import {
   authenticated,
   canManageEditorialContent,
 } from "../access/accessControl";
 
-const internalIdentityAccess = ({
-  req,
-}: {
-  req: { user?: { role?: string | null } | null };
-}) => ["admin", "editor"].includes(req.user?.role || "");
+const internalIdentityAccess: FieldAccess = ({ req }) => {
+  const user = req.user as { role?: string | null } | null | undefined;
+
+  return ["admin", "editor"].includes(user?.role || "");
+};
 
 const languageOptions = [
   { label: "Spanish", value: "es" },
