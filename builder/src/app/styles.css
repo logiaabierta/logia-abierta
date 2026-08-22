@@ -135,6 +135,31 @@ textarea {
   min-width: 0;
 }
 
+.builder-canvas-error {
+  display: grid;
+  min-height: calc(100vh - 2.75rem);
+  align-content: center;
+  gap: 0.75rem;
+  background: var(--la-surface);
+  color: var(--la-text);
+  padding: clamp(1.5rem, 5vw, 4rem);
+}
+
+.builder-canvas-error h2 {
+  margin: 0;
+  max-width: 760px;
+  font-size: clamp(2.25rem, 7vw, 6rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.builder-canvas-error p {
+  max-width: 700px;
+  margin: 0;
+  color: var(--la-muted);
+  line-height: 1.7;
+}
+
 .builder-topbar {
   display: flex;
   flex-wrap: wrap;

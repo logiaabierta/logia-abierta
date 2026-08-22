@@ -3,7 +3,7 @@
 import type { Data } from '@puckeditor/core'
 import dynamic from 'next/dynamic'
 import { Download, ExternalLink, FileJson, Monitor, Save } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { Component, type ReactNode, useEffect, useMemo, useState } from 'react'
 
 import { puckConfig } from '../lib/puck-config'
 import type { LogiaPage, PageSummary } from '../lib/types'
@@ -15,6 +15,32 @@ const Puck = dynamic(() => import('@puckeditor/core').then((mod) => mod.Puck), {
   loading: () => <main className="builder-loading">Cargando canvas...</main>,
 })
 
+class CanvasErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; message: string }> {
+  state = { hasError: false, message: '' }
+
+  static getDerivedStateFromError(error: unknown) {
+    return {
+      hasError: true,
+      message: error instanceof Error ? error.message : 'El canvas visual no pudo cargar.',
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="builder-canvas-error">
+          <p className="builder-eyebrow">Canvas</p>
+          <h2>El editor visual no pudo cargar</h2>
+          <p>{this.state.message}</p>
+          <p>La sesion sigue viva. Recarga la pagina o vuelve al selector de paginas.</p>
+        </div>
+      )
+    }
+
+    return this.props.children
+  }
+}
+
 function downloadJson(page: LogiaPage) {
   const blob = new Blob([`${JSON.stringify(page, null, 2)}\n`], {
     type: 'application/json',
@@ -25,6 +51,22 @@ function downloadJson(page: LogiaPage) {
   anchor.download = `${page.slug.split('/').pop() || 'page'}.json`
   anchor.click()
   URL.revokeObjectURL(url)
+}
+
+function ensurePuckIds(page: LogiaPage): LogiaPage {
+  return {
+    ...page,
+    puck: {
+      ...page.puck,
+      content: page.puck.content.map((block, index) => ({
+        ...block,
+        props: {
+          ...block.props,
+          id: typeof block.props.id === 'string' ? block.props.id : `${block.type.toLowerCase()}-${index + 1}`,
+        },
+      })),
+    },
+  }
 }
 
 export default function BuilderClient() {
@@ -59,7 +101,7 @@ export default function BuilderClient() {
     fetch(`/api/pages?id=${selectedId}`)
       .then((response) => response.json())
       .then((data) => {
-        setPage(data.page)
+        setPage(ensurePuckIds(data.page))
         setSaveState('idle')
         setMessage('')
       })
@@ -73,10 +115,10 @@ export default function BuilderClient() {
   async function publish(puckData: Data) {
     if (!page) return
 
-    const nextPage = {
+    const nextPage = ensurePuckIds({
       ...page,
       puck: puckData as LogiaPage['puck'],
-    }
+    })
 
     setPage(nextPage)
     setSaveState('saving')
@@ -215,7 +257,15 @@ export default function BuilderClient() {
             {saveState === 'saving' ? 'Guardando...' : 'Publish guarda JSON'}
           </span>
         </div>
-        <Puck config={puckConfig} data={data} onPublish={publish} />
+        <CanvasErrorBoundary>
+          <Puck
+            config={puckConfig}
+            data={data}
+            dnd={{ disableAutoScroll: true, behavior: 'static' }}
+            iframe={{ enabled: false }}
+            onPublish={publish}
+          />
+        </CanvasErrorBoundary>
       </section>
     </main>
   )
