@@ -19,22 +19,18 @@ export const Posts: CollectionConfig = {
           return data
         }
 
-        const linkedAuthor = await req.payload.find({
-          collection: 'authors',
+        const user = await req.payload.findByID({
+          id: req.user.id,
+          collection: 'users',
           depth: 0,
-          limit: 1,
-          overrideAccess: true,
-          where: {
-            linkedUser: {
-              equals: req.user.id,
-            },
-          },
         })
+        const authorProfiles = Array.isArray(user.authorProfiles) ? user.authorProfiles : []
+        const firstAuthor = authorProfiles[0]
 
-        if (linkedAuthor.docs[0]) {
+        if (firstAuthor) {
           return {
             ...data,
-            author: linkedAuthor.docs[0].id,
+            author: typeof firstAuthor === 'object' ? firstAuthor.id : firstAuthor,
           }
         }
 

@@ -371,7 +371,6 @@ try {
     const data = {
       name: author.name,
       slug,
-      linkedUser: slug === 'macarasco' ? linkedUserId : undefined,
       languages: author.activeLanguages?.length ? author.activeLanguages : ['es'],
       country: slugValue(author.country),
       cityName: slugValue(author.cityName),
@@ -400,13 +399,29 @@ try {
     console.log(`${result} author ${slug}`)
   }
 
-  const author =
-    (await findBySlug('authors', 'macarasco')) ||
-    (await findBySlug('authors', 'redaccion-logia-abierta')) ||
-    (await findBySlug('authors', 'archivo-logia-abierta'))
+  const authorProfiles = (
+    await Promise.all([
+      findBySlug('authors', 'macarasco'),
+      findBySlug('authors', 'redaccion-logia-abierta'),
+      findBySlug('authors', 'archivo-logia-abierta'),
+    ])
+  ).filter(Boolean)
+  const author = authorProfiles[0]
 
   if (!author) {
     throw new Error('No author found for sample posts.')
+  }
+
+  if (linkedUserId && authorProfiles.length > 0) {
+    await payload.update({
+      id: linkedUserId,
+      collection: 'users',
+      data: {
+        authorProfiles: authorProfiles.map((profile) => profile.id),
+      },
+      overrideAccess: true,
+    })
+    console.log(`updated user author profiles ${authorProfiles.map((profile) => profile.slug).join(', ')}`)
   }
 
   for (let index = 0; index < samplePosts.length; index++) {
