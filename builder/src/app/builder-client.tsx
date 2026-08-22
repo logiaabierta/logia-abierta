@@ -106,11 +106,11 @@ export default function BuilderClient() {
     }
   }
 
-  if (!page) {
+  if (!page || !viewportReady) {
     return <main className="builder-loading">Cargando builder...</main>
   }
 
-  if (viewportReady && !supportsEditorViewport) {
+  if (!supportsEditorViewport) {
     return (
       <main className="builder-mobile-shell">
         <section className="builder-mobile-panel">
