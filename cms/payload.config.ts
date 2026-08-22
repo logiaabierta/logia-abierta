@@ -48,6 +48,7 @@ const r2Enabled = Boolean(
 const databasePoolMax = Number(
   process.env.DATABASE_POOL_MAX || (process.env.VERCEL ? 1 : 5),
 );
+const runProdMigrations = process.env.PAYLOAD_RUN_MIGRATIONS === "true";
 
 export default buildConfig({
   admin: {
@@ -67,7 +68,7 @@ export default buildConfig({
           max: databasePoolMax,
           ...(databaseSsl ? { ssl: databaseSsl } : {}),
         },
-        prodMigrations: migrations,
+        ...(runProdMigrations ? { prodMigrations: migrations } : {}),
       })
     : sqliteAdapter({
         client: {
