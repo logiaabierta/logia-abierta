@@ -117,6 +117,81 @@ const pages = [
   },
 ]
 
+const samplePosts = [
+  {
+    title: 'El Templo como representacion del universo',
+    slug: 'el-templo-como-representacion-del-universo',
+    excerpt:
+      'Una introduccion al templo masonico como espacio simbolico y representacion ordenada del universo.',
+    category: 'Simbolismo',
+    tags: ['templo', 'simbolismo', 'cosmos'],
+    minutes: 8,
+  },
+  {
+    title: 'El simbolismo de la Luz',
+    slug: 'el-simbolismo-de-la-luz',
+    excerpt:
+      'Una aproximacion al significado de la Luz como imagen del conocimiento, la conciencia y la busqueda iniciatica.',
+    category: 'Simbolismo',
+    tags: ['luz', 'conocimiento', 'iniciacion'],
+    minutes: 6,
+  },
+  {
+    title: 'Que significa trabajar la Piedra Bruta',
+    slug: 'que-significa-trabajar-la-piedra-bruta',
+    excerpt:
+      'El trabajo interior expresado mediante uno de los simbolos mas conocidos de la tradicion masonica.',
+    category: 'Filosofia',
+    tags: ['piedra bruta', 'trabajo interior', 'aprendiz'],
+    minutes: 7,
+  },
+  {
+    title: 'Los origenes de la Masoneria especulativa',
+    slug: 'origenes-de-la-masoneria-especulativa',
+    excerpt:
+      'Una mirada introductoria a la transicion historica entre la tradicion operativa y la masoneria especulativa.',
+    category: 'Historia',
+    tags: ['historia', 'masoneria especulativa', 'tradicion'],
+    minutes: 10,
+  },
+  {
+    title: 'Escuadra y Compas: simbolo y construccion',
+    slug: 'escuadra-y-compas-simbolo-y-construccion',
+    excerpt:
+      'Geometria, conducta y construccion interior alrededor de dos herramientas convertidas en simbolos.',
+    category: 'Simbolismo',
+    tags: ['escuadra', 'compas', 'geometria'],
+    minutes: 5,
+  },
+  {
+    title: 'El Rito de Memphis y su desarrollo historico',
+    slug: 'rito-de-memphis-desarrollo-historico',
+    excerpt:
+      'Una pieza de demostracion sobre el desarrollo historico y las caracteristicas generales del Rito de Memphis.',
+    category: 'Ritos',
+    tags: ['memphis', 'ritos', 'historia'],
+    minutes: 12,
+  },
+  {
+    title: 'La Camara de Reflexiones',
+    slug: 'la-camara-de-reflexiones',
+    excerpt:
+      'Una introduccion al espacio de reflexion previa y a algunos de los simbolos que tradicionalmente lo acompanan.',
+    category: 'Cultura Masonica',
+    tags: ['camara de reflexiones', 'iniciacion', 'simbolos'],
+    minutes: 7,
+  },
+  {
+    title: 'Historia y simbolismo del Real Arco',
+    slug: 'historia-y-simbolismo-del-real-arco',
+    excerpt:
+      'Una introduccion historica y simbolica al Real Arco dentro del amplio panorama de la tradicion masonica.',
+    category: 'Historia',
+    tags: ['real arco', 'hraj', 'historia'],
+    minutes: 11,
+  },
+]
+
 function lexicalText(text?: string) {
   if (!text) return undefined
 
@@ -188,7 +263,23 @@ function localizedValue(input: unknown, fallback = '') {
   return preferred?.value || fallback
 }
 
-async function upsert(collection: 'authors' | 'pages', slug: string, data: Record<string, unknown>) {
+async function findBySlug(collection: 'authors' | 'pages' | 'posts', slug: string) {
+  const existing = await payload.find({
+    collection,
+    depth: 0,
+    limit: 1,
+    overrideAccess: true,
+    where: {
+      slug: {
+        equals: slug,
+      },
+    },
+  })
+
+  return existing.docs[0]
+}
+
+async function upsert(collection: 'authors' | 'pages' | 'posts', slug: string, data: Record<string, unknown>) {
   const existing = await payload.find({
     collection,
     depth: 0,
@@ -252,6 +343,15 @@ async function fetchSanityAuthors() {
 }
 
 try {
+  const firstUser = await payload.find({
+    collection: 'users',
+    depth: 0,
+    limit: 1,
+    overrideAccess: true,
+    sort: 'createdAt',
+  })
+  const linkedUserId = firstUser.docs[0]?.id
+
   for (const page of pages) {
     const result = await upsert('pages', page.slug, page)
     console.log(`${result} page ${page.slug}`)
@@ -271,6 +371,7 @@ try {
     const data = {
       name: author.name,
       slug,
+      linkedUser: slug === 'macarasco' ? linkedUserId : undefined,
       languages: author.activeLanguages?.length ? author.activeLanguages : ['es'],
       country: slugValue(author.country),
       cityName: slugValue(author.cityName),
@@ -297,6 +398,48 @@ try {
 
     const result = await upsert('authors', slug, data)
     console.log(`${result} author ${slug}`)
+  }
+
+  const author =
+    (await findBySlug('authors', 'macarasco')) ||
+    (await findBySlug('authors', 'redaccion-logia-abierta')) ||
+    (await findBySlug('authors', 'archivo-logia-abierta'))
+
+  if (!author) {
+    throw new Error('No author found for sample posts.')
+  }
+
+  for (let index = 0; index < samplePosts.length; index++) {
+    const post = samplePosts[index]
+    const publishedAt = new Date(Date.UTC(2026, 7, 5 + index, 12, 0, 0)).toISOString()
+    const data = {
+      title: post.title,
+      slug: post.slug,
+      language: 'es',
+      translationGroup: post.slug,
+      status: 'published',
+      publishedAt,
+      author: author.id,
+      categories: [{ name: post.category }],
+      tags: post.tags.map((name) => ({ name })),
+      excerpt: post.excerpt,
+      contentMode: 'visual',
+      body: lexicalText(
+        'Este es contenido temporal de demostracion para mantener visible el flujo editorial de Logia Abierta mientras se desarrolla la plataforma definitiva. El articulo final sustituira este texto.',
+      ),
+      faq: [
+        {
+          question: `De que trata ${post.title}?`,
+          answer: post.excerpt,
+        },
+      ],
+      seo: {
+        title: post.title.slice(0, 60),
+        description: post.excerpt.slice(0, 160),
+      },
+    }
+    const result = await upsert('posts', post.slug, data)
+    console.log(`${result} post ${post.slug}`)
   }
 } finally {
   await payload.destroy()

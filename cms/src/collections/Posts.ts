@@ -12,6 +12,36 @@ export const Posts: CollectionConfig = {
     group: 'Content',
     useAsTitle: 'title',
   },
+  hooks: {
+    beforeValidate: [
+      async ({ data, operation, req }) => {
+        if (!data || data.author || !req.user?.id || operation !== 'create') {
+          return data
+        }
+
+        const linkedAuthor = await req.payload.find({
+          collection: 'authors',
+          depth: 0,
+          limit: 1,
+          overrideAccess: true,
+          where: {
+            linkedUser: {
+              equals: req.user.id,
+            },
+          },
+        })
+
+        if (linkedAuthor.docs[0]) {
+          return {
+            ...data,
+            author: linkedAuthor.docs[0].id,
+          }
+        }
+
+        return data
+      },
+    ],
+  },
   fields: [
     {
       name: 'title',

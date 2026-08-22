@@ -73,7 +73,7 @@ const uniqueOptions = (options: typeof bodyOptions) =>
 export const Authors: CollectionConfig = {
   slug: 'authors',
   admin: {
-    defaultColumns: ['name', 'slug', 'languages'],
+    defaultColumns: ['name', 'slug', 'linkedUser', 'languages'],
     group: 'Editorial',
     useAsTitle: 'name',
   },
@@ -96,6 +96,15 @@ export const Authors: CollectionConfig = {
       name: 'photo',
       type: 'relationship',
       relationTo: 'media',
+    },
+    {
+      name: 'linkedUser',
+      type: 'relationship',
+      relationTo: 'users',
+      unique: true,
+      admin: {
+        description: 'Usuario del CMS que controla este perfil de autor.',
+      },
     },
     {
       name: 'languages',
