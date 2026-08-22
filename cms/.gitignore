@@ -10,3 +10,5 @@ payload-dev.db-shm
 payload-dev.db-wal
 prod-ca-2021.crt
 supabase-ca.crt
+.vercel
+.env*
