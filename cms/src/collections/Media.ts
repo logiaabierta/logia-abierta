@@ -1,7 +1,15 @@
 import type { CollectionConfig } from 'payload'
 
+import { authenticated, canCreateEditorialContent, canManageEditorialContent } from '../access/accessControl'
+
 export const Media: CollectionConfig = {
   slug: 'media',
+  access: {
+    create: canCreateEditorialContent,
+    delete: canManageEditorialContent,
+    read: authenticated,
+    update: canCreateEditorialContent,
+  },
   admin: {
     group: 'Library',
     useAsTitle: 'alt',

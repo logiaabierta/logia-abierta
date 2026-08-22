@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { authenticated, canManageEditorialContent } from '../access/accessControl'
+
 const languageOptions = [
   { label: 'Spanish', value: 'es' },
   { label: 'English', value: 'en' },
@@ -72,6 +74,12 @@ const uniqueOptions = (options: typeof bodyOptions) =>
 
 export const Authors: CollectionConfig = {
   slug: 'authors',
+  access: {
+    create: canManageEditorialContent,
+    delete: canManageEditorialContent,
+    read: authenticated,
+    update: canManageEditorialContent,
+  },
   admin: {
     defaultColumns: ['name', 'slug', 'languages'],
     group: 'Editorial',

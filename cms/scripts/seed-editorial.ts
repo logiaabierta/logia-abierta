@@ -418,6 +418,7 @@ try {
       collection: 'users',
       data: {
         authorProfiles: authorProfiles.map((profile) => profile.id),
+        role: 'admin',
       },
       overrideAccess: true,
     })

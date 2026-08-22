@@ -1,5 +1,11 @@
 import type { CollectionConfig } from 'payload'
 
+import {
+  canCreateEditorialContent,
+  canManageContent,
+  canManageEditorialContent,
+  publicPublishedWhere,
+} from '../access/accessControl'
 import { editorialBlocks } from '../blocks'
 import { contentModeOptions, languageOptions, statusOptions } from '../config/editorialOptions'
 import { postRichTextEditor } from '../editor/postRichTextEditor'
@@ -8,6 +14,12 @@ import { seoFields } from '../fields/seoFields'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
+  access: {
+    create: canCreateEditorialContent,
+    delete: canManageEditorialContent,
+    read: ({ req: { user } }) => canManageContent(user) || publicPublishedWhere(),
+    update: canManageEditorialContent,
+  },
   admin: {
     defaultColumns: ['title', 'slug', 'language', 'status', 'updatedAt'],
     group: 'Content',

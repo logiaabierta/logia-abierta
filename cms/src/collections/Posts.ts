@@ -1,5 +1,15 @@
 import type { CollectionConfig } from 'payload'
 
+import {
+  canCreateEditorialContent,
+  canEditAuthoredContent,
+  canManageContent,
+  canManageEditorialContent,
+  canReadDraftableContent,
+  hasRole,
+  selectedAuthorId,
+  userOwnsAuthor,
+} from '../access/accessControl'
 import { contentModeOptions, languageOptions, statusOptions } from '../config/editorialOptions'
 import { postRichTextEditor } from '../editor/postRichTextEditor'
 import { faqFields } from '../fields/faqFields'
@@ -7,6 +17,12 @@ import { seoFields } from '../fields/seoFields'
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
+  access: {
+    create: canCreateEditorialContent,
+    delete: canManageEditorialContent,
+    read: canReadDraftableContent,
+    update: canEditAuthoredContent,
+  },
   admin: {
     defaultColumns: ['title', 'language', 'status', 'publishedAt'],
     group: 'Content',
@@ -15,7 +31,7 @@ export const Posts: CollectionConfig = {
   hooks: {
     beforeValidate: [
       async ({ data, operation, req }) => {
-        if (!data || data.author || !req.user?.id || operation !== 'create') {
+        if (!data || !req.user?.id || !['create', 'update'].includes(operation)) {
           return data
         }
 
@@ -26,8 +42,17 @@ export const Posts: CollectionConfig = {
         })
         const authorProfiles = Array.isArray(user.authorProfiles) ? user.authorProfiles : []
         const firstAuthor = authorProfiles[0]
+        const incomingAuthorId = selectedAuthorId(data)
 
-        if (firstAuthor) {
+        if (!canManageContent(req.user) && incomingAuthorId && !userOwnsAuthor(user, incomingAuthorId)) {
+          throw new Error('You can only publish with an assigned author profile.')
+        }
+
+        if (hasRole(req.user, ['contributor']) && data.status === 'published') {
+          data.status = 'draft'
+        }
+
+        if (operation === 'create' && !data.author && firstAuthor) {
           return {
             ...data,
             author: typeof firstAuthor === 'object' ? firstAuthor.id : firstAuthor,
