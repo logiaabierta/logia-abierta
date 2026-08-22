@@ -1,0 +1,14 @@
+---
+const { eyebrow, title, text, label, href } = Astro.props;
+---
+
+<section class="section puck-cta" data-motion-reveal>
+  <div class="container">
+    <div class="puck-cta-panel">
+      {eyebrow && <p class="puck-eyebrow">{eyebrow}</p>}
+      {title && <h2>{title}</h2>}
+      {text && <p>{text}</p>}
+      {label && href && <a class="puck-button puck-button-primary" href={href}>{label}</a>}
+    </div>
+  </div>
+</section>

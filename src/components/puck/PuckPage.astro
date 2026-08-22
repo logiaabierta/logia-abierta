@@ -1,0 +1,11 @@
+---
+import PuckBlock from './PuckBlock.astro';
+
+const { page } = Astro.props;
+const content = page?.data?.puck?.content || page?.puck?.content || [];
+const template = page?.data?.template || page?.template || 'landing';
+---
+
+<div class={`puck-page puck-page-${template}`}>
+  {content.map((block) => <PuckBlock block={block} />)}
+</div>

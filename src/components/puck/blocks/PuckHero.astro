@@ -1,0 +1,36 @@
+---
+const {
+  eyebrow,
+  title,
+  summary,
+  image,
+  imageAlt = '',
+  align = 'left',
+  kicker,
+  primaryLabel,
+  primaryHref,
+  secondaryLabel,
+  secondaryHref,
+} = Astro.props;
+---
+
+<section class={`puck-hero puck-hero-${align}`} data-motion-reveal>
+  <div class="container puck-hero-inner">
+    <div class="puck-hero-copy">
+      {(eyebrow || kicker) && <p class="puck-eyebrow">{eyebrow || kicker}</p>}
+      <h1>{title}</h1>
+      {summary && <p class="puck-summary">{summary}</p>}
+      {(primaryLabel || secondaryLabel) && (
+        <div class="puck-actions">
+          {primaryLabel && primaryHref && <a class="puck-button puck-button-primary" href={primaryHref}>{primaryLabel}</a>}
+          {secondaryLabel && secondaryHref && <a class="puck-button puck-button-secondary" href={secondaryHref}>{secondaryLabel}</a>}
+        </div>
+      )}
+    </div>
+    {image && (
+      <figure class="puck-hero-media">
+        <img src={image} alt={imageAlt} loading="eager" />
+      </figure>
+    )}
+  </div>
+</section>

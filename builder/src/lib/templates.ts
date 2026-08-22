@@ -57,6 +57,28 @@ export const templates: Record<string, LogiaPage> = {
             ],
           },
         },
+        {
+          type: 'StatBand',
+          props: {
+            eyebrow: 'Preparado para crecer',
+            title: 'Contenido estatico, rapido y listo para SEO',
+            stats: [
+              { value: '5', label: 'Idiomas base' },
+              { value: '3', label: 'Formatos editoriales' },
+              { value: 'FAQ', label: 'Bloques para respuestas generativas' },
+            ],
+          },
+        },
+        {
+          type: 'Newsletter',
+          props: {
+            eyebrow: 'Comunidad',
+            title: 'Recibe nuevas publicaciones',
+            text: 'Ensayos, podcast, videos y recursos para estudiar la tradicion con calma.',
+            emailPlaceholder: 'tu@email.com',
+            buttonLabel: 'Suscribirme',
+          },
+        },
       ],
     },
   },
@@ -89,6 +111,30 @@ export const templates: Record<string, LogiaPage> = {
             title: 'Una estructura pensada para lectura lenta',
             body:
               'El contenido textual queda como HTML estatico generado por Astro.\n\nEste formato es ideal para articulos evergreen, paginas de doctrina, glosarios y recursos SEO.',
+          },
+        },
+        {
+          type: 'Quote',
+          props: {
+            quote: 'Una pagina editorial debe poder respirarse: titulo claro, argumento fuerte y salida natural hacia el siguiente paso.',
+            cite: 'Guia editorial Logia Abierta',
+          },
+        },
+        {
+          type: 'FAQ',
+          props: {
+            eyebrow: 'SEO',
+            title: 'Preguntas que esta pagina responde',
+            items: [
+              {
+                question: 'Para que sirve esta plantilla?',
+                answer: 'Para publicar paginas largas, guias y piezas evergreen con estructura clara para lectores y buscadores.',
+              },
+              {
+                question: 'Puede incluir FAQ schema?',
+                answer: 'Si. El bloque FAQ deja las preguntas organizadas para que Astro pueda generar datos estructurados.',
+              },
+            ],
           },
         },
       ],
@@ -126,6 +172,25 @@ export const templates: Record<string, LogiaPage> = {
             transcriptHref: '#transcripcion',
           },
         },
+        {
+          type: 'RichText',
+          props: {
+            eyebrow: 'Transcripcion',
+            title: 'Notas de la ponencia',
+            body:
+              'Incluye aqui el resumen, puntos clave y transcripcion parcial o completa.\n\nEsto convierte el video en una pagina indexable y util para Google, lectores y modelos de respuesta.',
+          },
+        },
+        {
+          type: 'CTA',
+          props: {
+            eyebrow: 'Siguiente paso',
+            title: 'Explora mas trazados relacionados',
+            text: 'Conecta esta ponencia con lecturas, recursos y episodios relacionados.',
+            label: 'Ver biblioteca',
+            href: '/es/blog',
+          },
+        },
       ],
     },
   },
@@ -160,6 +225,29 @@ export const templates: Record<string, LogiaPage> = {
             audioUrl: '',
             platformLabel: 'Escuchar en Spotify',
             platformHref: 'https://open.spotify.com/',
+          },
+        },
+        {
+          type: 'Timeline',
+          props: {
+            eyebrow: 'Show notes',
+            title: 'Estructura del episodio',
+            events: [
+              { year: '00:00', title: 'Introduccion', text: 'Contexto y tesis central.' },
+              { year: '12:00', title: 'Tema principal', text: 'Desarrollo del argumento.' },
+              { year: 'Final', title: 'Recursos', text: 'Lecturas y enlaces recomendados.' },
+            ],
+          },
+        },
+        {
+          type: 'LinkList',
+          props: {
+            eyebrow: 'Recursos',
+            title: 'Links del episodio',
+            links: [
+              { label: 'Spotify', href: 'https://open.spotify.com/', description: 'Escuchar o seguir el podcast.' },
+              { label: 'RSS', href: '/rss.xml', description: 'Agregar el feed a tu lector.' },
+            ],
           },
         },
       ],

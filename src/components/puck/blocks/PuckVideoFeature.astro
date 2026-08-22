@@ -1,0 +1,27 @@
+---
+const { eyebrow, title, summary, embedUrl, transcriptHref, poster, posterAlt = '' } = Astro.props;
+---
+
+<section class="section puck-media-feature puck-video-feature" data-motion-reveal>
+  <div class="container puck-media-layout">
+    <div class="puck-media-copy">
+      {eyebrow && <p class="puck-eyebrow">{eyebrow}</p>}
+      {title && <h2>{title}</h2>}
+      {summary && <p>{summary}</p>}
+      {transcriptHref && <a class="puck-link" href={transcriptHref}>Transcripcion</a>}
+    </div>
+    <div class="puck-video-frame">
+      {embedUrl ? (
+        <iframe
+          src={embedUrl}
+          title={title || 'Video'}
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        />
+      ) : poster ? (
+        <img src={poster} alt={posterAlt} loading="lazy" />
+      ) : null}
+    </div>
+  </div>
+</section>

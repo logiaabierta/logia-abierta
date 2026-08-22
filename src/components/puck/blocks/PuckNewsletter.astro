@@ -1,0 +1,17 @@
+---
+const { eyebrow, title, text, emailPlaceholder, buttonLabel } = Astro.props;
+---
+
+<section class="section puck-newsletter" data-motion-reveal>
+  <div class="container puck-newsletter-panel">
+    <div>
+      {eyebrow && <p class="puck-eyebrow">{eyebrow}</p>}
+      {title && <h2>{title}</h2>}
+      {text && <p>{text}</p>}
+    </div>
+    <form>
+      <input type="email" placeholder={emailPlaceholder || 'tu@email.com'} aria-label="Email" />
+      <button type="button">{buttonLabel || 'Suscribirme'}</button>
+    </form>
+  </div>
+</section>

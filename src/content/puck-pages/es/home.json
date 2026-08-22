@@ -1,0 +1,98 @@
+{
+  "title": "Logia Abierta",
+  "description": "Biblioteca editorial masonica con ensayos, podcast, video y trazados para estudiar la tradicion con calma.",
+  "lang": "es",
+  "slug": "home",
+  "template": "landing",
+  "status": "published",
+  "seo": {
+    "title": "Logia Abierta",
+    "description": "Ensayos, podcast, video y trazados masonicos para estudiar la tradicion con calma."
+  },
+  "puck": {
+    "root": {
+      "props": {
+        "pageLayout": "full"
+      }
+    },
+    "content": [
+      {
+        "type": "Hero",
+        "props": {
+          "eyebrow": "Biblioteca viva",
+          "title": "Logia Abierta",
+          "summary": "Ensayos, conversaciones y recursos para pensar la masoneria con rigor, belleza y libertad interior.",
+          "primaryLabel": "Leer articulos",
+          "primaryHref": "/es/blog",
+          "secondaryLabel": "Ver links",
+          "secondaryHref": "/es/links"
+        }
+      },
+      {
+        "type": "FeatureGrid",
+        "props": {
+          "eyebrow": "Formatos",
+          "title": "Tres formas de estudiar",
+          "items": [
+            {
+              "label": "Texto",
+              "title": "Ensayos y trazados",
+              "text": "Articulos largos, guias y piezas preparadas para SEO, lectura lenta y archivo."
+            },
+            {
+              "label": "Video",
+              "title": "Ponencias y clases",
+              "text": "Paginas con video, transcripcion, notas y recursos complementarios."
+            },
+            {
+              "label": "Audio",
+              "title": "Podcast y reflexiones",
+              "text": "Episodios con show notes, enlaces y contexto editorial reutilizable."
+            }
+          ]
+        }
+      },
+      {
+        "type": "CTA",
+        "props": {
+          "eyebrow": "Comunidad",
+          "title": "Sigue la investigacion",
+          "text": "Agrega el RSS o entra a nuestros canales para recibir nuevas publicaciones.",
+          "label": "Abrir links",
+          "href": "/es/links"
+        }
+      },
+      {
+        "type": "StatBand",
+        "props": {
+          "eyebrow": "Preparado para crecer",
+          "title": "Contenido estatico, rapido y listo para SEO",
+          "stats": [
+            {
+              "value": "5",
+              "label": "Idiomas base"
+            },
+            {
+              "value": "3",
+              "label": "Formatos editoriales"
+            },
+            {
+              "value": "FAQ",
+              "label": "Bloques para respuestas generativas"
+            }
+          ]
+        }
+      },
+      {
+        "type": "Newsletter",
+        "props": {
+          "eyebrow": "Comunidad",
+          "title": "Recibe nuevas publicaciones",
+          "text": "Ensayos, podcast, videos y recursos para estudiar la tradicion con calma.",
+          "emailPlaceholder": "tu@email.com",
+          "buttonLabel": "Suscribirme"
+        }
+      }
+    ]
+  }
+}

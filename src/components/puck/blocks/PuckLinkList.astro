@@ -1,0 +1,23 @@
+---
+const { eyebrow, title, links = [] } = Astro.props;
+---
+
+<section class="section puck-link-list" data-motion-reveal>
+  <div class="container">
+    {(eyebrow || title) && (
+      <header class="puck-section-header">
+        {eyebrow && <p class="puck-eyebrow">{eyebrow}</p>}
+        {title && <h2>{title}</h2>}
+      </header>
+    )}
+    <div class="puck-link-grid">
+      {links.map((link) => (
+        <a class="puck-link-card" href={link.href}>
+          <strong>{link.label}</strong>
+          {link.description && <span>{link.description}</span>}
+          <small>{link.href}</small>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

@@ -28,8 +28,7 @@ const locale = Astro.currentLocale || "es";
     <script is:inline>
       (() => {
         const storedTheme = localStorage.getItem("theme");
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        document.documentElement.dataset.theme = storedTheme || (prefersDark ? "dark" : "light");
+        document.documentElement.dataset.theme = storedTheme || "light";
       })();
     </script>
     <BaseHead

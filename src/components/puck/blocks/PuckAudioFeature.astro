@@ -1,0 +1,18 @@
+---
+const { eyebrow, title, summary, audioUrl, transcriptHref, platformLabel, platformHref } = Astro.props;
+---
+
+<section class="section puck-media-feature puck-audio-feature" data-motion-reveal>
+  <div class="container puck-audio-panel">
+    <div>
+      {eyebrow && <p class="puck-eyebrow">{eyebrow}</p>}
+      {title && <h2>{title}</h2>}
+      {summary && <p>{summary}</p>}
+    </div>
+    {audioUrl && <audio controls preload="metadata" src={audioUrl}></audio>}
+    <div class="puck-actions">
+      {platformHref && <a class="puck-button puck-button-secondary" href={platformHref}>{platformLabel || 'Escuchar'}</a>}
+      {transcriptHref && <a class="puck-link" href={transcriptHref}>Notas y transcripcion</a>}
+    </div>
+  </div>
+</section>

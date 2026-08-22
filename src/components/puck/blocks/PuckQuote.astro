@@ -1,0 +1,12 @@
+---
+const { quote, cite } = Astro.props;
+---
+
+<section class="section puck-quote" data-motion-reveal>
+  <div class="container">
+    <blockquote>
+      <p>{quote}</p>
+      {cite && <cite>{cite}</cite>}
+    </blockquote>
+  </div>
+</section>

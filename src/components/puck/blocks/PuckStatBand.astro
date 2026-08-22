@@ -1,0 +1,20 @@
+---
+const { eyebrow, title, stats = [] } = Astro.props;
+---
+
+<section class="section puck-stat-band" data-motion-reveal>
+  <div class="container puck-stat-band-inner">
+    <div>
+      {eyebrow && <p class="puck-eyebrow">{eyebrow}</p>}
+      {title && <h2>{title}</h2>}
+    </div>
+    <div class="puck-stats">
+      {stats.map((stat) => (
+        <div class="puck-stat">
+          <strong>{stat.value}</strong>
+          <span>{stat.label}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

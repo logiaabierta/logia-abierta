@@ -2,7 +2,7 @@
 
 import type { Data } from '@puckeditor/core'
 import dynamic from 'next/dynamic'
-import { Download, ExternalLink, FileJson, Monitor, Save } from 'lucide-react'
+import { Download, ExternalLink, FileJson, Monitor, Save, ShieldCheck } from 'lucide-react'
 import { Component, type ReactNode, useEffect, useMemo, useState } from 'react'
 
 import { puckConfig } from '../lib/puck-config'
@@ -186,7 +186,16 @@ export default function BuilderClient() {
         <div>
           <p className="builder-eyebrow">Logia Abierta</p>
           <h1>Builder</h1>
-          <p>Paginas visuales SSG guardadas como JSON para Astro.</p>
+          <p>Editor visual para paginas estaticas, landing pages y hubs SEO del sitio Astro.</p>
+        </div>
+
+        <div className="builder-readiness">
+          <span>
+            <ShieldCheck size={16} />
+            SSG
+          </span>
+          <span>SEO</span>
+          <span>R2 ready</span>
         </div>
 
         <label>
@@ -244,6 +253,12 @@ export default function BuilderClient() {
         </div>
 
         {message ? <p className={`builder-status builder-status-${saveState}`}>{message}</p> : null}
+        {!message ? (
+          <p className="builder-hint">
+            Usa <strong>Blocks</strong> para insertar secciones. <strong>Publish</strong> guarda en GitHub si el token
+            esta configurado; si no, exporta JSON.
+          </p>
+        ) : null}
       </aside>
 
       <section className="builder-editor">
@@ -259,6 +274,7 @@ export default function BuilderClient() {
         </div>
         <CanvasErrorBoundary>
           <Puck
+            key={selectedId}
             config={puckConfig}
             data={data}
             dnd={{ disableAutoScroll: true, behavior: 'static' }}

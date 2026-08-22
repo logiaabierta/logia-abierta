@@ -1,0 +1,23 @@
+---
+const { eyebrow, title, items = [] } = Astro.props;
+---
+
+<section class="section puck-feature-grid" data-motion-reveal>
+  <div class="container">
+    {(eyebrow || title) && (
+      <header class="puck-section-header">
+        {eyebrow && <p class="puck-eyebrow">{eyebrow}</p>}
+        {title && <h2>{title}</h2>}
+      </header>
+    )}
+    <div class="puck-grid">
+      {items.map((item) => (
+        <article class="puck-card">
+          {item.label && <p class="puck-card-label">{item.label}</p>}
+          <h3>{item.title}</h3>
+          {item.text && <p>{item.text}</p>}
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

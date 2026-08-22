@@ -1,0 +1,83 @@
+{
+  "title": "Plantilla de audio",
+  "description": "Pagina Puck estatica para podcasts, audios y reflexiones con show notes.",
+  "lang": "es",
+  "slug": "plantillas/audio",
+  "template": "audio",
+  "status": "published",
+  "seo": {
+    "title": "Plantilla audio",
+    "description": "Demo de pagina estatica para podcast y contenido de audio de Logia Abierta."
+  },
+  "puck": {
+    "root": {
+      "props": {
+        "template": "audio"
+      }
+    },
+    "content": [
+      {
+        "type": "Hero",
+        "props": {
+          "eyebrow": "Template audio",
+          "title": "Episodio de podcast o audio",
+          "summary": "Un formato para publicar audio con contexto, notas, links y transcripcion."
+        }
+      },
+      {
+        "type": "AudioFeature",
+        "props": {
+          "eyebrow": "Audio principal",
+          "title": "Titulo del episodio",
+          "summary": "Aqui va la descripcion editorial del episodio y sus temas principales.",
+          "audioUrl": "",
+          "platformLabel": "Escuchar en Spotify",
+          "platformHref": "https://open.spotify.com/"
+        }
+      },
+      {
+        "type": "Timeline",
+        "props": {
+          "eyebrow": "Show notes",
+          "title": "Estructura del episodio",
+          "events": [
+            {
+              "year": "00:00",
+              "title": "Introduccion",
+              "text": "Contexto y tesis central."
+            },
+            {
+              "year": "12:00",
+              "title": "Tema principal",
+              "text": "Desarrollo del argumento."
+            },
+            {
+              "year": "Final",
+              "title": "Recursos",
+              "text": "Lecturas y enlaces recomendados."
+            }
+          ]
+        }
+      },
+      {
+        "type": "LinkList",
+        "props": {
+          "eyebrow": "Recursos",
+          "title": "Links del episodio",
+          "links": [
+            {
+              "label": "Spotify",
+              "href": "https://open.spotify.com/",
+              "description": "Escuchar o seguir el podcast."
+            },
+            {
+              "label": "RSS",
+              "href": "/rss.xml",
+              "description": "Agregar el feed a tu lector."
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

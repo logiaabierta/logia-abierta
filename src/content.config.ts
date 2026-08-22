@@ -33,4 +33,38 @@ const essays = defineCollection({
 		}),
 });
 
-export const collections = { blog, essays };
+const puckPages = defineCollection({
+	loader: glob({ base: './src/content/puck-pages', pattern: '**/*.json' }),
+	schema: z.object({
+		title: z.string(),
+		description: z.string().max(160),
+		lang: z.string().default('es'),
+		slug: z.string(),
+		template: z.enum(['text', 'video', 'audio', 'landing', 'links']).default('landing'),
+		status: z.enum(['draft', 'published']).default('published'),
+		seo: z
+			.object({
+				title: z.string().max(60).optional(),
+				description: z.string().max(160).optional(),
+				image: z.string().optional(),
+				canonicalUrl: z.string().url().optional(),
+				noIndex: z.boolean().default(false),
+			})
+			.default({}),
+		puck: z.object({
+			root: z
+				.object({
+					props: z.record(z.string(), z.unknown()).default({}),
+				})
+				.default({ props: {} }),
+			content: z.array(
+				z.object({
+					type: z.string(),
+					props: z.record(z.string(), z.unknown()).default({}),
+				}),
+			),
+		}),
+	}),
+});
+
+export const collections = { blog, essays, puckPages };

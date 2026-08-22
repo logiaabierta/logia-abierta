@@ -14,6 +14,7 @@ import { contentModeOptions, languageOptions, statusOptions } from '../config/ed
 import { postRichTextEditor } from '../editor/postRichTextEditor'
 import { faqFields } from '../fields/faqFields'
 import { seoFields } from '../fields/seoFields'
+import { triggerDeployHook } from '../lib/deployHook'
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
@@ -60,6 +61,18 @@ export const Posts: CollectionConfig = {
         }
 
         return data
+      },
+    ],
+    afterChange: [
+      async ({ doc, previousDoc, req }) => {
+        if (doc.status !== 'published') return doc
+
+        const wasPublished = previousDoc?.status === 'published'
+        const reason = wasPublished ? `post updated: ${doc.slug}` : `post published: ${doc.slug}`
+
+        await triggerDeployHook({ reason, req })
+
+        return doc
       },
     ],
   },
@@ -112,6 +125,20 @@ export const Posts: CollectionConfig = {
       required: true,
     },
     {
+      name: 'contentTemplate',
+      type: 'select',
+      defaultValue: 'text',
+      options: [
+        { label: 'Texto / ensayo', value: 'text' },
+        { label: 'Video / ponencia', value: 'video' },
+        { label: 'Audio / podcast', value: 'audio' },
+      ],
+      required: true,
+      admin: {
+        description: 'Defines the Astro rendering template for this editorial piece.',
+      },
+    },
+    {
       name: 'categories',
       type: 'array',
       fields: [
@@ -142,6 +169,49 @@ export const Posts: CollectionConfig = {
       name: 'thumbnail',
       type: 'relationship',
       relationTo: 'media',
+    },
+    {
+      name: 'mediaDetails',
+      type: 'group',
+      admin: {
+        condition: (_, siblingData) => ['video', 'audio'].includes(siblingData?.contentTemplate),
+        description: 'Optional media metadata used by Astro templates for video and audio posts.',
+      },
+      fields: [
+        {
+          name: 'mediaUrl',
+          type: 'text',
+          admin: {
+            description: 'YouTube/Vimeo/embed URL for video, or audio file/platform URL for audio.',
+          },
+        },
+        {
+          name: 'duration',
+          type: 'text',
+          admin: {
+            description: 'Human readable duration, for example 42 min or 01:12:09.',
+          },
+        },
+        {
+          name: 'platform',
+          type: 'select',
+          options: [
+            { label: 'YouTube', value: 'youtube' },
+            { label: 'Spotify', value: 'spotify' },
+            { label: 'Substack', value: 'substack' },
+            { label: 'R2 / direct file', value: 'direct' },
+            { label: 'Other', value: 'other' },
+          ],
+        },
+        {
+          name: 'transcript',
+          type: 'textarea',
+          admin: {
+            rows: 16,
+            description: 'Transcript or show notes for SEO, accessibility and AI answer surfaces.',
+          },
+        },
+      ],
     },
     {
       name: 'excerpt',

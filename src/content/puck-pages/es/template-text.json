@@ -1,0 +1,66 @@
+{
+  "title": "Plantilla de articulo textual",
+  "description": "Pagina Puck estatica para ensayos, trazados y articulos largos.",
+  "lang": "es",
+  "slug": "plantillas/texto",
+  "template": "text",
+  "status": "published",
+  "seo": {
+    "title": "Plantilla texto",
+    "description": "Demo de pagina estatica para contenido textual de Logia Abierta."
+  },
+  "puck": {
+    "root": {
+      "props": {
+        "template": "text"
+      }
+    },
+    "content": [
+      {
+        "type": "Hero",
+        "props": {
+          "eyebrow": "Template texto",
+          "title": "Ensayo, trazado o guia editorial",
+          "summary": "Esta plantilla sirve para paginas largas con introduccion, cuerpo editorial, CTA y FAQ."
+        }
+      },
+      {
+        "type": "RichText",
+        "props": {
+          "eyebrow": "Cuerpo",
+          "title": "Una estructura pensada para lectura lenta",
+          "body": [
+            "El contenido textual queda como HTML estatico generado por Astro. Cuando el builder guarde este JSON en Git, Vercel recompila y el lector recibe una pagina rapida desde CDN.",
+            "Este formato es ideal para articulos evergreen, paginas de doctrina, glosarios, preguntas frecuentes y recursos que necesitan rankear organicamente."
+          ]
+        }
+      },
+      {
+        "type": "CTA",
+        "props": {
+          "title": "Listo para convertir en landing SEO",
+          "text": "El mismo JSON puede evolucionar con bloques de FAQ, timeline, galeria, Mermaid o CTA.",
+          "label": "Volver al home",
+          "href": "/es"
+        }
+      },
+      {
+        "type": "FAQ",
+        "props": {
+          "eyebrow": "SEO",
+          "title": "Preguntas que esta pagina responde",
+          "items": [
+            {
+              "question": "Para que sirve esta plantilla?",
+              "answer": "Para publicar guias, ensayos y piezas evergreen con estructura clara para lectores y buscadores."
+            },
+            {
+              "question": "Puede incluir FAQ schema?",
+              "answer": "Si. El bloque FAQ deja las preguntas organizadas para que Astro pueda generar datos estructurados."
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

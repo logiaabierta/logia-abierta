@@ -1,0 +1,14 @@
+---
+const { eyebrow, title, body = [], width = 'narrow' } = Astro.props;
+const paragraphs = Array.isArray(body) ? body : String(body || '').split('\n').filter(Boolean);
+---
+
+<section class={`section puck-rich-text puck-width-${width}`} data-motion-reveal>
+  <div class="container">
+    <article class="post puck-text-panel">
+      {eyebrow && <p class="puck-eyebrow">{eyebrow}</p>}
+      {title && <h2>{title}</h2>}
+      {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+    </article>
+  </div>
+</section>

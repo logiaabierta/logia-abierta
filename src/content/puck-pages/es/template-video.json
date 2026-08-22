@@ -1,0 +1,60 @@
+{
+  "title": "Plantilla de video",
+  "description": "Pagina Puck estatica para videos, ponencias y clases con transcripcion.",
+  "lang": "es",
+  "slug": "plantillas/video",
+  "template": "video",
+  "status": "published",
+  "seo": {
+    "title": "Plantilla video",
+    "description": "Demo de pagina estatica para videos y clases de Logia Abierta."
+  },
+  "puck": {
+    "root": {
+      "props": {
+        "template": "video"
+      }
+    },
+    "content": [
+      {
+        "type": "Hero",
+        "props": {
+          "eyebrow": "Template video",
+          "title": "Ponencia o clase en video",
+          "summary": "Una pagina con video, resumen, transcripcion y recursos para que el video tambien sea indexable."
+        }
+      },
+      {
+        "type": "VideoFeature",
+        "props": {
+          "eyebrow": "Video principal",
+          "title": "Tema de la ponencia",
+          "summary": "Aqui va el contexto editorial del video. El embed puede venir de YouTube, Vimeo o un reproductor propio.",
+          "embedUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          "transcriptHref": "#transcripcion"
+        }
+      },
+      {
+        "type": "RichText",
+        "props": {
+          "eyebrow": "Transcripcion",
+          "title": "Notas del video",
+          "body": [
+            "La transcripcion permite que el contenido audiovisual tenga una superficie SEO real.",
+            "Tambien sirve para Google Answers, SGE, LLM indexing y accesibilidad."
+          ]
+        }
+      },
+      {
+        "type": "CTA",
+        "props": {
+          "eyebrow": "Siguiente paso",
+          "title": "Explora mas trazados relacionados",
+          "text": "Conecta esta ponencia con lecturas, recursos y episodios relacionados.",
+          "label": "Ver biblioteca",
+          "href": "/es/blog"
+        }
+      }
+    ]
+  }
+}

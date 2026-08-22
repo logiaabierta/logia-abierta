@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+
+import PuckPage from '../../components/puck/PuckPage.astro';
+import Layout from '../../layouts/Base.astro';
+import { LOCALES } from '../../i18n';
+
+export const getStaticPaths = async () => {
+  const pages = await getCollection('puckPages', ({ data }) => data.status === 'published');
+  const localeKeys = Object.keys(LOCALES);
+
+  return pages
+    .filter((page) => localeKeys.includes(page.data.lang))
+    .filter((page) => page.data.slug !== 'home')
+    .map((page) => ({
+      params: {
+        lang: page.data.lang,
+        slug: page.data.slug,
+      },
+      props: { page },
+    }));
+};
+
+const { page } = Astro.props;
+const seo = page.data.seo || {};
+---
+
+<Layout
+  title={seo.title || page.data.title}
+  description={seo.description || page.data.description}
+  image={seo.image}
+  canonicalUrl={seo.canonicalUrl}
+  noindex={seo.noIndex}
+>
+  <PuckPage page={page} />
+</Layout>

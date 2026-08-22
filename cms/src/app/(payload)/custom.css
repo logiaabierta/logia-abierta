@@ -70,6 +70,29 @@ a {
   margin: 0;
 }
 
+.cms-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.cms-actions a {
+  border: 1px solid color-mix(in srgb, var(--cms-line) 52%, transparent);
+  border-radius: 6px;
+  color: var(--cms-bg);
+  background: var(--cms-accent);
+  font-weight: 800;
+  padding: 0.8rem 1rem;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.cms-actions a + a {
+  color: var(--cms-text);
+  background: color-mix(in srgb, var(--cms-line) 18%, transparent);
+}
+
 .payload-admin,
 .payload-admin body {
   background:
@@ -109,4 +132,45 @@ a {
 .template-default [class*="btn"],
 .template-default button[type="submit"] {
   font-weight: 700;
+}
+
+.payload-admin .nav__brand,
+.payload-admin [class*="logo"] {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.payload-admin [class*="dashboard"] {
+  background:
+    radial-gradient(circle at 12% 8%, color-mix(in srgb, var(--cms-accent) 12%, transparent), transparent 24rem),
+    transparent;
+}
+
+.payload-admin [class*="dashboard"] h1,
+.payload-admin .template-default h1 {
+  color: var(--cms-bone);
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.payload-admin .collection-list__wrap,
+.payload-admin [class*="collection"] [class*="card"],
+.payload-admin [class*="DocumentFields"] {
+  border-color: var(--cms-soft-line) !important;
+}
+
+.payload-admin label,
+.payload-admin .field-label {
+  color: var(--cms-muted) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em;
+}
+
+.payload-admin .field-description {
+  color: color-mix(in srgb, var(--cms-muted) 82%, transparent) !important;
+}
+
+.payload-admin .tabs-field__tabs button,
+.payload-admin .pill {
+  border-color: var(--cms-soft-line) !important;
 }

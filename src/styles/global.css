@@ -843,3 +843,243 @@ body {
 :root[data-theme="dark"] .border-black {
   border-color: color-mix(in oklab, currentColor 28%, transparent);
 }
+
+.puck-page {
+  @apply overflow-hidden;
+}
+
+.puck-hero {
+  @apply relative py-12 md:py-20;
+  border-block: 1px solid var(--la-border);
+  background:
+    linear-gradient(135deg, color-mix(in oklab, var(--la-accent) 14%, transparent), transparent 44%),
+    color-mix(in oklab, var(--la-surface) 82%, transparent);
+}
+
+.puck-hero-inner {
+  @apply grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.72fr)];
+}
+
+.puck-hero-center .puck-hero-inner {
+  @apply lg:grid-cols-1;
+}
+
+.puck-hero-center .puck-hero-copy {
+  @apply mx-auto max-w-5xl text-center;
+}
+
+.puck-hero h1 {
+  @apply max-w-6xl text-balance text-[clamp(3.75rem,12vw,12rem)] leading-[0.9];
+  letter-spacing: 0;
+}
+
+.puck-summary,
+.puck-media-copy > p,
+.puck-cta-panel > p {
+  @apply max-w-3xl text-lg leading-8 md:text-xl;
+  color: var(--la-muted);
+}
+
+.puck-eyebrow,
+.puck-card-label {
+  @apply mb-3 text-xs font-bold uppercase tracking-[0.18em];
+  color: var(--la-accent);
+}
+
+.puck-actions {
+  @apply mt-6 flex flex-wrap items-center gap-3;
+}
+
+.puck-button,
+.puck-link {
+  @apply inline-flex items-center justify-center border px-4 py-2 text-sm font-bold uppercase;
+  border-color: var(--la-border);
+}
+
+.puck-button-primary {
+  background: var(--la-accent);
+  color: var(--la-carbon);
+}
+
+.puck-button-secondary {
+  background: color-mix(in oklab, var(--la-accent-2) 18%, transparent);
+  color: var(--la-text);
+}
+
+.puck-hero-media img,
+.puck-video-frame,
+.puck-audio-panel,
+.puck-cta-panel,
+.puck-card {
+  @apply border;
+  border-color: var(--la-border);
+  background: var(--la-surface);
+}
+
+.puck-hero-media img {
+  @apply aspect-[4/3] w-full object-cover;
+}
+
+.puck-section-header {
+  @apply mb-8 max-w-4xl;
+}
+
+.puck-grid {
+  @apply grid gap-4 md:grid-cols-3;
+}
+
+.puck-card {
+  @apply p-5;
+}
+
+.puck-card h3 {
+  @apply text-2xl;
+}
+
+.puck-card p:not(.puck-card-label) {
+  color: var(--la-muted);
+}
+
+.puck-stat-band-inner,
+.puck-newsletter-panel {
+  @apply grid items-end gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(18rem,1fr)];
+}
+
+.puck-stats {
+  @apply grid gap-3 md:grid-cols-3;
+}
+
+.puck-stat,
+.puck-timeline article,
+.puck-faq details,
+.puck-link-card {
+  @apply border p-5;
+  border-color: var(--la-border);
+  background: var(--la-surface);
+}
+
+.puck-stat strong {
+  @apply block text-[clamp(2rem,5vw,4.75rem)] font-black leading-none;
+  color: var(--la-text);
+}
+
+.puck-stat span,
+.puck-timeline article > span {
+  @apply mt-2 block text-xs font-bold uppercase tracking-[0.16em];
+  color: var(--la-accent);
+}
+
+.puck-quote blockquote {
+  @apply m-0 border-y py-8;
+  border-color: var(--la-border);
+}
+
+.puck-quote blockquote p {
+  @apply max-w-5xl text-[clamp(2.25rem,6vw,6rem)] font-black leading-none;
+}
+
+.puck-quote cite {
+  @apply mt-5 block text-sm not-italic font-bold uppercase tracking-[0.16em];
+  color: var(--la-accent);
+}
+
+.puck-timeline-list,
+.puck-faq-list,
+.puck-link-grid {
+  @apply grid gap-3;
+}
+
+.puck-timeline h3 {
+  @apply mb-2 text-2xl md:text-3xl;
+}
+
+.puck-timeline p,
+.puck-faq p,
+.puck-link-card span {
+  color: var(--la-muted);
+}
+
+.puck-faq summary {
+  @apply cursor-pointer text-lg font-bold;
+}
+
+.puck-link-grid {
+  @apply md:grid-cols-2;
+}
+
+.puck-link-card {
+  @apply grid gap-2 no-underline transition hover:-translate-y-0.5;
+}
+
+.puck-link-card strong {
+  @apply text-xl uppercase;
+}
+
+.puck-link-card small {
+  @apply text-xs opacity-60;
+}
+
+.puck-newsletter-panel {
+  @apply border p-6 md:p-8;
+  border-color: var(--la-border);
+  background: var(--la-surface);
+}
+
+.puck-newsletter-panel p {
+  @apply max-w-2xl text-lg leading-8;
+  color: var(--la-muted);
+}
+
+.puck-newsletter form {
+  @apply flex flex-col gap-3 sm:flex-row;
+}
+
+.puck-newsletter input {
+  @apply min-w-0 flex-1 border px-4 py-3;
+  border-color: var(--la-border);
+  background: var(--la-bg);
+  color: var(--la-text);
+}
+
+.puck-newsletter button {
+  @apply border px-4 py-3 text-sm font-bold uppercase;
+  border-color: var(--la-border);
+  background: var(--la-accent);
+  color: var(--la-carbon);
+}
+
+.puck-text-panel {
+  @apply mx-auto;
+}
+
+.puck-width-narrow .puck-text-panel {
+  @apply max-w-3xl;
+}
+
+.puck-media-layout {
+  @apply grid items-center gap-8 lg:grid-cols-[0.72fr_1fr];
+}
+
+.puck-video-frame {
+  @apply aspect-video overflow-hidden;
+}
+
+.puck-video-frame iframe,
+.puck-video-frame img {
+  @apply h-full w-full object-cover;
+}
+
+.puck-audio-panel,
+.puck-cta-panel {
+  @apply mx-auto grid max-w-4xl gap-5 p-6 md:p-8;
+}
+
+.puck-audio-panel audio {
+  @apply w-full;
+}
+
+.puck-unknown-block {
+  @apply border p-4 text-sm;
+  border-color: var(--la-border);
+  color: var(--la-muted);
+}

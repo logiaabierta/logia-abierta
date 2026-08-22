@@ -1,0 +1,15 @@
+---
+const { eyebrow, title, code } = Astro.props;
+---
+
+<section class="section puck-mermaid-block" data-motion-reveal>
+  <div class="container">
+    {(eyebrow || title) && (
+      <header class="puck-section-header">
+        {eyebrow && <p class="puck-eyebrow">{eyebrow}</p>}
+        {title && <h2>{title}</h2>}
+      </header>
+    )}
+    <pre class="mdx-mermaid"><code>{code}</code></pre>
+  </div>
+</section>

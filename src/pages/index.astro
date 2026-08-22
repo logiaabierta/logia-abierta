@@ -1,20 +1,32 @@
 ---
+import { getCollection } from "astro:content";
+
 import Layout from "../layouts/Base.astro";
-import Hero from "../components/Hero.astro";
 import Topline from "../components/Topline.astro";
 import Demo from "../components/DemoPost.astro";
 import Posts from "../components/Posts.astro";
 import Podcasts from "../components/Podcasts.astro";
 import Authors from "../components/Authors.astro";
+import PuckPage from "../components/puck/PuckPage.astro";
 const locale = Astro.url.pathname.split("/")[1];
 
 // if (!["en", "uk", "de"].includes(locale)) {
 //   return Astro.redirect("/en" + Astro.url.pathname);
 // }
+
+const pages = await getCollection("puckPages", ({ data }) => data.status === "published");
+const homePage = pages.find((page) => page.data.lang === "es" && page.data.slug === "home");
+const seo = homePage?.data.seo || {};
 ---
 
-<Layout title="Logia Abierta">
-  <Hero title="Art & Life" />
+<Layout
+  title={seo.title || homePage?.data.title || "Logia Abierta"}
+  description={seo.description || homePage?.data.description}
+  image={seo.image}
+  canonicalUrl={seo.canonicalUrl}
+  noindex={seo.noIndex}
+>
+  {homePage ? <PuckPage page={homePage} /> : null}
   <Topline />
   <Demo />
   <Posts />

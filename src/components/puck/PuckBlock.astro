@@ -1,0 +1,55 @@
+---
+import PuckAudioFeature from './blocks/PuckAudioFeature.astro';
+import PuckCTA from './blocks/PuckCTA.astro';
+import PuckFAQ from './blocks/PuckFAQ.astro';
+import PuckFeatureGrid from './blocks/PuckFeatureGrid.astro';
+import PuckHero from './blocks/PuckHero.astro';
+import PuckLinkList from './blocks/PuckLinkList.astro';
+import PuckMermaid from './blocks/PuckMermaid.astro';
+import PuckNewsletter from './blocks/PuckNewsletter.astro';
+import PuckQuote from './blocks/PuckQuote.astro';
+import PuckRichText from './blocks/PuckRichText.astro';
+import PuckStatBand from './blocks/PuckStatBand.astro';
+import PuckTimeline from './blocks/PuckTimeline.astro';
+import PuckVideoFeature from './blocks/PuckVideoFeature.astro';
+
+const { block } = Astro.props;
+const type = block?.type;
+const props = block?.props || {};
+---
+
+{
+  type === 'Hero' ? (
+    <PuckHero {...props} />
+  ) : type === 'RichText' ? (
+    <PuckRichText {...props} />
+  ) : type === 'FeatureGrid' ? (
+    <PuckFeatureGrid {...props} />
+  ) : type === 'StatBand' ? (
+    <PuckStatBand {...props} />
+  ) : type === 'Quote' ? (
+    <PuckQuote {...props} />
+  ) : type === 'Timeline' ? (
+    <PuckTimeline {...props} />
+  ) : type === 'FAQ' ? (
+    <PuckFAQ {...props} />
+  ) : type === 'Mermaid' ? (
+    <PuckMermaid {...props} />
+  ) : type === 'LinkList' ? (
+    <PuckLinkList {...props} />
+  ) : type === 'VideoFeature' ? (
+    <PuckVideoFeature {...props} />
+  ) : type === 'AudioFeature' ? (
+    <PuckAudioFeature {...props} />
+  ) : type === 'CTA' ? (
+    <PuckCTA {...props} />
+  ) : type === 'Newsletter' ? (
+    <PuckNewsletter {...props} />
+  ) : (
+    <section class="section">
+      <div class="container">
+        <p class="puck-unknown-block">Unsupported Puck block: {type}</p>
+      </div>
+    </section>
+  )
+}
