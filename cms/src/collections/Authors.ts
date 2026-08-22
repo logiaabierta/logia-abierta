@@ -28,6 +28,7 @@ export const Authors: CollectionConfig = {
   slug: 'authors',
   admin: {
     defaultColumns: ['name', 'slug', 'languages'],
+    group: 'Editorial',
     useAsTitle: 'name',
   },
   fields: [

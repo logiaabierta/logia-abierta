@@ -9,6 +9,7 @@ export const Posts: CollectionConfig = {
   slug: 'posts',
   admin: {
     defaultColumns: ['title', 'language', 'status', 'publishedAt'],
+    group: 'Content',
     useAsTitle: 'title',
   },
   fields: [

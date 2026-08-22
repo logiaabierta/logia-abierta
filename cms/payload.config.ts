@@ -50,7 +50,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname, 'src'),
     },
   },
-  collections: [Users, Media, Authors, Pages, Posts],
+  collections: [Pages, Posts, Authors, Media, Users],
   db: databaseUrl
     ? postgresAdapter({
         pool: {

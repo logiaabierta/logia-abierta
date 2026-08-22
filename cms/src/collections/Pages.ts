@@ -10,6 +10,7 @@ export const Pages: CollectionConfig = {
   slug: 'pages',
   admin: {
     defaultColumns: ['title', 'slug', 'language', 'status', 'updatedAt'],
+    group: 'Content',
     useAsTitle: 'title',
   },
   fields: [
