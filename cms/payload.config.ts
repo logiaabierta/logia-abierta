@@ -46,13 +46,16 @@ const r2Enabled = Boolean(
   process.env.R2_PUBLIC_URL,
 );
 const databasePoolMax = Number(
-  process.env.DATABASE_POOL_MAX || (process.env.VERCEL ? 1 : 5),
+  process.env.DATABASE_POOL_MAX || (process.env.VERCEL ? 3 : 5),
+);
+const databaseConnectionTimeout = Number(
+  process.env.DATABASE_CONNECTION_TIMEOUT_MS || 30000,
 );
 const databaseIdleTimeout = Number(
-  process.env.DATABASE_IDLE_TIMEOUT_MS || (process.env.VERCEL ? 1000 : 10000),
+  process.env.DATABASE_IDLE_TIMEOUT_MS || (process.env.VERCEL ? 5000 : 10000),
 );
 const databaseMaxUses = Number(
-  process.env.DATABASE_MAX_USES || (process.env.VERCEL ? 1 : 0),
+  process.env.DATABASE_MAX_USES || (process.env.VERCEL ? 50 : 0),
 );
 const runProdMigrations = process.env.PAYLOAD_RUN_MIGRATIONS === "true";
 
@@ -69,7 +72,7 @@ export default buildConfig({
         pool: {
           connectionString: databaseUrl,
           allowExitOnIdle: true,
-          connectionTimeoutMillis: 10000,
+          connectionTimeoutMillis: databaseConnectionTimeout,
           idleTimeoutMillis: databaseIdleTimeout,
           max: databasePoolMax,
           ...(databaseMaxUses > 0 ? { maxUses: databaseMaxUses } : {}),
