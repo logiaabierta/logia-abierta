@@ -1,79 +1,95 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig } from "payload";
 
-import { authenticated, canManageEditorialContent } from '../access/accessControl'
+import {
+  authenticated,
+  canManageEditorialContent,
+} from "../access/accessControl";
+
+const internalIdentityAccess = ({
+  req,
+}: {
+  req: { user?: { role?: string | null } | null };
+}) => ["admin", "editor"].includes(req.user?.role || "");
 
 const languageOptions = [
-  { label: 'Spanish', value: 'es' },
-  { label: 'English', value: 'en' },
-  { label: 'French', value: 'fr' },
-  { label: 'Italian', value: 'it' },
-  { label: 'Portuguese', value: 'pt' },
-]
+  { label: "Spanish", value: "es" },
+  { label: "English", value: "en" },
+  { label: "French", value: "fr" },
+  { label: "Italian", value: "it" },
+  { label: "Portuguese", value: "pt" },
+];
 
 const countryOptions = [
-  { label: 'Republica Dominicana', value: 'republica-dominicana' },
-  { label: 'Estados Unidos', value: 'estados-unidos' },
-  { label: 'Puerto Rico', value: 'puerto-rico' },
-  { label: 'Mexico', value: 'mexico' },
-  { label: 'Colombia', value: 'colombia' },
-  { label: 'Venezuela', value: 'venezuela' },
-  { label: 'Espana', value: 'espana' },
-  { label: 'Francia', value: 'francia' },
-  { label: 'Italia', value: 'italia' },
-  { label: 'Portugal', value: 'portugal' },
-  { label: 'Brasil', value: 'brasil' },
-  { label: 'Argentina', value: 'argentina' },
-  { label: 'Chile', value: 'chile' },
-  { label: 'Peru', value: 'peru' },
-]
+  { label: "Republica Dominicana", value: "republica-dominicana" },
+  { label: "Estados Unidos", value: "estados-unidos" },
+  { label: "Puerto Rico", value: "puerto-rico" },
+  { label: "Mexico", value: "mexico" },
+  { label: "Colombia", value: "colombia" },
+  { label: "Venezuela", value: "venezuela" },
+  { label: "Espana", value: "espana" },
+  { label: "Francia", value: "francia" },
+  { label: "Italia", value: "italia" },
+  { label: "Portugal", value: "portugal" },
+  { label: "Brasil", value: "brasil" },
+  { label: "Argentina", value: "argentina" },
+  { label: "Chile", value: "chile" },
+  { label: "Peru", value: "peru" },
+];
 
 const cityOptions = [
-  { label: 'Santo Domingo', value: 'santo-domingo' },
-  { label: 'Santiago de los Caballeros', value: 'santiago-de-los-caballeros' },
-  { label: 'San Juan', value: 'san-juan' },
-  { label: 'Miami', value: 'miami' },
-  { label: 'New York', value: 'new-york' },
-  { label: 'Ciudad de Mexico', value: 'ciudad-de-mexico' },
-  { label: 'Bogota', value: 'bogota' },
-  { label: 'Caracas', value: 'caracas' },
-  { label: 'Madrid', value: 'madrid' },
-  { label: 'Barcelona', value: 'barcelona' },
-  { label: 'Paris', value: 'paris' },
-  { label: 'Rome', value: 'rome' },
-  { label: 'Lisbon', value: 'lisbon' },
-  { label: 'Sao Paulo', value: 'sao-paulo' },
-  { label: 'Buenos Aires', value: 'buenos-aires' },
-  { label: 'Santiago de Chile', value: 'santiago-de-chile' },
-  { label: 'Lima', value: 'lima' },
-]
+  { label: "Santo Domingo", value: "santo-domingo" },
+  { label: "Santiago de los Caballeros", value: "santiago-de-los-caballeros" },
+  { label: "San Juan", value: "san-juan" },
+  { label: "Miami", value: "miami" },
+  { label: "New York", value: "new-york" },
+  { label: "Ciudad de Mexico", value: "ciudad-de-mexico" },
+  { label: "Bogota", value: "bogota" },
+  { label: "Caracas", value: "caracas" },
+  { label: "Madrid", value: "madrid" },
+  { label: "Barcelona", value: "barcelona" },
+  { label: "Paris", value: "paris" },
+  { label: "Rome", value: "rome" },
+  { label: "Lisbon", value: "lisbon" },
+  { label: "Sao Paulo", value: "sao-paulo" },
+  { label: "Buenos Aires", value: "buenos-aires" },
+  { label: "Santiago de Chile", value: "santiago-de-chile" },
+  { label: "Lima", value: "lima" },
+];
 
 const riteOptions = [
-  { label: 'RAPM - Memphis', value: 'rapm' },
-  { label: 'RAPMM - Memphis-Misraim', value: 'rapmm' },
-  { label: 'RN - Regimen de Napoles / Misraim', value: 'rn' },
-  { label: 'RER - Regimen Escoces Rectificado', value: 'rer' },
-  { label: 'REAA - Rito Escoces Antiguo y Aceptado', value: 'reaa' },
-  { label: 'HRAJ - Holy Royal Arch of Jerusalem', value: 'hraj' },
-]
+  { label: "RAPM - Memphis", value: "rapm" },
+  { label: "RAPMM - Memphis-Misraim", value: "rapmm" },
+  { label: "RN - Regimen de Napoles / Misraim", value: "rn" },
+  { label: "RER - Regimen Escoces Rectificado", value: "rer" },
+  { label: "REAA - Rito Escoces Antiguo y Aceptado", value: "reaa" },
+  { label: "HRAJ - Holy Royal Arch of Jerusalem", value: "hraj" },
+];
 
 const bodyOptions = [
-  { label: 'SN - Escudero Novicio', value: 'sn' },
-  { label: 'MESA - Maestro Escoces de San Andres', value: 'mesa' },
-  { label: 'CBCS - Caballero Bienhechor de la Ciudad Santa', value: 'cbcs' },
-  { label: 'HRAJ - Holy Royal Arch of Jerusalem', value: 'hraj' },
-  { label: 'SGCHRAJ - Supremo Gran Capitulo HRAJ', value: 'sgchraj' },
-  { label: 'SC33 - Supremo Consejo Grado 33', value: 'sc33' },
-  { label: 'PRRER - Priorato del RER', value: 'prrer' },
-  { label: 'SSAPMM - Soberano Santuario Antiguos y Primitivos Ritos de Memphis y Misraim', value: 'ssapmm' },
-]
+  { label: "SN - Escudero Novicio", value: "sn" },
+  { label: "MESA - Maestro Escoces de San Andres", value: "mesa" },
+  { label: "CBCS - Caballero Bienhechor de la Ciudad Santa", value: "cbcs" },
+  { label: "HRAJ - Holy Royal Arch of Jerusalem", value: "hraj" },
+  { label: "SGCHRAJ - Supremo Gran Capitulo HRAJ", value: "sgchraj" },
+  { label: "SC33 - Supremo Consejo Grado 33", value: "sc33" },
+  { label: "PRRER - Priorato del RER", value: "prrer" },
+  {
+    label:
+      "SSAPMM - Soberano Santuario Antiguos y Primitivos Ritos de Memphis y Misraim",
+    value: "ssapmm",
+  },
+];
 
-const honorOptions = [{ label: 'PM - Past Master', value: 'pm' }]
+const honorOptions = [{ label: "PM - Past Master", value: "pm" }];
 
 const uniqueOptions = (options: typeof bodyOptions) =>
-  options.filter((option, index, list) => list.findIndex((item) => item.value === option.value) === index)
+  options.filter(
+    (option, index, list) =>
+      list.findIndex((item) => item.value === option.value) === index,
+  );
 
 export const Authors: CollectionConfig = {
-  slug: 'authors',
+  slug: "authors",
   access: {
     create: canManageEditorialContent,
     delete: canManageEditorialContent,
@@ -81,152 +97,235 @@ export const Authors: CollectionConfig = {
     update: canManageEditorialContent,
   },
   admin: {
-    defaultColumns: ['name', 'slug', 'languages'],
-    group: 'Editorial',
-    useAsTitle: 'name',
+    defaultColumns: ["name", "penName", "publicIdentity", "slug", "languages"],
+    group: "Editorial",
+    useAsTitle: "name",
   },
   fields: [
     {
-      name: 'name',
-      type: 'text',
+      name: "name",
+      type: "text",
       required: true,
+      admin: {
+        description:
+          "Nombre publico usado en el website, bylines, SEO y tarjetas sociales.",
+      },
     },
     {
-      name: 'slug',
-      type: 'text',
+      name: "publicIdentity",
+      type: "select",
+      defaultValue: "penName",
+      options: [
+        { label: "Pseudonimo publico", value: "penName" },
+        { label: "Nombre real publico", value: "realName" },
+        { label: "Nombre publico manual", value: "custom" },
+      ],
+      required: true,
+      admin: {
+        description:
+          "Control editorial de como se firma este autor publicamente.",
+      },
+    },
+    {
+      name: "penName",
+      type: "text",
+      admin: {
+        description:
+          "Pseudonimo visible. Ejemplos editoriales: Zorobabel, Ageo, Josue.",
+      },
+    },
+    {
+      name: "legalName",
+      type: "text",
+      access: {
+        read: internalIdentityAccess,
+        create: internalIdentityAccess,
+        update: internalIdentityAccess,
+      },
+      admin: {
+        description:
+          "Nombre real/legal. Campo interno; no debe publicarse mientras usemos pseudonimos.",
+      },
+    },
+    {
+      name: "internalIdentityKey",
+      type: "text",
+      unique: true,
+      access: {
+        read: internalIdentityAccess,
+        create: internalIdentityAccess,
+        update: internalIdentityAccess,
+      },
+      admin: {
+        description:
+          "Codigo interno para saber que pseudonimo pertenece a quien. Ej: autor-zorobabel-001.",
+      },
+    },
+    {
+      name: "identityRevealPlan",
+      type: "textarea",
+      access: {
+        read: internalIdentityAccess,
+        create: internalIdentityAccess,
+        update: internalIdentityAccess,
+      },
+      admin: {
+        description:
+          "Notas privadas sobre fecha/condiciones para revelar el nombre real.",
+      },
+    },
+    {
+      name: "craftOfficePseudonym",
+      type: "select",
+      options: [
+        { label: "Zorobabel - Principe / Gobernador", value: "zorobabel" },
+        { label: "Ageo - Profeta", value: "ageo" },
+        { label: "Josue - Sumo Sacerdote", value: "josue" },
+        { label: "Otro", value: "otro" },
+      ],
+      admin: {
+        description:
+          "Referencia simbolica opcional para ordenar la familia de pseudonimos.",
+      },
+    },
+    {
+      name: "slug",
+      type: "text",
       required: true,
       unique: true,
       admin: {
-        description: 'Stable URL handle for this author.',
+        description: "Stable URL handle for this author.",
       },
     },
     {
-      name: 'photo',
-      type: 'relationship',
-      relationTo: 'media',
+      name: "photo",
+      type: "relationship",
+      relationTo: "media",
     },
     {
-      name: 'languages',
-      type: 'select',
+      name: "languages",
+      type: "select",
       hasMany: true,
       options: languageOptions,
       admin: {
-        description: 'Idiomas en los que este autor puede publicar o revisar.',
+        description: "Idiomas en los que este autor puede publicar o revisar.",
       },
     },
     {
-      name: 'country',
-      type: 'select',
+      name: "country",
+      type: "select",
       options: countryOptions,
     },
     {
-      name: 'cityName',
-      type: 'select',
+      name: "cityName",
+      type: "select",
       options: cityOptions,
     },
     {
-      name: 'otherLocation',
-      type: 'text',
+      name: "otherLocation",
+      type: "text",
       admin: {
-        description: 'Usar solo si el pais o ciudad no aparece en las listas controladas.',
+        description:
+          "Usar solo si el pais o ciudad no aparece en las listas controladas.",
       },
     },
     {
-      name: 'showMasonicProfile',
-      type: 'checkbox',
+      name: "showMasonicProfile",
+      type: "checkbox",
       defaultValue: true,
     },
     {
-      name: 'primaryRites',
-      type: 'select',
+      name: "primaryRites",
+      type: "select",
       hasMany: true,
       options: riteOptions,
     },
     {
-      name: 'craftBodies',
-      type: 'select',
+      name: "craftBodies",
+      type: "select",
       hasMany: true,
       options: riteOptions,
     },
     {
-      name: 'philosophicalBodies',
-      type: 'select',
+      name: "philosophicalBodies",
+      type: "select",
       hasMany: true,
       options: uniqueOptions([...riteOptions, ...bodyOptions]),
     },
     {
-      name: 'appendantBodies',
-      type: 'select',
+      name: "appendantBodies",
+      type: "select",
       hasMany: true,
       options: bodyOptions,
     },
     {
-      name: 'honors',
-      type: 'select',
+      name: "honors",
+      type: "select",
       hasMany: true,
       options: honorOptions,
     },
     {
-      name: 'bodies',
-      type: 'select',
+      name: "bodies",
+      type: "select",
       hasMany: true,
       options: uniqueOptions([...riteOptions, ...bodyOptions, ...honorOptions]),
       admin: {
-        description: 'Legacy combined badges. Prefer the separated rite/body fields above.',
+        description:
+          "Legacy combined badges. Prefer the separated rite/body fields above.",
       },
     },
     {
-      name: 'shortBio',
-      type: 'textarea',
+      name: "shortBio",
+      type: "textarea",
       maxLength: 280,
     },
     {
-      name: 'bio',
-      type: 'richText',
+      name: "bio",
+      type: "richText",
     },
     {
-      name: 'personalWebsite',
-      type: 'text',
+      name: "personalWebsite",
+      type: "text",
     },
     {
-      name: 'publicEmail',
-      type: 'email',
+      name: "publicEmail",
+      type: "email",
     },
     {
-      name: 'contacts',
-      type: 'array',
+      name: "contacts",
+      type: "array",
       fields: [
         {
-          name: 'network',
-          type: 'text',
+          name: "network",
+          type: "text",
           required: true,
         },
         {
-          name: 'url',
-          type: 'text',
+          name: "url",
+          type: "text",
           required: true,
         },
         {
-          name: 'icon',
-          type: 'text',
+          name: "icon",
+          type: "text",
         },
       ],
     },
     {
-      name: 'links',
-      type: 'array',
+      name: "links",
+      type: "array",
       fields: [
         {
-          name: 'label',
-          type: 'text',
+          name: "label",
+          type: "text",
           required: true,
         },
         {
-          name: 'url',
-          type: 'text',
+          name: "url",
+          type: "text",
           required: true,
         },
       ],
     },
   ],
-}
+};
