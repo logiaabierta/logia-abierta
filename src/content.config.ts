@@ -30,7 +30,42 @@ const essays = defineCollection({
 			tags: z.array(z.string()).default([]),
 			featured: z.boolean().default(false),
 			heroImage: z.optional(image()),
+			heroImageUrl: z.string().url().optional(),
+			heroImageAlt: z.string().optional(),
 		}),
+});
+
+const authors = defineCollection({
+	loader: glob({ base: './src/content/authors', pattern: '**/*.json' }),
+	schema: z.object({
+		publicName: z.object({ name: z.string(), slug: z.string() }),
+		displayMode: z.enum(['pseudonym', 'real', 'both']).default('pseudonym'),
+		internalIdentity: z.string().optional(),
+		realName: z.string().optional(),
+		archetype: z.string().default('otro'),
+		bio: z.string().optional(),
+		languages: z.array(z.string()).default(['es']),
+		rites: z.array(z.string()).default([]),
+		country: z.string().default('DO'),
+		city: z.string().optional(),
+		avatarUrl: z.string().url().optional(),
+		website: z.string().url().optional(),
+		instagram: z.string().url().optional(),
+		linkedin: z.string().url().optional(),
+		substack: z.string().url().optional(),
+	}),
+});
+
+const mediaNotes = defineCollection({
+	loader: glob({ base: './src/content/media-notes', pattern: '**/*.json' }),
+	schema: z.object({
+		title: z.object({ name: z.string(), slug: z.string() }),
+		kind: z.enum(['image', 'audio', 'video', 'document', 'attachment']).default('image'),
+		r2Url: z.string().url(),
+		altText: z.string().optional(),
+		credit: z.string().optional(),
+		publishedAt: z.coerce.date().optional(),
+	}),
 });
 
 const puckPages = defineCollection({
@@ -67,4 +102,4 @@ const puckPages = defineCollection({
 	}),
 });
 
-export const collections = { blog, essays, puckPages };
+export const collections = { blog, essays, authors, mediaNotes, puckPages };

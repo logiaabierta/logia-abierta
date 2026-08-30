@@ -27,8 +27,8 @@ const locale = Astro.currentLocale || "es";
   <head>
     <script is:inline>
       (() => {
-        const storedTheme = localStorage.getItem("theme");
-        document.documentElement.dataset.theme = storedTheme || "light";
+        document.documentElement.dataset.theme = "light";
+        document.documentElement.style.colorScheme = "light";
       })();
     </script>
     <BaseHead

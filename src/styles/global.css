@@ -577,21 +577,32 @@ body {
 }
 
 .links-hub {
-  @apply px-4 py-10 md:py-16;
+  @apply w-full px-4 py-10 md:py-16;
   background:
-    radial-gradient(circle at 20% 0%, color-mix(in oklab, var(--la-amber) 18%, transparent), transparent 30rem),
-    radial-gradient(circle at 85% 15%, color-mix(in oklab, var(--la-brass) 15%, transparent), transparent 24rem),
-    var(--la-bg);
+    radial-gradient(circle at 20% 0%, color-mix(in oklab, var(--la-amber) 16%, transparent), transparent 30rem),
+    radial-gradient(circle at 85% 15%, color-mix(in oklab, var(--la-brass) 20%, transparent), transparent 24rem),
+    var(--la-bone);
+  color: var(--la-carbon);
   min-height: 100vh;
+  max-width: 100vw;
+  overflow-x: clip;
 }
 
 .links-hub-inner {
   @apply mx-auto grid w-full max-w-4xl gap-8;
   justify-items: stretch;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
 }
 
 .links-profile {
   @apply grid gap-5 sm:grid-cols-[4.5rem_1fr] sm:items-center;
+  min-width: 0;
+}
+
+.links-profile > * {
+  min-width: 0;
 }
 
 .links-logo {
@@ -602,11 +613,16 @@ body {
 }
 
 .links-profile h1 {
-  @apply mb-2 text-5xl uppercase leading-none md:text-7xl;
+  @apply mb-2 text-4xl uppercase leading-none sm:text-5xl md:text-7xl;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 .links-profile p:not(.links-kicker) {
-  @apply max-w-2xl text-base opacity-80;
+  @apply w-full max-w-2xl text-base opacity-80;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 .links-kicker {
@@ -616,6 +632,8 @@ body {
 
 .links-grid {
   @apply mx-auto grid w-full max-w-4xl gap-3 sm:grid-cols-2;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .links-grid-compact {
@@ -623,9 +641,17 @@ body {
 }
 
 .links-card {
-  @apply grid grid-cols-[2.5rem_1fr] items-center gap-3 border p-4 transition hover:-translate-y-0.5;
-  background: color-mix(in oklab, var(--la-surface) 82%, transparent);
-  border-color: var(--la-border);
+  @apply grid items-center gap-3 border p-4 transition hover:-translate-y-0.5;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  background: color-mix(in oklab, white 76%, var(--la-bone));
+  border-color: color-mix(in oklab, var(--la-brass) 45%, transparent);
+  max-width: 100%;
+  min-width: 0;
+}
+
+.links-card span,
+.links-feature span {
+  min-width: 0;
 }
 
 .links-card > svg {
@@ -641,11 +667,19 @@ body {
 .links-card small,
 .links-feature small {
   @apply mt-1 block text-sm leading-snug opacity-70;
+  max-width: 100%;
+  hyphens: auto;
+  line-break: anywhere;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .links-section {
   @apply mx-auto w-full max-w-4xl border-t pt-8;
-  border-color: var(--la-border);
+  border-color: color-mix(in oklab, var(--la-brass) 45%, transparent);
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
 }
 
 .links-section-heading {
@@ -662,12 +696,15 @@ body {
 
 .links-content-grid {
   @apply grid gap-4;
+  min-width: 0;
 }
 
 .links-feature {
   @apply grid gap-4 border p-3 transition hover:-translate-y-0.5 sm:grid-cols-[9rem_1fr] sm:items-center;
-  background: color-mix(in oklab, var(--la-surface) 78%, transparent);
-  border-color: var(--la-border);
+  background: color-mix(in oklab, white 78%, var(--la-bone));
+  border-color: color-mix(in oklab, var(--la-brass) 45%, transparent);
+  max-width: 100%;
+  min-width: 0;
 }
 
 .links-feature img {
@@ -685,8 +722,8 @@ body {
 
 .links-wordmark {
   @apply w-full overflow-visible pt-4;
-  color: color-mix(in oklab, var(--la-bone) 92%, var(--la-brass));
-  opacity: 0.72;
+  color: color-mix(in oklab, var(--la-carbon) 76%, var(--la-brass));
+  opacity: 0.74;
   justify-self: center;
   max-width: min(calc(100vw - 1rem), 1500px);
 }
@@ -706,8 +743,8 @@ body {
 
 .links-footer {
   @apply mx-auto grid w-full max-w-4xl justify-items-center gap-3 border-t pt-6 text-center text-xs uppercase;
-  border-color: var(--la-border);
-  color: var(--la-muted);
+  border-color: color-mix(in oklab, var(--la-brass) 45%, transparent);
+  color: color-mix(in oklab, var(--la-carbon) 72%, white);
 }
 
 .links-socials {
@@ -743,6 +780,19 @@ body {
 
 .links-footer a {
   @apply underline underline-offset-4;
+}
+
+@media (max-width: 480px) {
+  .links-card {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.65rem;
+    padding: 0.95rem 0.85rem;
+  }
+
+  .links-card small {
+    max-width: 25ch;
+    white-space: normal;
+  }
 }
 
 .mdx-figure-title {
