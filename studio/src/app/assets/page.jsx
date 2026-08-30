@@ -5,8 +5,11 @@ import { useEffect, useState } from 'react';
 export default function AssetsPage() {
   const [secret, setSecret] = useState('');
   const [assetUrl, setAssetUrl] = useState('');
+  const [assets, setAssets] = useState([]);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [listing, setListing] = useState(false);
+  const [prefix, setPrefix] = useState('');
 
   useEffect(() => {
     setSecret(localStorage.getItem('la-r2-upload-secret') || '');
@@ -34,6 +37,30 @@ export default function AssetsPage() {
     }
 
     setAssetUrl(payload.url);
+    setPrefix(String(formData.get('folder') || ''));
+    await loadAssets(String(formData.get('folder') || ''));
+  }
+
+  async function loadAssets(nextPrefix = prefix) {
+    setListing(true);
+    setError('');
+    localStorage.setItem('la-r2-upload-secret', secret);
+
+    const params = new URLSearchParams();
+    if (nextPrefix) params.set('prefix', nextPrefix);
+
+    const response = await fetch(`/api/r2-upload?${params.toString()}`, {
+      headers: { Authorization: `Bearer ${secret}` },
+    });
+    const payload = await response.json();
+    setListing(false);
+
+    if (!response.ok) {
+      setError(payload.error || 'No se pudo leer la biblioteca R2.');
+      return;
+    }
+
+    setAssets(payload.objects || []);
   }
 
   return (
@@ -86,6 +113,42 @@ export default function AssetsPage() {
           )}
         </section>
       )}
+
+      <section className="panel library">
+        <div>
+          <p className="kicker">Biblioteca R2</p>
+          <h2>Archivos publicados</h2>
+        </div>
+        <div className="library-controls">
+          <label>
+            Carpeta / prefix
+            <input value={prefix} onChange={(event) => setPrefix(event.target.value)} placeholder="blog, authors, podcast" />
+          </label>
+          <button type="button" onClick={() => loadAssets()} disabled={listing || !secret}>
+            {listing ? 'Cargando...' : 'Ver R2'}
+          </button>
+        </div>
+        {assets.length > 0 ? (
+          <ul className="asset-list">
+            {assets.map((asset) => (
+              <li key={asset.key}>
+                <div>
+                  <strong>{asset.key}</strong>
+                  <small>{asset.lastModified ? new Date(asset.lastModified).toLocaleString() : 'Sin fecha'} · {Math.ceil(asset.size / 1024)} KB</small>
+                </div>
+                <div className="actions">
+                  <button type="button" className="secondary" onClick={() => navigator.clipboard.writeText(asset.url)}>
+                    Copiar URL
+                  </button>
+                  <a href={asset.url} target="_blank" rel="noreferrer">Abrir</a>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Escribe el secret y carga la biblioteca para ver los archivos existentes en R2.</p>
+        )}
+      </section>
     </main>
   );
 }

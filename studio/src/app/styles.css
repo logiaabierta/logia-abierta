@@ -55,6 +55,13 @@ h1 {
   text-transform: uppercase;
 }
 
+h2 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  line-height: 0.95;
+  margin: 0.25rem 0 0;
+  text-transform: uppercase;
+}
+
 p {
   line-height: 1.6;
   margin: 0;
@@ -112,6 +119,50 @@ input {
   padding: 0.85rem 0.95rem;
 }
 
+.library-controls {
+  align-items: end;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.library-controls label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.asset-list {
+  display: grid;
+  gap: 0.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.asset-list li {
+  align-items: center;
+  background: color-mix(in oklab, white 58%, var(--bone));
+  border: 1px solid color-mix(in oklab, var(--brass) 32%, transparent);
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 0.85rem;
+}
+
+.asset-list strong,
+.asset-list small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.asset-list small {
+  color: color-mix(in oklab, var(--carbon) 68%, var(--brass));
+  margin-top: 0.25rem;
+}
+
 code {
   background: color-mix(in oklab, var(--bone) 70%, white);
   display: block;
@@ -122,4 +173,11 @@ code {
 .error {
   color: #8f1d1d;
   font-weight: 800;
+}
+
+@media (max-width: 720px) {
+  .library-controls,
+  .asset-list li {
+    grid-template-columns: 1fr;
+  }
 }

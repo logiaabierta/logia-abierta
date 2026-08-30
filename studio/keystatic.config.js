@@ -31,7 +31,7 @@ const riteOptions = [
 ];
 
 const storage =
-  process.env.KEYSTATIC_STORAGE === 'github'
+  process.env.NODE_ENV === 'production' || process.env.KEYSTATIC_STORAGE === 'github'
     ? {
         kind: 'github',
         repo: 'logiaabierta/logia-abierta',
