@@ -56,6 +56,24 @@ const authors = defineCollection({
 	}),
 });
 
+const categories = defineCollection({
+	loader: glob({ base: './src/content/categories', pattern: '**/*.json' }),
+	schema: z.object({
+		title: z.object({ name: z.string(), slug: z.string() }),
+		lang: z.string().default('es'),
+		description: z.string().optional(),
+	}),
+});
+
+const tags = defineCollection({
+	loader: glob({ base: './src/content/tags', pattern: '**/*.json' }),
+	schema: z.object({
+		title: z.object({ name: z.string(), slug: z.string() }),
+		lang: z.string().default('es'),
+		description: z.string().optional(),
+	}),
+});
+
 const mediaNotes = defineCollection({
 	loader: glob({ base: './src/content/media-notes', pattern: '**/*.json' }),
 	schema: z.object({
@@ -102,4 +120,4 @@ const puckPages = defineCollection({
 	}),
 });
 
-export const collections = { blog, essays, authors, mediaNotes, puckPages };
+export const collections = { blog, essays, authors, categories, tags, mediaNotes, puckPages };

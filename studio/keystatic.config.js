@@ -8,14 +8,6 @@ const languageOptions = [
   { label: 'Português', value: 'pt' },
 ];
 
-const categoryOptions = [
-  { label: 'Cultura masónica', value: 'cultura-masonica' },
-  { label: 'Filosofía', value: 'filosofia' },
-  { label: 'Historia', value: 'historia' },
-  { label: 'Ritos', value: 'ritos' },
-  { label: 'Simbolismo', value: 'simbolismo' },
-];
-
 const statusOptions = [
   { label: 'Borrador', value: 'draft' },
   { label: 'Publicado', value: 'published' },
@@ -52,11 +44,41 @@ export default config({
   ui: {
     brand: { name: 'Logia Abierta Studio' },
     navigation: {
-      Editorial: ['posts', 'essays', 'authors'],
+      Editorial: ['posts', 'essays', 'authors', 'categories', 'tags'],
       Operaciones: ['mediaNotes'],
     },
   },
   collections: {
+    categories: collection({
+      label: 'Categorías',
+      path: 'src/content/categories/*',
+      slugField: 'title',
+      format: 'json',
+      columns: ['title', 'lang'],
+      schema: {
+        title: fields.slug({
+          name: { label: 'Nombre', validation: { isRequired: true, length: { min: 3, max: 80 } } },
+          slug: { label: 'Slug' },
+        }),
+        lang: fields.select({ label: 'Idioma', options: languageOptions, defaultValue: 'es' }),
+        description: fields.text({ label: 'Descripción SEO', validation: { length: { max: 160 } }, multiline: true }),
+      },
+    }),
+    tags: collection({
+      label: 'Tags',
+      path: 'src/content/tags/*',
+      slugField: 'title',
+      format: 'json',
+      columns: ['title', 'lang'],
+      schema: {
+        title: fields.slug({
+          name: { label: 'Nombre', validation: { isRequired: true, length: { min: 2, max: 60 } } },
+          slug: { label: 'Slug' },
+        }),
+        lang: fields.select({ label: 'Idioma', options: languageOptions, defaultValue: 'es' }),
+        description: fields.text({ label: 'Descripción', validation: { length: { max: 160 } }, multiline: true }),
+      },
+    }),
     posts: collection({
       label: 'Artículos',
       path: 'src/content/blog/*',
@@ -86,11 +108,8 @@ export default config({
         pubDate: fields.date({ label: 'Fecha de publicación' }),
         updatedDate: fields.date({ label: 'Fecha de actualización' }),
         author: fields.relationship({ label: 'Autor', collection: 'authors' }),
-        category: fields.select({ label: 'Categoría', options: categoryOptions, defaultValue: 'simbolismo' }),
-        tags: fields.array(fields.text({ label: 'Tag' }), {
-          label: 'Tags',
-          itemLabel: (props) => props.value || 'Tag',
-        }),
+        category: fields.relationship({ label: 'Categoría', collection: 'categories' }),
+        tags: fields.multiRelationship({ label: 'Tags', collection: 'tags' }),
         readingMinutes: fields.integer({ label: 'Duración estimada en minutos' }),
         featured: fields.checkbox({ label: 'Featured' }),
         heroImageUrl: fields.url({ label: 'Imagen principal en R2' }),
@@ -108,10 +127,10 @@ export default config({
           }),
           { label: 'FAQs para schema SEO', itemLabel: (props) => props.value.question || 'FAQ' },
         ),
-        content: fields.mdx({
-          label: 'Contenido MDX',
-          description: 'Markdown/MDX completo. Mermaid en bloques ```mermaid; Impress con componentes MDX existentes.',
-          extension: 'mdx',
+        content: fields.markdoc({
+          label: 'Contenido Markdown / MDX',
+          description: 'Markdown editorial compatible con Astro. Para JSX/MDX avanzado, edita el archivo en Git cuando haga falta.',
+          extension: 'md',
         }),
       },
     }),
@@ -133,14 +152,15 @@ export default config({
         pubDate: fields.date({ label: 'Fecha de publicación' }),
         updatedDate: fields.date({ label: 'Fecha de actualización' }),
         author: fields.relationship({ label: 'Autor', collection: 'authors' }),
-        tags: fields.array(fields.text({ label: 'Tag' }), {
-          label: 'Tags',
-          itemLabel: (props) => props.value || 'Tag',
-        }),
+        tags: fields.multiRelationship({ label: 'Tags', collection: 'tags' }),
         featured: fields.checkbox({ label: 'Featured' }),
         heroImageUrl: fields.url({ label: 'Imagen en R2' }),
         heroImageAlt: fields.text({ label: 'Alt text', validation: { length: { max: 160 } } }),
-        content: fields.mdx({ label: 'Contenido MDX', extension: 'mdx' }),
+        content: fields.markdoc({
+          label: 'Contenido Markdown / MDX',
+          description: 'Markdown editorial compatible con Astro. Para JSX/MDX avanzado, edita el archivo en Git cuando haga falta.',
+          extension: 'md',
+        }),
       },
     }),
     authors: collection({
