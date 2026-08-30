@@ -17,7 +17,9 @@ export function middleware(request) {
 
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith('/_next') || pathname.startsWith('/api/keystatic') || pathname === '/favicon.ico') {
+  const protectedPath = pathname.startsWith('/assets') || pathname.startsWith('/api/r2-upload');
+
+  if (!protectedPath || pathname.startsWith('/_next') || pathname === '/favicon.ico') {
     return NextResponse.next();
   }
 
