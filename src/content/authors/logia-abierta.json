@@ -1,13 +1,12 @@
 {
-  "publicName": {
-    "name": "Logia Abierta",
-    "slug": "logia-abierta"
-  },
+  "publicName": "Logia Abierta",
   "displayMode": "pseudonym",
   "internalIdentity": "Equipo editorial",
   "archetype": "otro",
   "bio": "Equipo editorial de Logia Abierta.",
-  "languages": ["es"],
+  "languages": [
+    "es"
+  ],
   "rites": [],
   "country": "DO"
 }

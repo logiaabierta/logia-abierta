@@ -31,7 +31,8 @@ const riteOptions = [
 ];
 
 const storage =
-  process.env.NODE_ENV === 'production' || process.env.KEYSTATIC_STORAGE === 'github'
+  process.env.KEYSTATIC_STORAGE === 'github' ||
+  (process.env.NODE_ENV === 'production' && process.env.KEYSTATIC_GITHUB_CLIENT_ID)
     ? {
         kind: 'github',
         repo: 'logiaabierta/logia-abierta',
@@ -57,7 +58,7 @@ export default config({
       columns: ['title', 'lang'],
       schema: {
         title: fields.slug({
-          name: { label: 'Nombre', validation: { isRequired: true, length: { min: 3, max: 80 } } },
+          name: { label: 'Nombre', validation: { isRequired: true, length: { min: 2, max: 80 } } },
           slug: { label: 'Slug' },
         }),
         lang: fields.select({ label: 'Idioma', options: languageOptions, defaultValue: 'es' }),
@@ -89,7 +90,7 @@ export default config({
       previewUrl: 'https://logiaabierta.com/{lang}/blog/{slug}',
       schema: {
         title: fields.slug({
-          name: { label: 'Título', validation: { isRequired: true, length: { min: 8, max: 70 } } },
+          name: { label: 'Título', validation: { isRequired: true, length: { min: 3, max: 120 } } },
           slug: { label: 'Slug SEO', description: 'URL corta, legible y sin fecha.' },
         }),
         lang: fields.select({ label: 'Idioma', options: languageOptions, defaultValue: 'es' }),
@@ -97,7 +98,7 @@ export default config({
         description: fields.text({
           label: 'Meta description',
           description: 'Ideal: 140-160 caracteres.',
-          validation: { isRequired: true, length: { min: 80, max: 160 } },
+          validation: { isRequired: true, length: { min: 10, max: 250 } },
           multiline: true,
         }),
         excerpt: fields.text({
@@ -128,8 +129,8 @@ export default config({
           { label: 'FAQs para schema SEO', itemLabel: (props) => props.value.question || 'FAQ' },
         ),
         content: fields.markdoc({
-          label: 'Contenido Markdown / MDX',
-          description: 'Markdown editorial compatible con Astro. Para JSX/MDX avanzado, edita el archivo en Git cuando haga falta.',
+          label: 'Contenido Markdown',
+          description: 'Markdown editorial compatible con Astro.',
           extension: 'md',
         }),
       },
@@ -144,10 +145,10 @@ export default config({
       previewUrl: 'https://logiaabierta.com/{lang}/ensayos/{slug}',
       schema: {
         title: fields.slug({
-          name: { label: 'Título', validation: { isRequired: true, length: { min: 4, max: 80 } } },
+          name: { label: 'Título', validation: { isRequired: true, length: { min: 3, max: 120 } } },
           slug: { label: 'Slug' },
         }),
-        description: fields.text({ label: 'Descripción SEO', validation: { isRequired: true, length: { min: 60, max: 160 } }, multiline: true }),
+        description: fields.text({ label: 'Descripción SEO', validation: { isRequired: true, length: { min: 10, max: 250 } }, multiline: true }),
         lang: fields.select({ label: 'Idioma', options: languageOptions, defaultValue: 'es' }),
         pubDate: fields.date({ label: 'Fecha de publicación' }),
         updatedDate: fields.date({ label: 'Fecha de actualización' }),
@@ -156,10 +157,10 @@ export default config({
         featured: fields.checkbox({ label: 'Featured' }),
         heroImageUrl: fields.url({ label: 'Imagen en R2' }),
         heroImageAlt: fields.text({ label: 'Alt text', validation: { length: { max: 160 } } }),
-        content: fields.markdoc({
-          label: 'Contenido Markdown / MDX',
-          description: 'Markdown editorial compatible con Astro. Para JSX/MDX avanzado, edita el archivo en Git cuando haga falta.',
-          extension: 'md',
+        content: fields.mdx({
+          label: 'Contenido MDX',
+          description: 'MDX con soporte para componentes (Mermaid, Impress.js, etc.).',
+          extension: 'mdx',
         }),
       },
     }),
@@ -171,7 +172,7 @@ export default config({
       columns: ['publicName', 'displayMode', 'country'],
       schema: {
         publicName: fields.slug({
-          name: { label: 'Nombre público / pseudónimo', validation: { isRequired: true, length: { min: 3, max: 80 } } },
+          name: { label: 'Nombre público / pseudónimo', validation: { isRequired: true, length: { min: 2, max: 80 } } },
           slug: { label: 'Slug del autor' },
         }),
         displayMode: fields.select({
@@ -228,7 +229,10 @@ export default config({
       format: 'json',
       columns: ['title', 'kind', 'publishedAt'],
       schema: {
-        title: fields.slug({ name: { label: 'Título', validation: { isRequired: true } }, slug: { label: 'Slug' } }),
+        title: fields.slug({
+          name: { label: 'Título', validation: { isRequired: true } },
+          slug: { label: 'Slug' },
+        }),
         kind: fields.select({
           label: 'Tipo',
           options: [

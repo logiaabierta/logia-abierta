@@ -1,0 +1,14 @@
+{
+  "publicName": "Redacción Logia Abierta",
+  "displayMode": "pseudonym",
+  "internalIdentity": "Equipo editorial",
+  "realName": "Redacción Logia Abierta",
+  "archetype": "otro",
+  "bio": "Perfil de demostración utilizado durante el desarrollo de Logia Abierta. Será reemplazado por información editorial definitiva.",
+  "languages": [
+    "es"
+  ],
+  "rites": [],
+  "country": "DO",
+  "city": "Santo Domingo"
+}

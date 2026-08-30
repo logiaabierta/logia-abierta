@@ -1,8 +1,5 @@
 {
-  "title": {
-    "name": "Biblioteca R2",
-    "slug": "r2-media-library"
-  },
+  "title": "Biblioteca R2",
   "kind": "image",
   "r2Url": "https://pub-490f1c18b67d44e4968672517297f4c8.r2.dev/",
   "altText": "Biblioteca publica de medios de Logia Abierta en Cloudflare R2.",

@@ -10,10 +10,34 @@ const blog = defineCollection({
 		z.object({
 			title: z.string(),
 			description: z.string(),
+			lang: z.string().default('es'),
+			status: z.enum(['draft', 'published']).default('published'),
+			excerpt: z.string().optional(),
 			// Transform string to Date object
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
+			author: z.string().optional(),
+			category: z.string().optional(),
+			tags: z.array(z.string()).default([]),
+			readingMinutes: z.number().optional(),
+			featured: z.boolean().default(false),
 			heroImage: z.optional(image()),
+			heroImageUrl: z.string().url().optional(),
+			heroImageAlt: z.string().optional(),
+			thumbnailUrl: z.string().url().optional(),
+			thumbnailAlt: z.string().optional(),
+			canonicalUrl: z.string().url().optional(),
+			ogTitle: z.string().optional(),
+			ogDescription: z.string().optional(),
+			ogImageUrl: z.string().url().optional(),
+			faqs: z
+				.array(
+					z.object({
+						question: z.string(),
+						answer: z.string(),
+					})
+				)
+				.optional(),
 		}),
 });
 
@@ -38,7 +62,7 @@ const essays = defineCollection({
 const authors = defineCollection({
 	loader: glob({ base: './src/content/authors', pattern: '**/*.json' }),
 	schema: z.object({
-		publicName: z.object({ name: z.string(), slug: z.string() }),
+		publicName: z.string(),
 		displayMode: z.enum(['pseudonym', 'real', 'both']).default('pseudonym'),
 		internalIdentity: z.string().optional(),
 		realName: z.string().optional(),
@@ -59,7 +83,7 @@ const authors = defineCollection({
 const categories = defineCollection({
 	loader: glob({ base: './src/content/categories', pattern: '**/*.json' }),
 	schema: z.object({
-		title: z.object({ name: z.string(), slug: z.string() }),
+		title: z.string(),
 		lang: z.string().default('es'),
 		description: z.string().optional(),
 	}),
@@ -68,7 +92,7 @@ const categories = defineCollection({
 const tags = defineCollection({
 	loader: glob({ base: './src/content/tags', pattern: '**/*.json' }),
 	schema: z.object({
-		title: z.object({ name: z.string(), slug: z.string() }),
+		title: z.string(),
 		lang: z.string().default('es'),
 		description: z.string().optional(),
 	}),
@@ -77,7 +101,7 @@ const tags = defineCollection({
 const mediaNotes = defineCollection({
 	loader: glob({ base: './src/content/media-notes', pattern: '**/*.json' }),
 	schema: z.object({
-		title: z.object({ name: z.string(), slug: z.string() }),
+		title: z.string(),
 		kind: z.enum(['image', 'audio', 'video', 'document', 'attachment']).default('image'),
 		r2Url: z.string().url(),
 		altText: z.string().optional(),
