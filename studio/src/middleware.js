@@ -17,7 +17,7 @@ export function middleware(request) {
 
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith('/_next') || pathname === '/favicon.ico') {
+  if (pathname.startsWith('/_next') || pathname.startsWith('/api/keystatic') || pathname === '/favicon.ico') {
     return NextResponse.next();
   }
 
