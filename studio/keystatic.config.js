@@ -58,10 +58,7 @@ export default config({
       format: 'json',
       columns: ['title', 'lang'],
       schema: {
-        title: fields.slug({
-          name: { label: 'Nombre', validation: { isRequired: true, length: { min: 2, max: 80 } } },
-          slug: { label: 'Slug' },
-        }),
+        title: fields.text({ label: 'Nombre', validation: { isRequired: true, length: { min: 2, max: 80 } } }),
         lang: fields.select({ label: 'Idioma', options: languageOptions, defaultValue: 'es' }),
         description: fields.text({ label: 'Descripción SEO', validation: { length: { max: 160 } }, multiline: true }),
       },
@@ -73,10 +70,7 @@ export default config({
       format: 'json',
       columns: ['title', 'lang'],
       schema: {
-        title: fields.slug({
-          name: { label: 'Nombre', validation: { isRequired: true, length: { min: 2, max: 60 } } },
-          slug: { label: 'Slug' },
-        }),
+        title: fields.text({ label: 'Nombre', validation: { isRequired: true, length: { min: 2, max: 60 } } }),
         lang: fields.select({ label: 'Idioma', options: languageOptions, defaultValue: 'es' }),
         description: fields.text({ label: 'Descripción', validation: { length: { max: 160 } }, multiline: true }),
       },
@@ -90,10 +84,7 @@ export default config({
       columns: ['title', 'lang', 'status', 'pubDate'],
       previewUrl: 'https://logiaabierta.com/{lang}/blog/{slug}',
       schema: {
-        title: fields.slug({
-          name: { label: 'Título', validation: { isRequired: true, length: { min: 3, max: 120 } } },
-          slug: { label: 'Slug SEO', description: 'URL corta, legible y sin fecha.' },
-        }),
+        title: fields.text({ label: 'Título', validation: { isRequired: true, length: { min: 3, max: 120 } } }),
         lang: fields.select({ label: 'Idioma', options: languageOptions, defaultValue: 'es' }),
         status: fields.select({ label: 'Estado', options: statusOptions, defaultValue: 'draft' }),
         description: fields.text({
@@ -145,10 +136,7 @@ export default config({
       columns: ['title', 'lang', 'pubDate'],
       previewUrl: 'https://logiaabierta.com/{lang}/ensayos/{slug}',
       schema: {
-        title: fields.slug({
-          name: { label: 'Título', validation: { isRequired: true, length: { min: 3, max: 120 } } },
-          slug: { label: 'Slug' },
-        }),
+        title: fields.text({ label: 'Título', validation: { isRequired: true, length: { min: 3, max: 120 } } }),
         description: fields.text({ label: 'Descripción SEO', validation: { isRequired: true, length: { min: 10, max: 250 } }, multiline: true }),
         lang: fields.select({ label: 'Idioma', options: languageOptions, defaultValue: 'es' }),
         pubDate: fields.date({ label: 'Fecha de publicación' }),
@@ -172,10 +160,7 @@ export default config({
       format: 'json',
       columns: ['publicName', 'displayMode', 'country'],
       schema: {
-        publicName: fields.slug({
-          name: { label: 'Nombre público / pseudónimo', validation: { isRequired: true, length: { min: 2, max: 80 } } },
-          slug: { label: 'Slug del autor' },
-        }),
+        publicName: fields.text({ label: 'Nombre público / pseudónimo', validation: { isRequired: true, length: { min: 2, max: 80 } } }),
         displayMode: fields.select({
           label: 'Cómo publicar',
           options: [
@@ -230,10 +215,7 @@ export default config({
       format: 'json',
       columns: ['title', 'kind', 'publishedAt'],
       schema: {
-        title: fields.slug({
-          name: { label: 'Título', validation: { isRequired: true } },
-          slug: { label: 'Slug' },
-        }),
+        title: fields.text({ label: 'Título', validation: { isRequired: true } }),
         kind: fields.select({
           label: 'Tipo',
           options: [
