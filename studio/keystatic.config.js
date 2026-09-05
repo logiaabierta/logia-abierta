@@ -1,4 +1,5 @@
 import { collection, config, fields } from '@keystatic/core';
+import { block, wrapper } from '@keystatic/core/content-components';
 
 const languageOptions = [
   { label: 'Español', value: 'es' },
@@ -29,6 +30,60 @@ const riteOptions = [
   { label: 'SGC-HRAJ - Supremo Gran Capítulo del HRAJ', value: 'SGC-HRAJ' },
   { label: 'SSAPMM - Soberano Santuario de los Antiguos y Primitivos Ritos de Memphis y Misraim', value: 'SSAPMM' },
 ];
+
+const mdxComponents = {
+  Mermaid: block({
+    label: 'Mermaid chart',
+    schema: {
+      title: fields.text({ label: 'Título' }),
+      caption: fields.text({ label: 'Caption', multiline: true }),
+      chart: fields.text({
+        label: 'Código Mermaid',
+        multiline: true,
+        validation: { isRequired: true },
+      }),
+    },
+    ContentView: ({ value }) => (
+      <div style={{ border: '1px solid #b8975b', padding: 12 }}>
+        <strong>{value.title || 'Mermaid chart'}</strong>
+        <pre style={{ whiteSpace: 'pre-wrap' }}>{value.chart}</pre>
+      </div>
+    ),
+  }),
+  ImpressDeck: wrapper({
+    label: 'Impress deck',
+    schema: {
+      id: fields.text({ label: 'ID' }),
+      height: fields.text({ label: 'Altura CSS', defaultValue: '78vh' }),
+    },
+    ContentView: ({ value, children }) => (
+      <section style={{ border: '1px solid #b8975b', padding: 12 }}>
+        <strong>Impress deck {value.id ? `#${value.id}` : ''}</strong>
+        <div>{children}</div>
+      </section>
+    ),
+  }),
+  ImpressStep: wrapper({
+    label: 'Impress step',
+    schema: {
+      x: fields.integer({ label: 'X', defaultValue: 0 }),
+      y: fields.integer({ label: 'Y', defaultValue: 0 }),
+      z: fields.integer({ label: 'Z', defaultValue: 0 }),
+      rotate: fields.integer({ label: 'Rotación', defaultValue: 0 }),
+      rotateX: fields.integer({ label: 'Rotación X', defaultValue: 0 }),
+      rotateY: fields.integer({ label: 'Rotación Y', defaultValue: 0 }),
+      scale: fields.integer({ label: 'Escala', defaultValue: 1 }),
+    },
+    ContentView: ({ value, children }) => (
+      <section style={{ border: '1px dashed #d97736', padding: 12, marginTop: 8 }}>
+        <strong>
+          Step x:{value.x} y:{value.y} rot:{value.rotate} scale:{value.scale}
+        </strong>
+        <div>{children}</div>
+      </section>
+    ),
+  }),
+};
 
 const storage =
   process.env.NODE_ENV === 'production' ||
@@ -150,6 +205,7 @@ export default config({
           label: 'Contenido MDX',
           description: 'MDX con soporte para componentes (Mermaid, Impress.js, etc.).',
           extension: 'mdx',
+          components: mdxComponents,
         }),
       },
     }),
