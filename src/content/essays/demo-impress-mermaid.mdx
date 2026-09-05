@@ -15,43 +15,36 @@ featured: true
 Este demo prueba una presentación Impress.js donde los pasos pueden incluir diagramas Mermaid. El texto sigue visible en HTML, y el diagrama queda acompañado por contexto editorial.
 
 <ImpressDeck id="impress-mermaid-demo" height="78vh">
-  <ImpressStep x={0} y={0} scale={1}>
-    <h2>Mapa de una idea</h2>
-    <p>Un deck MDX puede combinar narrativa, visualización y estructura semántica.</p>
+  <ImpressStep x="0" y="0" scale="1">
+    ## Mapa de una idea
+
+    Un deck MDX puede combinar narrativa, visualización y estructura semántica.
   </ImpressStep>
 
-  <ImpressStep x={1300} y={0} rotate={8} scale={1}>
-    <h2>Flujo de lectura</h2>
+  <ImpressStep x="1300" y="0" rotate="8" scale="1">
+    ## Flujo de lectura
+
     <Mermaid
       title="De concepto a publicación"
       caption="El diagrama vive dentro de un paso de Impress.js."
-      chart={`
-flowchart TD
-  A[Concepto] --> B[Esquema]
-  B --> C[MDX]
-  C --> D[Mermaid]
-  C --> E[Impress.js]
-  D --> F[Pagina publicada]
-  E --> F
-`}/>
+      chart="flowchart TD&#10;  A[Concepto] --> B[Esquema]&#10;  B --> C[MDX]&#10;  C --> D[Mermaid]&#10;  C --> E[Impress.js]&#10;  D --> F[Pagina publicada]&#10;  E --> F"
+    />
   </ImpressStep>
 
-  <ImpressStep x={2600} y={300} rotate={-10} scale={1}>
-    <h2>Relaciones simbólicas</h2>
+  <ImpressStep x="2600" y="300" rotate="-10" scale="1">
+    ## Relaciones simbólicas
+
     <Mermaid
       title="Triada conceptual"
       caption="Ejemplo sencillo de relaciones entre temas."
-      chart={`
-graph LR
-  Luz((Luz)) --- Conocimiento[Conocimiento]
-  Conocimiento --- Trabajo[Trabajo interior]
-  Trabajo --- Luz
-`}/>
+      chart="graph LR&#10;  Luz((Luz)) --- Conocimiento[Conocimiento]&#10;  Conocimiento --- Trabajo[Trabajo interior]&#10;  Trabajo --- Luz"
+    />
   </ImpressStep>
 
-  <ImpressStep x={3900} y={-150} rotate={4} scale={1}>
-    <h2>Cierre</h2>
-    <p>Si esto se ve bien, podemos crear presentaciones editoriales completas desde archivos MDX.</p>
+  <ImpressStep x="3900" y="-150" rotate="4" scale="1">
+    ## Cierre
+
+    Si esto se ve bien, podemos crear presentaciones editoriales completas desde archivos MDX.
   </ImpressStep>
 </ImpressDeck>
 

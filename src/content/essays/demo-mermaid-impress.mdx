@@ -19,37 +19,30 @@ Para SGE, AI Overviews y buscadores generativos, la clave sigue siendo que el co
 <Mermaid
   title="Flujo editorial híbrido"
   caption="Sanity queda para artículos editoriales; MDX queda para ensayos técnicos, diagramas y presentaciones."
-  chart={`
-flowchart LR
-  A[Idea editorial] --> B{Tipo de contenido}
-  B -->|Artículo normal| C[Sanity Portable Text]
-  B -->|Ensayo interactivo| D[MDX]
-  D --> E[Mermaid]
-  D --> F[Impress.js]
-  C --> G[Astro]
-  E --> G
-  F --> G
-  G --> H[SEO + AI Overviews]
-`}/>
+  chart="flowchart LR&#10;  A[Idea editorial] --> B{Tipo de contenido}&#10;  B -->|Artículo normal| C[Keystatic Markdown]&#10;  B -->|Ensayo interactivo| D[MDX]&#10;  D --> E[Mermaid]&#10;  D --> F[Impress.js]&#10;  C --> G[Astro]&#10;  E --> G&#10;  F --> G&#10;  G --> H[SEO + AI Overviews]"
+/>
 
 ## Presentación embebida
 
 El siguiente bloque usa una estructura compatible con Impress.js. Puedes navegar con teclado cuando el deck esté enfocado.
 
 <ImpressDeck id="demo-impress">
-  <ImpressStep x={0} y={0} scale={1}>
-    <h2>Logia Abierta</h2>
-    <p>Ensayos con espacio, movimiento y estructura.</p>
+  <ImpressStep x="0" y="0" scale="1">
+    ## Logia Abierta
+
+    Ensayos con espacio, movimiento y estructura.
   </ImpressStep>
 
-  <ImpressStep x={1200} y={0} rotate={10} scale={1}>
-    <h2>Mermaid</h2>
-    <p>Diagramas explicados con texto visible y rastreable.</p>
+  <ImpressStep x="1200" y="0" rotate="10" scale="1">
+    ## Mermaid
+
+    Diagramas explicados con texto visible y rastreable.
   </ImpressStep>
 
-  <ImpressStep x={2400} y={400} rotate={-8} scale={1}>
-    <h2>SGE Ready</h2>
-    <p>Contenido claro, schema honesto y señales semánticas consistentes.</p>
+  <ImpressStep x="2400" y="400" rotate="-8" scale="1">
+    ## SGE Ready
+
+    Contenido claro, schema honesto y señales semánticas consistentes.
   </ImpressStep>
 </ImpressDeck>
 
