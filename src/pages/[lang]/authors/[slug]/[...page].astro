@@ -1,10 +1,9 @@
 ---
 import { Icon } from "astro-icon/components";
 import Layout from "../../../../layouts/Base.astro";
-import { client } from "../../../../lib/sanity";
 import Card from "../../../../components/AuthorBlogCard.astro";
-import PortableComponent from "../../../../components/builder/PortableComponent.astro";
 import Pagination from "../../../../components/Pagination.astro";
+import { getCollection } from "astro:content";
 
 import { LOCALES } from "../../../../i18n";
 
@@ -12,65 +11,46 @@ export async function getStaticPaths({ paginate }) {
   const paths = [];
 
   for (const lang of Object.keys(LOCALES)) {
-    const authors = await client.fetch(
-      `*[
-        _type == "author" &&
-        defined(slug.current) &&
-        $lang in coalesce(activeLanguages, [language, "es"])
-      ]{
-        name,
-        "activeLanguages": coalesce(activeLanguages, [language, "es"]),
-        showMasonicProfile,
-        primaryRites,
-        craftBodies,
-        philosophicalBodies,
-        appendantBodies,
-        honors,
-        personalWebsite,
-        publicEmail,
-        contacts,
-        bio,
-        "description": coalesce(descriptionLocalized[language == $lang][0].value, descriptionLocalized[language == "es"][0].value, shortBio[language == $lang][0].value, shortBio[language == "es"][0].value, description),
-        "shortBio": coalesce(shortBio[language == $lang][0].value, shortBio[language == "es"][0].value, description),
-        "city": coalesce(
-          select(defined(cityName) && defined(country) => cityName + ", " + country),
-          cityName,
-          country,
-          otherLocation,
-          cityLocalized[language == $lang][0].value,
-          cityLocalized[language == "es"][0].value,
-          city
-        ),
-        "job": coalesce(jobLocalized[language == $lang][0].value, jobLocalized[language == "es"][0].value, job),
-        "bioText": coalesce(bioLocalized[language == $lang][0].value, bioLocalized[language == "es"][0].value),
-        "masonicNotes": coalesce(masonicNotes[language == $lang][0].value, masonicNotes[language == "es"][0].value),
-        "slug": slug.current,
-        "image": image.asset->url
-      }`,
-      { lang },
-    );
+    const authors = (await getCollection("authors"))
+      .filter((entry) => (entry.data.languages || ["es"]).includes(lang))
+      .map((entry) => ({
+        name: entry.data.publicName,
+        activeLanguages: entry.data.languages,
+        showMasonicProfile: true,
+        primaryRites: entry.data.rites,
+        craftBodies: [],
+        philosophicalBodies: [],
+        appendantBodies: [],
+        honors: [],
+        personalWebsite: entry.data.website,
+        publicEmail: "",
+        contacts: [
+          entry.data.instagram && { network: "Instagram", link: entry.data.instagram, icon: "instagram" },
+          entry.data.linkedin && { network: "LinkedIn", link: entry.data.linkedin, icon: "linkedin" },
+          entry.data.substack && { network: "Substack", link: entry.data.substack, icon: "substack" },
+        ].filter(Boolean),
+        description: entry.data.bio,
+        shortBio: entry.data.bio,
+        city: [entry.data.city, entry.data.country].filter(Boolean).join(", "),
+        job: entry.data.archetype !== "otro" ? entry.data.archetype : "",
+        bioText: entry.data.bio,
+        masonicNotes: "",
+        slug: entry.id.replace(/\.json$/, ""),
+        image: entry.data.avatarUrl,
+        imageAlt: entry.data.avatarAlt,
+      }));
 
     for (const author of authors) {
-      const posts = await client.fetch(
-        `
-    *[
-      _type == "post" &&
-      language == $lang &&
-      author->slug.current == $slug
-    ]
-    | order(_createdAt desc){
-      title,
-      duration,
-      _createdAt,
-      "slug": slug.current,
-      "image": thumbnail.asset->url
-    }
-    `,
-        {
-          lang,
-          slug: author.slug,
-        },
-      );
+      const posts = (await getCollection("blog"))
+        .filter((post) => post.data.status === "published" && post.data.lang === lang && post.data.author === author.slug)
+        .map((post) => ({
+          title: post.data.title,
+          duration: post.data.readingMinutes || 5,
+          _createdAt: post.data.pubDate,
+          slug: post.id.replace(/\.(md|mdx)$/, ""),
+          image: post.data.thumbnailUrl || post.data.heroImageUrl,
+        }))
+        .sort((a, b) => new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime());
 
       const paginated = paginate(posts, {
         pageSize: 4,
@@ -164,10 +144,10 @@ const getContactIcon = (icon = "", network = "") => {
       >
         <aside>
           {
-            author && (
+            author.image && (
               <img
                 src={author.image}
-                alt={author.name}
+                alt={author.imageAlt || author.name}
                 class="rounded-full h-auto mx-auto w-full max-w-[350px] aspect-square object-cover"
               />
             )
@@ -263,17 +243,11 @@ const getContactIcon = (icon = "", network = "") => {
             </div>
           )}
 
-          {
-            author.bioText ? (
-              <div class="prose prose-lg max-w-none mt-10">
-                {author.bioText.split("\n").map((paragraph) => paragraph.trim() && <p>{paragraph}</p>)}
-              </div>
-            ) : author?.bio && (
-              <div class="prose prose-lg max-w-none mt-10">
-                <PortableComponent body={author.bio} />
-              </div>
-            )
-          }
+          {author.bioText && (
+            <div class="prose prose-lg max-w-none mt-10">
+              {author.bioText.split("\n").map((paragraph) => paragraph.trim() && <p>{paragraph}</p>)}
+            </div>
+          )}
         </div>
       </div>
     </div>

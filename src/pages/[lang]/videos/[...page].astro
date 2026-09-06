@@ -1,0 +1,59 @@
+---
+import Layout from "../../../layouts/Base.astro";
+import Hero from "../../../components/Hero.astro";
+import MediaCardRow from "../../../components/MediaCardRow.astro";
+import Pagination from "../../../components/Pagination.astro";
+import { getCollection } from "astro:content";
+import { LOCALES } from "../../../i18n";
+
+export async function getStaticPaths({ paginate }) {
+  const paths = [];
+
+  for (const lang of Object.keys(LOCALES)) {
+    const videos = (await getCollection("videos"))
+      .filter((item) => item.data.status === "published" && item.data.lang === lang)
+      .map((item) => ({
+        title: item.data.title,
+        description: item.data.description,
+        _createdAt: item.data.pubDate,
+        duration: item.data.duration || 0,
+        slug: item.id.replace(/\.(md|mdx)$/, ""),
+        image: item.data.thumbnailUrl,
+        imageAlt: item.data.thumbnailAlt,
+        collection: "videos",
+        action: "Watch",
+      }))
+      .sort((a, b) => new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime());
+
+    paths.push(
+      ...paginate(videos, {
+        pageSize: 6,
+        params: { lang },
+      }),
+    );
+  }
+
+  return paths;
+}
+
+const { page } = Astro.props;
+const totalPages = Math.ceil(page.total / page.size);
+---
+
+<Layout title="Videos">
+  <Hero title="Videos" />
+
+  <section class="section">
+    <div class="container">
+      <ul class="grid gap-10 mb-10">
+        {page.data.map((item) => (
+          <li class="border-b pb-10 last:border-b-0 last:pb-0">
+            <MediaCardRow {...item} />
+          </li>
+        ))}
+      </ul>
+
+      {totalPages > 1 && <Pagination totalPages={totalPages} page={page} />}
+    </div>
+  </section>
+</Layout>

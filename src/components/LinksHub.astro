@@ -4,7 +4,7 @@ import { Icon } from "astro-icon/components";
 import Layout from "../layouts/Links.astro";
 import SiteSignature from "./SiteSignature.astro";
 import Socials from "./Socials.astro";
-import { client } from "../lib/sanity";
+import { getCollection } from "astro:content";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 
 type Props = {
@@ -157,48 +157,34 @@ const paidLinks = [
   },
 ];
 
-const posts = await client.fetch(
-  `
-  *[_type == "post" && language == $locale]
-  | order(coalesce(publishedAt, _createdAt) desc)[0...3]{
-    title,
-    description,
-    "slug": slug.current,
-    "image": coalesce(thumbnail.asset->url, mainImage.asset->url)
-  }
-  `,
-  { locale },
-);
+const posts = (await getCollection("blog"))
+  .filter((post) => post.data.status === "published" && post.data.lang === locale)
+  .map((post) => ({
+    title: post.data.title,
+    description: post.data.description,
+    slug: post.id.replace(/\.(md|mdx)$/, ""),
+    image: post.data.thumbnailUrl || post.data.heroImageUrl,
+    date: post.data.pubDate,
+  }))
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 3);
 
-const podcasts = await client.fetch(
-  `
-  *[_type == "podcast" && language == $locale]
-  | order(coalesce(publishedAt, _createdAt) desc)[0...3]{
-    title,
-    description,
-    duration,
-    episod,
-    listen,
-    "slug": slug.current,
-    "image": mainImage.asset->url
-  }
-  `,
-  { locale },
-);
+const podcasts = (await getCollection("podcasts"))
+  .filter((podcast) => podcast.data.status === "published" && podcast.data.lang === locale)
+  .map((podcast) => ({
+    title: podcast.data.title,
+    description: podcast.data.description,
+    duration: podcast.data.duration || 0,
+    episod: podcast.data.episode || 0,
+    slug: podcast.id.replace(/\.(md|mdx)$/, ""),
+    image: podcast.data.thumbnailUrl,
+    youtubeUrl: podcast.data.youtubeUrl || "https://www.youtube.com/@logiaabierta/videos",
+    date: podcast.data.pubDate,
+  }))
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 3);
 
-const youtubeEpisodes = podcasts.map((podcast) => {
-  const youtube = (podcast.listen || []).find((item) => {
-    const network = String(item?.network || "").toLowerCase();
-    const link = String(item?.link || "").toLowerCase();
-
-    return network.includes("youtube") || link.includes("youtube.com") || link.includes("youtu.be");
-  });
-
-  return {
-    ...podcast,
-    youtubeUrl: youtube?.link || "https://www.youtube.com/@logiaabierta/videos",
-  };
-});
+const youtubeEpisodes = podcasts.filter((podcast) => podcast.youtubeUrl);
 ---
 
 <Layout

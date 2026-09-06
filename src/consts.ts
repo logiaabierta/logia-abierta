@@ -37,6 +37,14 @@ export const menu = [
     title: "Podcast",
   },
   {
+    url: "/audio",
+    title: "Audio",
+  },
+  {
+    url: "/videos",
+    title: "Videos",
+  },
+  {
     url: "/authors",
     title: "Authors",
   },

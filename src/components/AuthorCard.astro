@@ -6,6 +6,7 @@ const {
   job,
   slug,
   image,
+  imageAlt,
   description,
   activeLanguages = [],
   showMasonicProfile = true,
@@ -45,7 +46,7 @@ const masonicBadges =
   >
    {image && <Image
       src={image}
-      alt=""
+      alt={imageAlt || name}
       width="150"
       height="150"
       format="webp"

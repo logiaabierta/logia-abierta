@@ -1,0 +1,50 @@
+---
+import Image from "astro/components/Image.astro";
+import { Icon } from "astro-icon/components";
+import { formatDate } from "../utils/dateFormatter";
+
+const { title, description, _createdAt, duration, slug, image, imageAlt, collection, action = "Open" } = Astro.props;
+const locale = Astro.currentLocale;
+---
+
+<article>
+  <a
+    href={`/${locale}/${collection}/${slug}`}
+    class="grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-8 items-center"
+  >
+    {
+      image && (
+        <Image
+          src={image}
+          alt={imageAlt || title}
+          width="320"
+          height="180"
+          format="webp"
+          quality={75}
+          class="aspect-video w-full object-cover"
+        />
+      )
+    }
+
+    <div class="mx-auto sm:mx-0">
+      <h3 class="mb-0">{title}</h3>
+      {description && <p class="mt-3 text-sm opacity-70">{description}</p>}
+      <div class="flex flex-wrap gap-x-6 gap-y-3 justify-start items-center mt-4">
+        <p>
+          <b class="mr-2">Date</b>
+          <span>{formatDate(_createdAt)}</span>
+        </p>
+        {duration ? (
+          <p>
+            <b class="mr-2">Duration</b>
+            <span>{duration} Min</span>
+          </p>
+        ) : null}
+        <button class="btn btn-link text-inherit uppercase no-underline group p-0">
+          {action}
+          <Icon name="lucide:arrow-right" aria-hidden="true" class="size-4 transition group-hover:translate-x-1" />
+        </button>
+      </div>
+    </div>
+  </a>
+</article>

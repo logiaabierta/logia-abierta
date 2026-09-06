@@ -1,0 +1,60 @@
+---
+import Layout from "../../../layouts/Base.astro";
+import { Icon } from "astro-icon/components";
+import { getCollection, render } from "astro:content";
+import { formatDate } from "../../../utils/dateFormatter";
+import { LOCALES } from "../../../i18n";
+
+export async function getStaticPaths() {
+  const paths = [];
+
+  for (const lang of Object.keys(LOCALES)) {
+    const items = (await getCollection("audioEpisodes")).filter((item) => item.data.status === "published" && item.data.lang === lang);
+
+    for (const entry of items) {
+      paths.push({
+        params: { lang, slug: entry.id.replace(/\.(md|mdx)$/, "") },
+        props: { entry },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const locale = Astro.params.lang;
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const audio = entry.data;
+---
+
+<Layout title={audio.title} description={audio.description} image={audio.thumbnailUrl || ""}>
+  <section class="mt-10">
+    <div class="container">
+      <a href={`/${locale}/audio`} class="btn btn-link text-inherit uppercase no-underline group p-0">
+        <Icon name="lucide:arrow-left" aria-hidden="true" class="size-4 transition group-hover:translate-x-1" />
+        Go Back
+      </a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container max-w-4xl">
+      <p class="font-semibold uppercase mb-3">Audio</p>
+      <h1>{audio.title}</h1>
+      <p class="text-lg my-8 font-semibold">{audio.description}</p>
+
+      <div class="flex flex-wrap gap-x-6 gap-y-3 border-y py-5 my-8">
+        <p><b class="mr-2">Date</b>{formatDate(audio.pubDate)}</p>
+        {audio.duration ? <p><b class="mr-2">Duration</b>{audio.duration} Min</p> : null}
+        {audio.audioType ? <p><b class="mr-2">Type</b>{audio.audioType}</p> : null}
+      </div>
+
+      {audio.audioUrl && <audio controls preload="metadata" src={audio.audioUrl} class="w-full mb-10"></audio>}
+
+      <div class="post" data-motion-reveal>
+        <Content />
+      </div>
+    </div>
+  </section>
+</Layout>

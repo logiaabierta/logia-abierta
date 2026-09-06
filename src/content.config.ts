@@ -73,6 +73,7 @@ const authors = defineCollection({
 		country: z.string().default('DO'),
 		city: z.string().optional(),
 		avatarUrl: z.string().url().optional(),
+		avatarAlt: z.string().optional(),
 		website: z.string().url().optional(),
 		instagram: z.string().url().optional(),
 		linkedin: z.string().url().optional(),
@@ -110,6 +111,61 @@ const mediaNotes = defineCollection({
 	}),
 });
 
+const editorialMediaBase = z.object({
+	title: z.string(),
+	description: z.string(),
+	lang: z.string().default('es'),
+	status: z.enum(['draft', 'published']).default('published'),
+	pubDate: z.coerce.date(),
+	updatedDate: z.coerce.date().optional(),
+	author: z.string().optional(),
+	category: z.string().optional(),
+	tags: z.array(z.string()).default([]),
+	episode: z.number().optional(),
+	duration: z.number().optional(),
+	thumbnailUrl: z.string().url().optional(),
+	thumbnailAlt: z.string().optional(),
+	audioUrl: z.string().url().optional(),
+	videoUrl: z.string().url().optional(),
+	spotifyUrl: z.string().url().optional(),
+	youtubeUrl: z.string().url().optional(),
+	transcriptUrl: z.string().url().optional(),
+	canonicalUrl: z.string().url().optional(),
+	ogTitle: z.string().optional(),
+	ogDescription: z.string().optional(),
+	ogImageUrl: z.string().url().optional(),
+	featured: z.boolean().default(false),
+	faqs: z
+		.array(
+			z.object({
+				question: z.string(),
+				answer: z.string(),
+			})
+		)
+		.optional(),
+});
+
+const podcasts = defineCollection({
+	loader: glob({ base: './src/content/podcasts', pattern: '**/*.{md,mdx}' }),
+	schema: editorialMediaBase.extend({
+		showNotes: z.string().optional(),
+	}),
+});
+
+const audioEpisodes = defineCollection({
+	loader: glob({ base: './src/content/audio', pattern: '**/*.{md,mdx}' }),
+	schema: editorialMediaBase.extend({
+		audioType: z.enum(['podcast-extra', 'lecture', 'reflection', 'music', 'archive']).default('reflection'),
+	}),
+});
+
+const videos = defineCollection({
+	loader: glob({ base: './src/content/videos', pattern: '**/*.{md,mdx}' }),
+	schema: editorialMediaBase.extend({
+		videoType: z.enum(['class', 'lecture', 'short', 'interview', 'archive']).default('lecture'),
+	}),
+});
+
 const puckPages = defineCollection({
 	loader: glob({ base: './src/content/puck-pages', pattern: '**/*.json' }),
 	schema: z.object({
@@ -144,4 +200,15 @@ const puckPages = defineCollection({
 	}),
 });
 
-export const collections = { blog, essays, authors, categories, tags, mediaNotes, puckPages };
+export const collections = {
+	blog,
+	essays,
+	authors,
+	categories,
+	tags,
+	mediaNotes,
+	podcasts,
+	audioEpisodes,
+	videos,
+	puckPages,
+};

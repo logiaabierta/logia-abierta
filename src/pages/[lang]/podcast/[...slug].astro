@@ -2,11 +2,10 @@
 import Image from "astro/components/Image.astro";
 import { Icon } from "astro-icon/components";
 import Layout from "../../../layouts/Base.astro";
-import { client } from "../../../lib/sanity";
 import { r2Asset } from "../../../lib/r2Assets";
 import { formatDate } from "../../../utils/dateFormatter";
-import PortableComponent from "../../../components/builder/PortableComponent.astro";
 import PodcastCard from "../../../components/PodcastCard.astro";
+import { getCollection, render } from "astro:content";
 
 import { LOCALES } from "../../../i18n";
 
@@ -14,27 +13,27 @@ export async function getStaticPaths() {
   const paths = [];
 
   for (const lang of Object.keys(LOCALES)) {
-    const podcasts = await client.fetch(
-      `
-      *[
-        _type == "podcast" &&
-        language == $lang
-      ]{
-        title,
-        _createdAt,
-        duration,
-        episod,
-        body,
-        description,
-        language,
-        "slug": slug.current,
-        "image": mainImage.asset->url
-      }
-      `,
-      { lang },
-    );
+    const podcasts = (await getCollection("podcasts"))
+      .filter((entry) => entry.data.status === "published" && entry.data.lang === lang)
+      .map((entry) => ({
+        entry,
+        podcast: {
+          title: entry.data.title,
+          _createdAt: entry.data.pubDate,
+          duration: entry.data.duration || 0,
+          episod: entry.data.episode || 0,
+          description: entry.data.description,
+          language: entry.data.lang,
+          slug: entry.id.replace(/\.(md|mdx)$/, ""),
+          image: entry.data.thumbnailUrl,
+          imageAlt: entry.data.thumbnailAlt,
+          audioUrl: entry.data.audioUrl,
+          spotifyUrl: entry.data.spotifyUrl,
+          youtubeUrl: entry.data.youtubeUrl,
+        },
+      }));
 
-    for (const podcast of podcasts) {
+    for (const { entry, podcast } of podcasts) {
       paths.push({
         params: {
           lang,
@@ -42,6 +41,7 @@ export async function getStaticPaths() {
         },
         props: {
           podcast,
+          entry,
         },
       });
     }
@@ -51,47 +51,39 @@ export async function getStaticPaths() {
 }
 
 const locale = Astro.params.lang;
-const { podcast } = Astro.props;
+const { podcast, entry } = Astro.props;
+const { Content } = await render(entry);
 
-const relatedPodcasts = await client.fetch(
-  `
-  *[
-    _type == "podcast"
-    && language == $lang
-    && slug.current != $currentSlug
-  ]
-  | order(_createdAt desc)[0...3]{
-    title,
-    duration,
-    episod,
-    _createdAt,
-    "slug": slug.current,
-    "image": mainImage.asset->url
-  }
-  `,
-  {
-    lang: locale,
-    currentSlug: podcast.slug,
-  },
-);
+const relatedPodcasts = (await getCollection("podcasts"))
+  .filter((item) => item.data.status === "published" && item.data.lang === locale && item.id.replace(/\.(md|mdx)$/, "") !== podcast.slug)
+  .map((item) => ({
+    title: item.data.title,
+    duration: item.data.duration || 0,
+    episod: item.data.episode || 0,
+    _createdAt: item.data.pubDate,
+    slug: item.id.replace(/\.(md|mdx)$/, ""),
+    image: item.data.thumbnailUrl,
+  }))
+  .sort((a, b) => new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime())
+  .slice(0, 3);
 
 const socials = [
   {
-    url: "#",
-    title: "Instagram",
-    icon: "simple-icons:instagram",
+    url: podcast.spotifyUrl || "https://open.spotify.com/show/logiaabierta",
+    title: "Spotify",
+    icon: "simple-icons:spotify",
   },
   {
-    url: "#",
-    title: "Twitter",
-    icon: "simple-icons:x",
-  },
-  {
-    url: "#",
-    title: "Youtube",
+    url: podcast.youtubeUrl || "https://www.youtube.com/@logiaabierta/videos",
+    title: "YouTube",
     icon: "simple-icons:youtube",
   },
-];
+  {
+    url: "https://logiaabierta.substack.com",
+    title: "Substack",
+    icon: "simple-icons:substack",
+  },
+].filter((item) => item.url);
 ---
 
 <Layout
@@ -235,7 +227,10 @@ const socials = [
           <p class="text-lg my-10 font-semibold">
             {podcast?.description}
           </p>
-          {podcast?.body && <PortableComponent body={podcast.body} />}
+          {podcast.audioUrl && (
+            <audio controls preload="metadata" src={podcast.audioUrl} class="w-full mb-10"></audio>
+          )}
+          <Content />
         </div>
       </div>
     </div>

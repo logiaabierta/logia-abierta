@@ -67,8 +67,10 @@ export default function AssetsPage() {
     <main className="landing">
       <section className="panel">
         <p className="kicker">Logia Abierta Studio</p>
-        <h1>Assets R2</h1>
-        <p>Sube imágenes, audios, videos o adjuntos a Cloudflare R2. Luego pega la URL pública en Keystatic.</p>
+        <h1>Biblioteca R2</h1>
+        <p>
+          Sube imágenes, audios, videos o adjuntos a Cloudflare R2. Keystatic guarda la URL pública: copia el enlace y pégalo en autores, artículos, podcasts, audio o videos.
+        </p>
         <div className="actions">
           <a href="/keystatic">Abrir Keystatic</a>
           <a href="/" className="secondary">Inicio</a>
@@ -86,7 +88,7 @@ export default function AssetsPage() {
         </label>
         <label>
           Carpeta en R2
-          <input name="folder" defaultValue="studio" placeholder="blog, authors, pages, podcast" />
+          <input name="folder" defaultValue="studio" placeholder="authors, blog, podcast, audio, videos" />
         </label>
         <label>
           Nombre SEO del archivo
@@ -116,13 +118,13 @@ export default function AssetsPage() {
 
       <section className="panel library">
         <div>
-          <p className="kicker">Biblioteca R2</p>
+          <p className="kicker">Browse R2</p>
           <h2>Archivos publicados</h2>
         </div>
         <div className="library-controls">
           <label>
             Carpeta / prefix
-            <input value={prefix} onChange={(event) => setPrefix(event.target.value)} placeholder="blog, authors, podcast" />
+            <input value={prefix} onChange={(event) => setPrefix(event.target.value)} placeholder="authors, blog, podcast, audio, videos" />
           </label>
           <button type="button" onClick={() => loadAssets()} disabled={listing || !secret}>
             {listing ? 'Cargando...' : 'Ver R2'}
@@ -146,7 +148,7 @@ export default function AssetsPage() {
             ))}
           </ul>
         ) : (
-          <p>Escribe el secret y carga la biblioteca para ver los archivos existentes en R2.</p>
+          <p>Escribe el secret y usa Ver R2 para buscar archivos existentes por carpeta/prefix.</p>
         )}
       </section>
     </main>

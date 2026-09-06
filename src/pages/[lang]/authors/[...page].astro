@@ -4,46 +4,32 @@ import Hero from "../../../components/Hero.astro";
 import AuthorCardRow from "../../../components/AuthorCardRow.astro";
 import Pagination from "../../../components/Pagination.astro";
 
-import { client } from "../../../lib/sanity";
+import { getCollection } from "astro:content";
 import { LOCALES } from "../../../i18n";
 
 export async function getStaticPaths({ paginate }) {
   const paths = [];
 
   for (const lang of Object.keys(LOCALES)) {
-    const authors = await client.fetch(
-      `
-      *[
-        _type == "author" &&
-        defined(slug.current) &&
-        $lang in coalesce(activeLanguages, [language, "es"])
-      ]
-      | order(_createdAt desc){
-        name,
-        "activeLanguages": coalesce(activeLanguages, [language, "es"]),
-        showMasonicProfile,
-        primaryRites,
-        craftBodies,
-        philosophicalBodies,
-        appendantBodies,
-        honors,
-        "city": coalesce(
-          select(defined(cityName) && defined(country) => cityName + ", " + country),
-          cityName,
-          country,
-          otherLocation,
-          cityLocalized[language == $lang][0].value,
-          cityLocalized[language == "es"][0].value,
-          city
-        ),
-        "job": coalesce(jobLocalized[language == $lang][0].value, jobLocalized[language == "es"][0].value, job),
-        "description": coalesce(shortBio[language == $lang][0].value, shortBio[language == "es"][0].value, descriptionLocalized[language == $lang][0].value, descriptionLocalized[language == "es"][0].value, description),
-        "slug": slug.current,
-        "image": image.asset->url
-      }
-      `,
-      { lang }
-    );
+    const authors = (await getCollection("authors"))
+      .filter((author) => (author.data.languages || ["es"]).includes(lang))
+      .map((author) => ({
+        name: author.data.publicName,
+        activeLanguages: author.data.languages,
+        showMasonicProfile: true,
+        primaryRites: author.data.rites,
+        craftBodies: [],
+        philosophicalBodies: [],
+        appendantBodies: [],
+        honors: [],
+        city: [author.data.city, author.data.country].filter(Boolean).join(", "),
+        job: author.data.archetype !== "otro" ? author.data.archetype : "",
+        description: author.data.bio,
+        slug: author.id.replace(/\.json$/, ""),
+        image: author.data.avatarUrl,
+        imageAlt: author.data.avatarAlt,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name, lang));
 
     const paginated = paginate(authors, {
       pageSize: 6,

@@ -1,0 +1,69 @@
+---
+import Layout from "../../../layouts/Base.astro";
+import { Icon } from "astro-icon/components";
+import { getCollection, render } from "astro:content";
+import { formatDate } from "../../../utils/dateFormatter";
+import { LOCALES } from "../../../i18n";
+
+export async function getStaticPaths() {
+  const paths = [];
+
+  for (const lang of Object.keys(LOCALES)) {
+    const items = (await getCollection("videos")).filter((item) => item.data.status === "published" && item.data.lang === lang);
+
+    for (const entry of items) {
+      paths.push({
+        params: { lang, slug: entry.id.replace(/\.(md|mdx)$/, "") },
+        props: { entry },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const locale = Astro.params.lang;
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const video = entry.data;
+const embedUrl = video.youtubeUrl?.includes("watch?v=")
+  ? video.youtubeUrl.replace("watch?v=", "embed/")
+  : video.videoUrl;
+---
+
+<Layout title={video.title} description={video.description} image={video.thumbnailUrl || ""}>
+  <section class="mt-10">
+    <div class="container">
+      <a href={`/${locale}/videos`} class="btn btn-link text-inherit uppercase no-underline group p-0">
+        <Icon name="lucide:arrow-left" aria-hidden="true" class="size-4 transition group-hover:translate-x-1" />
+        Go Back
+      </a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container max-w-5xl">
+      <p class="font-semibold uppercase mb-3">Video</p>
+      <h1>{video.title}</h1>
+      <p class="text-lg my-8 font-semibold">{video.description}</p>
+
+      {embedUrl ? (
+        <div class="aspect-video w-full overflow-hidden border mb-8">
+          <iframe src={embedUrl} title={video.title} class="h-full w-full" loading="lazy" allowfullscreen></iframe>
+        </div>
+      ) : video.thumbnailUrl ? (
+        <img src={video.thumbnailUrl} alt={video.thumbnailAlt || video.title} class="aspect-video w-full object-cover border mb-8" />
+      ) : null}
+
+      <div class="flex flex-wrap gap-x-6 gap-y-3 border-y py-5 my-8">
+        <p><b class="mr-2">Date</b>{formatDate(video.pubDate)}</p>
+        {video.duration ? <p><b class="mr-2">Duration</b>{video.duration} Min</p> : null}
+        {video.videoType ? <p><b class="mr-2">Type</b>{video.videoType}</p> : null}
+      </div>
+
+      <div class="post" data-motion-reveal>
+        <Content />
+      </div>
+    </div>
+  </section>
+</Layout>

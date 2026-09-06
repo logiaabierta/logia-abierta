@@ -3,7 +3,7 @@ import Layout from "../../../layouts/Base.astro";
 import Hero from "../../../components/Hero.astro";
 import PodcastCardRow from "../../../components/PodcastCardRow.astro";
 import Pagination from "../../../components/Pagination.astro";
-import { client } from "../../../lib/sanity";
+import { getCollection } from "astro:content";
 
 import { LOCALES } from "../../../i18n";
 
@@ -11,20 +11,17 @@ export async function getStaticPaths({ paginate }) {
   const paths = [];
 
   for (const lang of Object.keys(LOCALES)) {
-    const podcasts = await client.fetch(
-      `
-      *[_type == "podcast" && language == $lang]
-      | order(_createdAt desc){
-        title,
-        _createdAt,
-        duration,
-        episod,
-        "slug": slug.current,
-        "image": mainImage.asset->url
-      }
-      `,
-      { lang }
-    );
+    const podcasts = (await getCollection("podcasts"))
+      .filter((podcast) => podcast.data.status === "published" && podcast.data.lang === lang)
+      .map((podcast) => ({
+        title: podcast.data.title,
+        _createdAt: podcast.data.pubDate,
+        duration: podcast.data.duration || 0,
+        episod: podcast.data.episode || 0,
+        slug: podcast.id.replace(/\.(md|mdx)$/, ""),
+        image: podcast.data.thumbnailUrl,
+      }))
+      .sort((a, b) => new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime());
 
     const paginated = paginate(podcasts, {
       pageSize: 6,

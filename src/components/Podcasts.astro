@@ -1,25 +1,22 @@
 ---
 import { Icon } from "astro-icon/components";
 import PodcastCard from "../components/PodcastCard.astro";
+import { getCollection } from "astro:content";
 
-import { client } from "../lib/sanity";
 const locale = Astro.currentLocale;
 
-const podcasts = await client.fetch(
-  `
-  *[_type == "podcast" && language == $locale] | order(_createdAt desc)[0...3]{
-    title,
-    _createdAt,
-    duration, 
-    episod,
-    "slug": slug.current,
-    "image": mainImage.asset->url
-  }
-`,
-  {
-    locale,
-  },
-);
+const podcasts = (await getCollection("podcasts"))
+  .filter((podcast) => podcast.data.status === "published" && podcast.data.lang === locale)
+  .map((podcast) => ({
+    title: podcast.data.title,
+    _createdAt: podcast.data.pubDate,
+    duration: podcast.data.duration || 0,
+    episod: podcast.data.episode || 0,
+    slug: podcast.id.replace(/\.(md|mdx)$/, ""),
+    image: podcast.data.thumbnailUrl,
+  }))
+  .sort((a, b) => new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime())
+  .slice(0, 3);
 ---
 
 {
