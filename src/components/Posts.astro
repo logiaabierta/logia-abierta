@@ -7,7 +7,7 @@ import MostPopularPosts from "../components/MostPopularPosts.astro";
 import { getBlogPosts } from "../lib/editorialContent";
 const locale = Astro.currentLocale;
 
-const posts = (await getBlogPosts(locale)).slice(1, 7);
+const posts = (await getBlogPosts(locale)).slice(0, 6);
 ---
 
 {

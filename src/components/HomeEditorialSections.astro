@@ -1,0 +1,155 @@
+---
+import { getCollection } from "astro:content";
+import { Icon } from "astro-icon/components";
+import { getBlogPosts } from "../lib/editorialContent";
+import { formatDate } from "../utils/dateFormatter";
+
+const locale = Astro.currentLocale || "es";
+
+const toSlug = (entry) => entry.id.replace(/\.(md|mdx)$/, "");
+const byDateDesc = (a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf();
+
+const [articles, essays, podcasts, audio, videos] = await Promise.all([
+  getBlogPosts(locale),
+  getCollection("essays", ({ data }) => data.lang === locale),
+  getCollection("podcasts", ({ data }) => data.status === "published" && data.lang === locale),
+  getCollection("audioEpisodes", ({ data }) => data.status === "published" && data.lang === locale),
+  getCollection("videos", ({ data }) => data.status === "published" && data.lang === locale),
+]);
+
+const publicationTypes = [
+  {
+    label: "Artículos",
+    description: "Lecturas editoriales, SEO y publicaciones frecuentes.",
+    href: `/${locale}/blog`,
+    count: articles.length,
+    latest: articles[0]?.title,
+    icon: "lucide:file-text",
+  },
+  {
+    label: "Ensayos / MDX",
+    description: "Piezas con Mermaid, Impress.js y componentes interactivos.",
+    href: `/${locale}/ensayos`,
+    count: essays.length,
+    latest: essays[0]?.data.title,
+    icon: "lucide:braces",
+  },
+  {
+    label: "Podcast",
+    description: "Episodios principales y conversaciones publicadas.",
+    href: `/${locale}/podcast`,
+    count: podcasts.length,
+    latest: podcasts[0]?.data.title,
+    icon: "lucide:radio",
+  },
+  {
+    label: "Audio",
+    description: "Reflexiones, trazados, lecturas y archivos sonoros.",
+    href: `/${locale}/audio`,
+    count: audio.length,
+    latest: audio[0]?.data.title,
+    icon: "lucide:audio-lines",
+  },
+  {
+    label: "Videos",
+    description: "Ponencias, clases, entrevistas y piezas audiovisuales.",
+    href: `/${locale}/videos`,
+    count: videos.length,
+    latest: videos[0]?.data.title,
+    icon: "lucide:play-square",
+  },
+];
+
+const latestItems = [
+  ...articles.map((item) => ({
+    type: "Artículo",
+    title: item.title,
+    description: item.description,
+    date: item.date,
+    href: `/${locale}/blog/${item.slug}`,
+  })),
+  ...essays.map((item) => ({
+    type: "Ensayo",
+    title: item.data.title,
+    description: item.data.description,
+    date: item.data.pubDate,
+    href: `/${locale}/ensayos/${toSlug(item)}`,
+  })),
+  ...podcasts.map((item) => ({
+    type: "Podcast",
+    title: item.data.title,
+    description: item.data.description,
+    date: item.data.pubDate,
+    href: `/${locale}/podcast/${toSlug(item)}`,
+  })),
+  ...audio.map((item) => ({
+    type: "Audio",
+    title: item.data.title,
+    description: item.data.description,
+    date: item.data.pubDate,
+    href: `/${locale}/audio/${toSlug(item)}`,
+  })),
+  ...videos.map((item) => ({
+    type: "Video",
+    title: item.data.title,
+    description: item.data.description,
+    date: item.data.pubDate,
+    href: `/${locale}/videos/${toSlug(item)}`,
+  })),
+].sort(byDateDesc).slice(0, 6);
+---
+
+<section class="section">
+  <div class="container">
+    <div class="border-t pt-8">
+      <div class="flex flex-wrap gap-4 justify-between items-end">
+        <div>
+          <p class="font-semibold uppercase text-sm tracking-[0.12em] opacity-70">Editorial</p>
+          <h2 class="h1 mt-2">Tipos de publicación</h2>
+        </div>
+        <a href={`/${locale}/blog`} class="btn btn-link text-inherit uppercase no-underline group p-0">
+          Explorar
+          <Icon name="lucide:arrow-right" aria-hidden="true" class="size-4 transition group-hover:translate-x-1" />
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 border mt-10">
+        {publicationTypes.map((item) => (
+          <a href={item.href} class="group min-h-56 p-5 border-b md:border-r xl:border-b-0 last:border-b-0 xl:last:border-r-0 flex flex-col">
+            <div class="flex justify-between items-start gap-4">
+              <Icon name={item.icon} aria-hidden="true" class="size-6 text-brand-amber" />
+              <span class="text-sm font-semibold">{item.count}</span>
+            </div>
+            <h3 class="h4 mt-8 group-hover:underline">{item.label}</h3>
+            <p class="text-sm opacity-75 mt-3">{item.description}</p>
+            {item.latest && <p class="text-sm font-semibold mt-auto pt-6">Último: {item.latest}</p>}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    {latestItems.length > 0 && (
+      <div class="border-t mt-12 pt-8">
+        <div class="flex flex-wrap gap-4 justify-between items-end">
+          <h2 class="uppercase">Últimas publicaciones</h2>
+          <p class="text-sm opacity-70">Artículos, ensayos, audio y video desde Keystatic.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 mt-8">
+          {latestItems.map((item) => (
+            <article class="border-t pt-5">
+              <div class="flex justify-between gap-4 text-sm uppercase opacity-70">
+                <span>{item.type}</span>
+                <span>{formatDate(item.date)}</span>
+              </div>
+              <a href={item.href} class="group">
+                <h3 class="h4 mt-4 group-hover:underline">{item.title}</h3>
+                {item.description && <p class="mt-3 text-sm opacity-75">{item.description}</p>}
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</section>

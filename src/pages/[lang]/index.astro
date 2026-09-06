@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 
 import Layout from "../../layouts/Base.astro";
 import Topline from "../../components/Topline.astro";
+import HomeEditorialSections from "../../components/HomeEditorialSections.astro";
 import Posts from "../../components/Posts.astro";
 import Podcasts from "../../components/Podcasts.astro";
 import Authors from "../../components/Authors.astro";
@@ -29,6 +30,7 @@ const seo = homePage?.data.seo || {};
 >
   {homePage ? <PuckPage page={homePage} /> : null}
   <Topline />
+  <HomeEditorialSections />
   <Posts />
   <Podcasts />
   <Authors />

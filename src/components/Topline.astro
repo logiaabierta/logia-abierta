@@ -1,13 +1,29 @@
+---
+import { getCollection } from "astro:content";
+import { getBlogPosts } from "../lib/editorialContent";
+
+const locale = Astro.currentLocale || "es";
+const [posts, essays] = await Promise.all([
+  getBlogPosts(locale),
+  getCollection("essays", ({ data }) => data.lang === locale),
+]);
+
+const headlines = [
+  ...posts.map((post) => post.title),
+  ...essays.map((essay) => essay.data.title),
+].slice(0, 5);
+---
+
 <section class="my-4">
   <div class="container">
     <div class="bg-black text-white overflow-x-hidden flex gap-4 p-4">
       <p class="shrink-0">
-        <b>News Ticker+++</b>
+        <b>Logia Abierta+++</b>
       </p>
       {
-        Array.from({ length: 5 }).map((_) => (
+        (headlines.length > 0 ? headlines : ["Publicaciones editoriales, ensayos y recursos de Logia Abierta"]).map((headline) => (
           <p class="shrink-0">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit +++
+            {headline} +++
           </p>
         ))
       }
