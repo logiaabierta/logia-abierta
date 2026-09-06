@@ -5,7 +5,7 @@ lang: "es"
 status: "published"
 audioType: "reflection"
 pubDate: "2026-09-05"
-author: "redaccion-logia-abierta"
+author: "logia-abierta"
 category: "filosofia"
 tags:
   - "simbolismo"

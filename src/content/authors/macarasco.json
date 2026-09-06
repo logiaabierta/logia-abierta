@@ -12,11 +12,11 @@
   "country": "DO",
   "city": "",
   "avatarImage": {
-    "src": "https://pub-490f1c18b67d44e4968672517297f4c8.r2.dev/site-assets/public/img/authors/author6.png",
+    "src": "https://cdn.sanity.io/images/x7y01k44/production/9cadfb38cc3fdae0fe51cd204be43c9669f179d3-1280x1280.png",
     "alt": "Avatar editorial de Miguel Carrasco",
-    "width": 600,
-    "height": 600
+    "width": 1280,
+    "height": 1280
   },
-  "avatarUrl": "https://pub-490f1c18b67d44e4968672517297f4c8.r2.dev/site-assets/public/img/authors/author6.png",
+  "avatarUrl": "https://cdn.sanity.io/images/x7y01k44/production/9cadfb38cc3fdae0fe51cd204be43c9669f179d3-1280x1280.png",
   "avatarAlt": "Avatar editorial de Miguel Carrasco"
 }
