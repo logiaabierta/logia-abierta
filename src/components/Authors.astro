@@ -20,8 +20,8 @@ const authors = (await getCollection("authors"))
     job: author.data.archetype !== "otro" ? author.data.archetype : "",
     description: author.data.bio,
     slug: author.id.replace(/\.json$/, ""),
-    image: author.data.avatarUrl,
-    imageAlt: author.data.avatarAlt,
+    image: author.data.avatarImage?.src || author.data.avatarUrl,
+    imageAlt: author.data.avatarImage?.alt || author.data.avatarAlt,
   }))
   .sort((a, b) => a.name.localeCompare(b.name, locale))
   .slice(0, 6);

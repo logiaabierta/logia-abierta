@@ -36,8 +36,8 @@ export async function getStaticPaths({ paginate }) {
         bioText: entry.data.bio,
         masonicNotes: "",
         slug: entry.id.replace(/\.json$/, ""),
-        image: entry.data.avatarUrl,
-        imageAlt: entry.data.avatarAlt,
+        image: entry.data.avatarImage?.src || entry.data.avatarUrl,
+        imageAlt: entry.data.avatarImage?.alt || entry.data.avatarAlt,
       }));
 
     for (const author of authors) {

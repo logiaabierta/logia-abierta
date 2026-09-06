@@ -72,6 +72,14 @@ const authors = defineCollection({
 		rites: z.array(z.string()).default([]),
 		country: z.string().default('DO'),
 		city: z.string().optional(),
+		avatarImage: z
+			.object({
+				src: z.string().url().optional(),
+				alt: z.string().optional(),
+				width: z.number().nullable().optional(),
+				height: z.number().nullable().optional(),
+			})
+			.optional(),
 		avatarUrl: z.string().url().optional(),
 		avatarAlt: z.string().optional(),
 		website: z.string().url().optional(),

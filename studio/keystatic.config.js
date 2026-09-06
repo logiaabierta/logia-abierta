@@ -258,9 +258,13 @@ export default config({
           defaultValue: 'DO',
         }),
         city: fields.text({ label: 'Ciudad', validation: { length: { max: 80 } } }),
+        avatarImage: fields.cloudImage({
+          label: 'Foto de perfil',
+          description: 'Pega aquí la URL pública de R2 en src. Keystatic mostrará preview de la imagen.',
+        }),
         avatarUrl: fields.url({
           label: 'Foto / avatar en R2',
-          description: 'Sube la foto en /assets, copia la URL pública de R2 y pégala aquí.',
+          description: 'Fallback legacy. Usa preferiblemente el campo Foto de perfil arriba.',
         }),
         avatarAlt: fields.text({ label: 'Alt text foto', validation: { length: { max: 160 } } }),
         website: fields.url({ label: 'Página personal' }),
