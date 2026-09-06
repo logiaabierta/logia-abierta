@@ -66,13 +66,13 @@ const mdxComponents = {
   ImpressStep: wrapper({
     label: 'Impress step',
     schema: {
-      x: fields.integer({ label: 'X', defaultValue: 0 }),
-      y: fields.integer({ label: 'Y', defaultValue: 0 }),
-      z: fields.integer({ label: 'Z', defaultValue: 0 }),
-      rotate: fields.integer({ label: 'Rotación', defaultValue: 0 }),
-      rotateX: fields.integer({ label: 'Rotación X', defaultValue: 0 }),
-      rotateY: fields.integer({ label: 'Rotación Y', defaultValue: 0 }),
-      scale: fields.integer({ label: 'Escala', defaultValue: 1 }),
+      x: fields.text({ label: 'X', defaultValue: '0' }),
+      y: fields.text({ label: 'Y', defaultValue: '0' }),
+      z: fields.text({ label: 'Z', defaultValue: '0' }),
+      rotate: fields.text({ label: 'Rotación', defaultValue: '0' }),
+      rotateX: fields.text({ label: 'Rotación X', defaultValue: '0' }),
+      rotateY: fields.text({ label: 'Rotación Y', defaultValue: '0' }),
+      scale: fields.text({ label: 'Escala', defaultValue: '1' }),
     },
     ContentView: ({ value, children }) => (
       <section style={{ border: '1px dashed #d97736', padding: 12, marginTop: 8 }}>
