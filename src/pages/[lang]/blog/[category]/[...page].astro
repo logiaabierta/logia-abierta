@@ -1,66 +1,27 @@
 ---
 import { Icon } from "astro-icon/components";
-import { client } from "../../../../lib/sanity";
 import Layout from "../../../../layouts/Base.astro";
 import Hero from "../../../../components/Hero.astro";
 import PostCard from "../../../../components/PostCardBase.astro";
 import Pagination from "../../../../components/Pagination.astro";
-
+import { getBlogPosts, getCategories } from "../../../../lib/editorialContent";
 import { LOCALES } from "../../../../i18n";
 
 export async function getStaticPaths({ paginate }) {
   const paths = [];
 
   for (const lang of Object.keys(LOCALES)) {
-    const categories = await client.fetch(
-      `
-      *[_type == "category"]{
-        "title": title[language == $lang][0].value,
-        "slug": slug.current
-      }
-      `,
-      { lang }
-    );
+    const categories = await getCategories(lang);
+    const posts = await getBlogPosts(lang);
 
     for (const category of categories) {
-      const posts = await client.fetch(
-        `
-        *[
-          _type == "post"
-          && language == $lang
-          && $category in categories[]->slug.current
-        ]
-        | order(_createdAt desc){
-          title,
-          description,
-          duration,
-          _createdAt,
-          "slug": slug.current,
-          "image": thumbnail.asset->url,
-          "author": author->{
-            name,
-            "slug": slug.current
-          },
-          "categories": categories[0]->{
-            "title": title[language == $lang][0].value,
-            "slug": slug.current
-          }
-        }
-        `,
-        {
-          lang,
-          category: category.slug,
-        }
-      );
-
-      const paginated = paginate(posts, {
+      const categoryPosts = posts.filter((post) => post.category?.slug === category.slug);
+      const paginated = paginate(categoryPosts, {
         pageSize: 6,
-
         params: {
           lang,
           category: category.slug,
         },
-
         props: {
           categoryTitle: category.title,
         },
@@ -74,23 +35,8 @@ export async function getStaticPaths({ paginate }) {
 }
 
 const locale = Astro.params.lang;
-
 const { page, categoryTitle } = Astro.props;
-
 const totalPages = Math.ceil(page.total / page.size);
-
-const postsCategories = await client.fetch(
-  `
-  *[_type == "category"]
-  | order(_createdAt desc){
-    "title": title[language == $lang][0].value,
-    "slug": slug.current
-  }
-  `,
-  {
-    lang: locale,
-  }
-);
 ---
 
 <Layout title={`Blog | category: ${categoryTitle}`}>
@@ -116,9 +62,15 @@ const postsCategories = await client.fetch(
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-10">
-        {page.data.map((post) => <PostCard {...post} />)}
-      </div>
+      {
+        page.data.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-10">
+            {page.data.map((post) => <PostCard {...post} />)}
+          </div>
+        ) : (
+          <p class="py-10">No hay artículos publicados en esta categoría todavía.</p>
+        )
+      }
 
       {
         totalPages > 1 && (

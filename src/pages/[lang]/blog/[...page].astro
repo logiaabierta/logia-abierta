@@ -3,39 +3,17 @@ import Layout from "../../../layouts/Base.astro";
 import Hero from "../../../components/Hero.astro";
 import PostCard from "../../../components/PostCardBase.astro";
 import Pagination from "../../../components/Pagination.astro";
-import { client } from "../../../lib/sanity";
+import { getBlogPosts, getCategories } from "../../../lib/editorialContent";
 import { LOCALES } from "../../../i18n";
 
 export async function getStaticPaths({ paginate }) {
   const paths = [];
 
   for (const lang of Object.keys(LOCALES)) {
-    const posts = await client.fetch(
-      `
-      *[_type == "post" && language == $lang]
-      | order(_createdAt desc)
-      {
-        title,
-        description,
-        duration,
-        _createdAt,
-        "slug": slug.current,
-        "image": thumbnail.asset->url,
-        "author": author->{name, slug},
-        "categories": categories[0]->{
-          "title": title[language == $lang][0].value,
-          slug
-        }
-      }
-    `,
-      { lang }
-    );
-
+    const posts = await getBlogPosts(lang);
     const paginated = paginate(posts, {
       pageSize: 12,
-      params: {
-        lang,
-      },
+      params: { lang },
     });
 
     paths.push(...paginated);
@@ -45,23 +23,9 @@ export async function getStaticPaths({ paginate }) {
 }
 
 const locale = Astro.params.lang;
-
 const { page } = Astro.props;
-
-
 const totalPages = Math.ceil(page.total / page.size);
-
-const postsCategories = await client.fetch(
-  `
-  *[_type == "category"]
-  | order(_createdAt desc)
-  {
-    "title": title[language == $lang][0].value,
-    "slug": slug.current,
-  }
-`,
-  { lang: locale }
-);
+const postsCategories = await getCategories(locale);
 ---
 
 <Layout title="Blog">
@@ -92,9 +56,15 @@ const postsCategories = await client.fetch(
   </section>
   <section class="section mt-5!">
     <div class="container">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-10">
-        {page.data.map((post, index) => <PostCard {...post} />)}
-      </div>
+      {
+        page.data.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-10">
+            {page.data.map((post) => <PostCard {...post} />)}
+          </div>
+        ) : (
+          <p class="py-10">No hay artículos publicados todavía.</p>
+        )
+      }
 
       {totalPages > 1 && <Pagination totalPages={totalPages} page={page} />}
     </div>

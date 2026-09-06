@@ -8,11 +8,14 @@ const {
   _createdAt,
   slug,
   image,
+  imageAlt,
   author,
   categories,
 } = Astro.props;
 
 const locale = Astro.currentLocale;
+const categorySlug = categories?.slug?.current || categories?.slug;
+const categoryTitle = categories?.title;
 
 //console.log("cat", categories);
 ---
@@ -35,17 +38,19 @@ const locale = Astro.currentLocale;
   <div>
     <div class="flex flex-wrap justify-between in gap-4 mb-4">
       <span>{formatDateTime(_createdAt)}</span>
-      <a
-        href={`/${locale}/blog/${categories.slug.current}`}
-        class="uppercase ml-auto btn btn-outline rounded-full py-1 px-4 h-auto hover:bg-black hover:text-white"
-      >
-        {categories.title}
-      </a>
+      {categorySlug && categoryTitle && (
+        <a
+          href={`/${locale}/blog/${categorySlug}`}
+          class="uppercase ml-auto btn btn-outline rounded-full py-1 px-4 h-auto hover:bg-black hover:text-white"
+        >
+          {categoryTitle}
+        </a>
+      )}
     </div>
     <a href={`/${locale}/blog/${slug}`} class="mb-auto">
       <Image
         src={image}
-        alt={title}
+        alt={imageAlt || title}
         width="150"
         height="150"
         format="webp"
@@ -65,7 +70,7 @@ const locale = Astro.currentLocale;
     <div class="flex flex-wrap gap-x-6 gap-y-3 justify-start items-center mt-4">
       {author && <p>
         <b class="mr-2">Text</b>
-        <a href={`/${locale}/authors/${author.slug.current}`} class="hover:underline">
+        <a href={`/${locale}/authors/${author.slug?.current || author.slug}`} class="hover:underline">
           {author.name}
         </a>
       </p>}
