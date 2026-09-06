@@ -13,32 +13,38 @@ export async function getStaticPaths({ paginate }) {
   for (const lang of Object.keys(LOCALES)) {
     const authors = (await getCollection("authors"))
       .filter((entry) => (entry.data.languages || ["es"]).includes(lang))
-      .map((entry) => ({
-        name: entry.data.publicName,
-        activeLanguages: entry.data.languages,
-        showMasonicProfile: true,
-        primaryRites: entry.data.rites,
-        craftBodies: [],
-        philosophicalBodies: [],
-        appendantBodies: [],
-        honors: [],
-        personalWebsite: entry.data.website,
-        publicEmail: "",
-        contacts: [
-          entry.data.instagram && { network: "Instagram", link: entry.data.instagram, icon: "instagram" },
-          entry.data.linkedin && { network: "LinkedIn", link: entry.data.linkedin, icon: "linkedin" },
-          entry.data.substack && { network: "Substack", link: entry.data.substack, icon: "substack" },
-        ].filter(Boolean),
-        description: entry.data.bio,
-        shortBio: entry.data.bio,
-        city: [entry.data.city, entry.data.country].filter(Boolean).join(", "),
-        job: entry.data.archetype !== "otro" ? entry.data.archetype : "",
-        bioText: entry.data.bio,
-        masonicNotes: "",
-        slug: entry.id.replace(/\.json$/, ""),
-        image: entry.data.avatarImage?.src || entry.data.avatarUrl,
-        imageAlt: entry.data.avatarImage?.alt || entry.data.avatarAlt,
-      }));
+      .map((entry) => {
+        const name = entry.data.publicName;
+        const description = entry.data.bio || `Perfil editorial de ${name} en Logia Abierta.`;
+
+        return {
+          name,
+          activeLanguages: entry.data.languages,
+          showMasonicProfile: true,
+          primaryRites: entry.data.rites,
+          craftBodies: [],
+          philosophicalBodies: [],
+          appendantBodies: [],
+          honors: [],
+          personalWebsite: entry.data.website,
+          publicEmail: "",
+          contacts: [
+            entry.data.instagram && { network: "Instagram", link: entry.data.instagram, icon: "instagram" },
+            entry.data.linkedin && { network: "LinkedIn", link: entry.data.linkedin, icon: "linkedin" },
+            entry.data.substack && { network: "Substack", link: entry.data.substack, icon: "substack" },
+          ].filter(Boolean),
+          description,
+          shortBio: entry.data.bio,
+          city: entry.data.city || "",
+          country: entry.data.country,
+          job: entry.data.archetype !== "otro" ? entry.data.archetype : "",
+          bioText: entry.data.bio,
+          masonicNotes: "",
+          slug: entry.id.replace(/\.json$/, ""),
+          image: entry.data.avatarImage?.src || entry.data.avatarUrl,
+          imageAlt: entry.data.avatarImage?.alt || entry.data.avatarAlt || name,
+        };
+      });
 
     for (const author of authors) {
       const posts = (await getCollection("blog"))
@@ -201,15 +207,26 @@ const getContactIcon = (icon = "", network = "") => {
             <h1 class="mb-6">{author.name}</h1>
 
             <div class="flex flex-wrap gap-x-6 gap-y-3 items-center">
-              <p>
-                <b class="mr-2">Job</b>
-                <span>{author.job}</span>
-              </p>
+              {author.job && (
+                <p>
+                  <b class="mr-2">Perfil</b>
+                  <span>{author.job}</span>
+                </p>
+              )}
 
-              <p>
-                <b class="mr-2">City</b>
-                <span>{author.city}</span>
-              </p>
+              {author.city && (
+                <p>
+                  <b class="mr-2">Ciudad</b>
+                  <span>{author.city}</span>
+                </p>
+              )}
+
+              {!author.city && author.country && (
+                <p>
+                  <b class="mr-2">País</b>
+                  <span>{author.country}</span>
+                </p>
+              )}
             </div>
 
             {languageBadges.length > 0 && (

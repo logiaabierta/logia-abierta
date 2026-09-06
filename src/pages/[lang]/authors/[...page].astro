@@ -13,22 +13,27 @@ export async function getStaticPaths({ paginate }) {
   for (const lang of Object.keys(LOCALES)) {
     const authors = (await getCollection("authors"))
       .filter((author) => (author.data.languages || ["es"]).includes(lang))
-      .map((author) => ({
-        name: author.data.publicName,
-        activeLanguages: author.data.languages,
-        showMasonicProfile: true,
-        primaryRites: author.data.rites,
-        craftBodies: [],
-        philosophicalBodies: [],
-        appendantBodies: [],
-        honors: [],
-        city: [author.data.city, author.data.country].filter(Boolean).join(", "),
-        job: author.data.archetype !== "otro" ? author.data.archetype : "",
-        description: author.data.bio,
-        slug: author.id.replace(/\.json$/, ""),
-        image: author.data.avatarImage?.src || author.data.avatarUrl,
-        imageAlt: author.data.avatarImage?.alt || author.data.avatarAlt,
-      }))
+      .map((author) => {
+        const name = author.data.publicName;
+
+        return {
+          name,
+          activeLanguages: author.data.languages,
+          showMasonicProfile: true,
+          primaryRites: author.data.rites,
+          craftBodies: [],
+          philosophicalBodies: [],
+          appendantBodies: [],
+          honors: [],
+          city: author.data.city || "",
+          country: author.data.country,
+          job: author.data.archetype !== "otro" ? author.data.archetype : "",
+          description: author.data.bio || `Perfil editorial de ${name} en Logia Abierta.`,
+          slug: author.id.replace(/\.json$/, ""),
+          image: author.data.avatarImage?.src || author.data.avatarUrl,
+          imageAlt: author.data.avatarImage?.alt || author.data.avatarAlt || name,
+        };
+      })
       .sort((a, b) => a.name.localeCompare(b.name, lang));
 
     const paginated = paginate(authors, {
